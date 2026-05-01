@@ -2,14 +2,26 @@
   "name": "notaria",
   "version": "1.0.0",
   "private": true,
-  "description": "Sitio estático de Notaría Martínez desplegado en Firebase Hosting.",
+  "type": "module",
+  "description": "Sitio de Notaría Martínez (Vite + TypeScript + Tailwind v4) desplegado en Firebase Hosting.",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "check": "prettier --check README.md firebase.json package.json .github/workflows/*.yml && prettier --check --parser json .firebaserc",
-    "format": "prettier --write README.md firebase.json package.json .github/workflows/*.yml && prettier --write --parser json .firebaserc"
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "typecheck": "tsc --noEmit",
+    "check": "tsc --noEmit && prettier --check \"src/**/*.{ts,css}\" README.md firebase.json package.json index.html .github/workflows/*.yml && prettier --check --parser json .firebaserc",
+    "format": "prettier --write \"src/**/*.{ts,css}\" README.md firebase.json package.json index.html .github/workflows/*.yml && prettier --write --parser json .firebaserc"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.1.13",
+    "@types/node": "^22.9.0",
     "prettier": "^3.6.2",
+    "tailwindcss": "^4.1.13",
+    "typescript": "^5.7.2",
     "vite": "^7.1.11"
+  },
+  "dependencies": {
+    "@fullcalendar/core": "^6.1.15",
+    "@fullcalendar/daygrid": "^6.1.15"
   }
 }

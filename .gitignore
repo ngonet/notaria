@@ -67,3 +67,15 @@ node_modules/
 
 # dataconnect generated files
 .dataconnect
+
+# Vite build output
+dist/
+
+# Functions build output
+functions/lib/
+functions/node_modules/
+
+# Editor / OS
+.DS_Store
+.vscode/
+.idea/
