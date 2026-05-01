@@ -1,0 +1,15 @@
+{
+  "name": "notaria",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sitio estático de Notaría Martínez desplegado en Firebase Hosting.",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "check": "prettier --check README.md firebase.json package.json .github/workflows/*.yml && prettier --check --parser json .firebaserc",
+    "format": "prettier --write README.md firebase.json package.json .github/workflows/*.yml && prettier --write --parser json .firebaserc"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2",
+    "vite": "^7.1.11"
+  }
+}
