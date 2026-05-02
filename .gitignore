@@ -70,6 +70,7 @@ node_modules/
 
 # Vite build output
 dist/
+.atl/
 
 # Functions build output
 functions/lib/

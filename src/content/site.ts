@@ -73,8 +73,6 @@ export const site = {
 
   nav: [
     { href: "#servicios", label: "Servicios" },
-    { href: "#funcionarios", label: "Funcionarios" },
-    { href: "#aranceles", label: "Aranceles" },
     { href: "#nosotros", label: "Nosotros" },
     { href: "#documentos", label: "Documentos" },
     { href: "#contacto", label: "Contacto" },
@@ -344,7 +342,7 @@ export const site = {
         icon: "university",
         title: "Instalaciones y servicios",
         description:
-          "Apertura en pleno centro de Melipilla, Avenida Serrano 374, a media cuadra de la Plaza de Armas.",
+          "Apertura en pleno centro de Melipilla, Avenida Serrano 369, oficina 11, a media cuadra de la Plaza de Armas.",
         period: "Inicio de actividades",
         date: "Marzo 2012",
       },
@@ -403,9 +401,9 @@ export const site = {
 
   contact: {
     legalName: "Notaría René A. Martínez Loaiza",
-    street: "Avenida Serrano 374",
+    street: "Avenida Serrano 369, oficina 11",
     city: "Melipilla, Chile",
-    mapsUrl: "https://goo.gl/maps/W9GqyVEoBXk",
+    mapsUrl: "https://www.google.com/maps?q=Avenida+Serrano+369,+Melipilla,+Chile",
     phoneDisplay: "(+56 2) 3314 8818",
     phoneE164: "+56233148818",
     email: "notaria.martinez@notariamelipilla.cl",

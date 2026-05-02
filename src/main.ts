@@ -6,10 +6,6 @@ const mounts: Record<string, () => Promise<Mount>> = {
   nav: () => import("@/components/nav").then((m) => m.mountNav),
   hero: () => import("@/components/hero").then((m) => m.mountHero),
   services: () => import("@/components/services").then((m) => m.mountServices),
-  funcionarios: () =>
-    import("@/components/funcionarios").then((m) => m.mountFuncionarios),
-  aranceles: () =>
-    import("@/components/aranceles").then((m) => m.mountAranceles),
   about: () => import("@/components/about").then((m) => m.mountAbout),
   documents: () =>
     import("@/components/documents").then((m) => m.mountDocuments),

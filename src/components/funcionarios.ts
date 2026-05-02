@@ -1,13 +1,13 @@
 import { site } from "@/content/site";
 
-export function mountFuncionarios(el: HTMLElement): void {
+export function renderFuncionarios(): string {
   const { heading, lead, groups } = site.funcionarios;
 
-  el.innerHTML = `
-    <div class="mx-auto max-w-(--container-content) px-6 py-20 md:py-28">
+  return `
+    <section id="funcionarios" class="scroll-mt-24" aria-labelledby="funcionarios-heading">
       <header class="mx-auto max-w-3xl text-center">
         <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">Equipo</p>
-        <h2 id="funcionarios-heading" class="mt-3 font-display text-3xl text-navy md:text-4xl">${heading}</h2>
+        <h3 id="funcionarios-heading" class="mt-3 font-display text-2xl text-navy md:text-3xl">${heading}</h3>
         <p class="mt-4 text-base text-muted md:text-lg">${lead}</p>
       </header>
 
@@ -15,8 +15,8 @@ export function mountFuncionarios(el: HTMLElement): void {
         ${groups
           .map(
             (group) => `
-              <li class="flex h-full flex-col rounded-card border border-line bg-surface p-6 shadow-card">
-                <h3 class="font-display text-base font-semibold text-navy">${group.title}</h3>
+              <li class="flex h-full flex-col rounded-card border border-line bg-bg p-6 shadow-card">
+                <h4 class="font-display text-base font-semibold text-navy">${group.title}</h4>
                 <ul class="mt-4 flex-1 space-y-2">
                   ${group.members
                     .map(
@@ -34,6 +34,6 @@ export function mountFuncionarios(el: HTMLElement): void {
           )
           .join("")}
       </ul>
-    </div>
+    </section>
   `;
 }

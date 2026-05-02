@@ -1,6 +1,12 @@
 {
   "version": 1,
   "skills": {
+    "api-design-principles": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/backend-development/skills/api-design-principles/SKILL.md",
+      "computedHash": "3316239df2bdcb41e992857b8142e0239e6964564dd5d7224e470c2ab350a03c"
+    },
     "developing-genkit-dart": {
       "source": "firebase/agent-skills",
       "sourceType": "github",
@@ -78,6 +84,12 @@
       "sourceType": "github",
       "skillPath": "skills/firebase-security-rules-auditor/SKILL.md",
       "computedHash": "5a90e991bb9acfd3e43bfb570498dee60b9cef94cbb80cfb99257c7e4f61c1a0"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/frontend-design/SKILL.md",
+      "computedHash": "063a0e6448123cd359ad0044cc46b0e490cc7964d45ef4bb9fd842bd2ffbca67"
     },
     "xcode-project-setup": {
       "source": "firebase/agent-skills",

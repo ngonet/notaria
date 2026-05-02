@@ -1,4 +1,5 @@
 import { site } from "@/content/site";
+import { renderFuncionarios } from "./funcionarios";
 
 const ICONS: Record<string, string> = {
   gavel: `<path d="m14 12-8.5 8.5a2.12 2.12 0 1 1-3-3L11 9"/><path d="m15 13 6-6"/><path d="m9 7 6 6"/><path d="m17 5 4 4"/><path d="m13 9 4-4"/>`,
@@ -63,6 +64,10 @@ export function mountAbout(el: HTMLElement): void {
               .join("")}
           </ol>
         </section>
+
+        <div class="mt-20 md:mt-24 border-t border-line/60 pt-16 md:pt-20">
+          ${renderFuncionarios()}
+        </div>
       </div>
     </div>
   `;

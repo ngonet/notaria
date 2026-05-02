@@ -1,4 +1,5 @@
 import { site } from "@/content/site";
+import { renderAranceles } from "./aranceles";
 
 const ICONS: Record<string, string> = {
   newspaper: `<path d="M4 5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5Z" /><path d="M9 7h6M9 11h6M9 15h4" /><path d="M19 7h2v10a2 2 0 0 1-2 2" />`,
@@ -70,6 +71,10 @@ export function mountServices(el: HTMLElement): void {
           )
           .join("")}
       </ul>
+
+      <div class="mt-20 md:mt-24 border-t border-line/60 pt-16 md:pt-20">
+        ${renderAranceles()}
+      </div>
     </div>
   `;
 }
