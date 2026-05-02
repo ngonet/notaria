@@ -203,45 +203,102 @@ export const site = {
         note: "Arancel notarial actualizado a diciembre de 2023. Se aplica recargo de 1‰ sobre el monto del acto o contrato (límite $319.232.000).",
         items: [
           { service: "Otorgamiento de escritura pública", amount: "$6.235" },
-          { service: "Escritura sin apreciación pecuniaria (mandatos, reglamentos de copropiedad, prohibiciones)", amount: "$6.235" },
+          {
+            service:
+              "Escritura sin apreciación pecuniaria (mandatos, reglamentos de copropiedad, prohibiciones)",
+            amount: "$6.235",
+          },
           { service: "Diligencia anexa a escritura", amount: "$3.741" },
           { service: "Otorgamiento de testamento abierto", amount: "$18.705" },
           { service: "Otorgamiento de testamento cerrado", amount: "$24.940" },
           { service: "Protocolización de instrumento", amount: "$4.988" },
           { service: "Autorización de copia", amount: "$1.247" },
-          { service: "Por cada página de escritura matriz o carilla de copia", amount: "$748" },
+          {
+            service: "Por cada página de escritura matriz o carilla de copia",
+            amount: "$748",
+          },
         ],
       },
       {
         title: "Instrumentos privados",
         note: "Arancel notarial actualizado a diciembre de 2023.",
         items: [
-          { service: "Autorización de firma (cuantía hasta $50.000)", amount: "$1.247" },
-          { service: "Autorización de firma (cuantía sobre $500.000)", amount: "$7.482" },
-          { service: "Autorización de firma sin apreciación pecuniaria", amount: "$1.195" },
-          { service: "Certificado de supervivencia o de estado civil", amount: "$624" },
-          { service: "Autorización para salir del país (con tres copias)", amount: "$3.741" },
-          { service: "Carta de poder (para cobro de beneficios sociales: exento)", amount: "$1.195" },
+          {
+            service: "Autorización de firma (cuantía hasta $50.000)",
+            amount: "$1.247",
+          },
+          {
+            service: "Autorización de firma (cuantía sobre $500.000)",
+            amount: "$7.482",
+          },
+          {
+            service: "Autorización de firma sin apreciación pecuniaria",
+            amount: "$1.195",
+          },
+          {
+            service: "Certificado de supervivencia o de estado civil",
+            amount: "$624",
+          },
+          {
+            service: "Autorización para salir del país (con tres copias)",
+            amount: "$3.741",
+          },
+          {
+            service:
+              "Carta de poder (para cobro de beneficios sociales: exento)",
+            amount: "$1.195",
+          },
           { service: "Declaración con una o más firmas", amount: "$1.247" },
-          { service: "Compraventa de cosas muebles (más 1‰ sobre el monto)", amount: "$6.235" },
+          {
+            service: "Compraventa de cosas muebles (más 1‰ sobre el monto)",
+            amount: "$6.235",
+          },
           { service: "Certificación de documentos", amount: "$1.247" },
-          { service: "Protesto de letras (sobre $5.000.000)", amount: "$14.964" },
+          {
+            service: "Protesto de letras (sobre $5.000.000)",
+            amount: "$14.964",
+          },
         ],
       },
       {
         title: "Registro de bienes raíces y comercio",
         note: "Valores base según Decreto 588 de 1998. Sujetos a reajuste legal.",
         items: [
-          { service: "Inscripción (incluye anotación, citas y certificación en el título)", amount: "$2.000" },
-          { service: "Inscripción sin cuantía (prohibiciones, embargos, reglamentos de copropiedad)", amount: "$3.500" },
+          {
+            service:
+              "Inscripción (incluye anotación, citas y certificación en el título)",
+            amount: "$2.000",
+          },
+          {
+            service:
+              "Inscripción sin cuantía (prohibiciones, embargos, reglamentos de copropiedad)",
+            amount: "$3.500",
+          },
           { service: "Subinscripción o anotación", amount: "$1.500" },
-          { service: "Certificado de inscripción o subinscripción", amount: "$1.500" },
-          { service: "Certificado de gravámenes o prohibiciones (hasta 10 años)", amount: "$1.500" },
-          { service: "Certificado de gravámenes o prohibiciones (más de 10 años)", amount: "$2.500" },
+          {
+            service: "Certificado de inscripción o subinscripción",
+            amount: "$1.500",
+          },
+          {
+            service:
+              "Certificado de gravámenes o prohibiciones (hasta 10 años)",
+            amount: "$1.500",
+          },
+          {
+            service:
+              "Certificado de gravámenes o prohibiciones (más de 10 años)",
+            amount: "$2.500",
+          },
           { service: "Inscripción de testamento", amount: "$2.500" },
           { service: "Inscripción especial de herencia", amount: "$2.000" },
-          { service: "Protocolización, agregación o archivo de documentos", amount: "$2.000" },
-          { service: "Autorización de la matriz, copias y certificaciones", amount: "$500" },
+          {
+            service: "Protocolización, agregación o archivo de documentos",
+            amount: "$2.000",
+          },
+          {
+            service: "Autorización de la matriz, copias y certificaciones",
+            amount: "$500",
+          },
         ],
       },
     ] satisfies ArancelArea[],
