@@ -15,44 +15,12 @@ function timelineIcon(name: keyof typeof ICONS): string {
 }
 
 export function mountAbout(el: HTMLElement): void {
-  const {
-    teamHeading,
-    teamLead,
-    teamGroups,
-    teamFooter,
-    commitment,
-    timeline,
-  } = site.about;
+  const { commitment, trajectory, timeline } = site.about;
 
   el.innerHTML = `
     <div class="border-y border-line bg-surface">
       <div class="mx-auto max-w-(--container-content) px-6 py-20 md:py-28">
-        <header class="mx-auto max-w-3xl text-center">
-          <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">Nosotros</p>
-          <h2 id="nosotros-heading" class="mt-3 font-display text-3xl text-navy md:text-4xl">${teamHeading}</h2>
-          <p class="mt-4 text-base text-muted md:text-lg">${teamLead}</p>
-        </header>
-
-        <ul class="mt-12 grid gap-6 md:grid-cols-3">
-          ${teamGroups
-            .map(
-              (group) => `
-                <li class="flex h-full flex-col rounded-card border border-line bg-bg p-6 shadow-card">
-                  <h3 class="font-display text-lg font-semibold text-navy">${group.title}</h3>
-                  <p class="mt-3 flex-1 text-sm leading-relaxed text-muted">${group.members}</p>
-                  <a class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-navy underline-offset-4 hover:underline" href="mailto:${group.email}">
-                    ${group.email}
-                    <span aria-hidden="true">→</span>
-                  </a>
-                </li>
-              `,
-            )
-            .join("")}
-        </ul>
-
-        <p class="mx-auto mt-10 max-w-3xl text-center text-sm leading-relaxed text-muted md:text-base">${teamFooter}</p>
-
-        <article class="mt-20 grid gap-10 rounded-card border border-line bg-bg px-8 py-12 md:grid-cols-[1.1fr_1fr] md:items-center md:px-12">
+        <article class="grid gap-10 rounded-card border border-line bg-bg px-8 py-12 md:grid-cols-[1.1fr_1fr] md:items-center md:px-12">
           <div>
             <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">${commitment.heading}</p>
             <h3 class="mt-3 font-display text-2xl text-navy md:text-3xl">${commitment.title}</h3>
@@ -60,14 +28,14 @@ export function mountAbout(el: HTMLElement): void {
             <p class="mt-5 text-sm leading-relaxed text-ink md:text-base">${commitment.body}</p>
           </div>
           <div class="overflow-hidden rounded-card ring-1 ring-line">
-            <img src="${commitment.image}" alt="Nuestro compromiso con cada cliente" loading="lazy" decoding="async" class="h-full w-full object-cover" />
+            <img src="${commitment.image}" alt="${commitment.imageAlt}" loading="lazy" decoding="async" class="h-full w-full object-cover" />
           </div>
         </article>
 
         <section class="mt-20" aria-label="Historia y trayectoria">
           <header class="mx-auto max-w-3xl text-center">
-            <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">Trayectoria</p>
-            <h3 class="mt-3 font-display text-2xl text-navy md:text-3xl">Más de 15 años de experiencia notarial</h3>
+            <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">${trajectory.heading}</p>
+            <h3 class="mt-3 font-display text-2xl text-navy md:text-3xl">${trajectory.title}</h3>
           </header>
 
           <ol class="relative mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
