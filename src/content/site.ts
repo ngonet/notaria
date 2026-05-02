@@ -403,7 +403,8 @@ export const site = {
     legalName: "Notaría René A. Martínez Loaiza",
     street: "Avenida Serrano 369, oficina 11",
     city: "Melipilla, Chile",
-    mapsUrl: "https://www.google.com/maps?q=Avenida+Serrano+369,+Melipilla,+Chile",
+    mapsUrl:
+      "https://www.google.com/maps?q=Avenida+Serrano+369,+Melipilla,+Chile",
     phoneDisplay: "(+56 2) 3314 8818",
     phoneE164: "+56233148818",
     email: "notaria.martinez@notariamelipilla.cl",
