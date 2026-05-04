@@ -80,6 +80,7 @@ async function renderCalendar(root: HTMLDivElement): Promise<void> {
               ...(ev.end ? { end: ev.end } : {}),
               allDay: ev.allDay,
               classNames: [`notaria-calendar-event--${ev.kind}`],
+              extendedProps: { kind: ev.kind },
             })),
           );
         } catch (err) {
@@ -92,6 +93,25 @@ async function renderCalendar(root: HTMLDivElement): Promise<void> {
         hour: "2-digit",
         minute: "2-digit",
         hour12: false,
+      },
+      eventContent: (arg) => {
+        const kind = arg.event.extendedProps.kind as string | undefined;
+        const content = document.createElement("span");
+        content.className = "notaria-calendar-event__content";
+
+        const title = document.createElement("span");
+        title.className = "notaria-calendar-event__title";
+        title.textContent = arg.event.title;
+        content.append(title);
+
+        if (kind === "attention" && arg.timeText) {
+          const time = document.createElement("span");
+          time.className = "notaria-calendar-event__time";
+          time.textContent = arg.timeText.replace(" - ", "–");
+          content.append(time);
+        }
+
+        return { domNodes: [content] };
       },
     });
 

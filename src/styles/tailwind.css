@@ -80,7 +80,7 @@
     align-items: flex-start;
     border-radius: 0.45rem;
     margin-top: 0.2rem;
-    padding: 0.15rem 0.35rem;
+    padding: 0.25rem 0.35rem;
     white-space: normal;
   }
 
@@ -100,9 +100,35 @@
     line-height: 1.2;
   }
 
+  .notaria-calendar-event__content {
+    display: grid;
+    gap: 0.05rem;
+    line-height: 1.15;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .notaria-calendar-event__title,
+  .notaria-calendar-event__time {
+    display: block;
+    min-width: 0;
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+
+  .notaria-calendar-event__title {
+    font-weight: 750;
+  }
+
+  .notaria-calendar-event__time {
+    font-size: 0.72rem;
+    font-weight: 650;
+    opacity: 0.86;
+  }
+
   .notaria-calendar-event--attention {
-    background: color-mix(in srgb, var(--color-gold) 20%, white);
-    color: var(--color-navy);
+    background: color-mix(in srgb, var(--color-gold) 24%, white) !important;
+    color: var(--color-navy) !important;
   }
 
   .notaria-calendar-event--attention .fc-daygrid-event-dot {
@@ -110,12 +136,16 @@
   }
 
   .notaria-calendar-event--holiday {
-    background: color-mix(in srgb, #2f855a 18%, white);
-    color: #17422f;
+    background: #2f855a !important;
+    color: white !important;
   }
 
   .notaria-calendar-event--holiday .fc-daygrid-event-dot {
-    border-color: #2f855a;
+    border-color: white;
+  }
+
+  .notaria-calendar-event--holiday .notaria-calendar-event__title {
+    font-size: 0.76rem;
   }
 
   @media (max-width: 640px) {
