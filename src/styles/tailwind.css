@@ -5,7 +5,7 @@
   --color-navy-light: #1a4a7a;
   --color-gold: #c9a65a;
   --color-gold-soft: #d9bd80;
-  --color-gold-light: #d9bd8052;
+  --color-gold-light: #d9bd8040;
   --color-bg: #f8f7f4;
   --color-surface: #ffffff;
   --color-ink: #1a1a1a;
@@ -129,7 +129,7 @@
 
   .notaria-calendar-event--attention {
     --fc-event-text-color: var(--color-navy);
-    background: color-mix(in oklab, var(--color-gold) 15%, transparent);
+    background: var(--color-gold-light) !important;
     color: var(--color-navy) !important;
   }
 
