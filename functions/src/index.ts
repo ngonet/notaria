@@ -7,6 +7,22 @@ setGlobalOptions({ region: 'us-central1', maxInstances: 10 });
 
 const CALENDAR_API_KEY = defineSecret('GOOGLE_CALENDAR_API_KEY');
 const CALENDAR_ID = 'soporte@notariamelipilla.cl';
+const HOLIDAY_CALENDAR_ID = 'es.cl#holiday@group.v.calendar.google.com';
+
+type CalendarSource = 'attention' | 'holiday';
+
+interface GoogleCalendarEvent {
+  id: string;
+  summary?: string;
+  start?: { dateTime?: string; date?: string; timeZone?: string };
+  end?: { dateTime?: string; date?: string; timeZone?: string };
+  calendarSource?: CalendarSource;
+}
+
+interface GoogleCalendarResponse {
+  items?: GoogleCalendarEvent[];
+  error?: unknown;
+}
 
 const ALLOWED_ORIGINS = new Set([
   'https://notariamelipilla.cl',
@@ -19,6 +35,34 @@ const ALLOWED_ORIGINS = new Set([
 
 function isIsoLike(value: string): boolean {
   return /^\d{4}-\d{2}-\d{2}T?[\d:.\-+Z]*$/.test(value) && value.length <= 40;
+}
+
+async function fetchCalendar(
+  calendarId: string,
+  apiKey: string,
+  timeMin: string,
+  timeMax: string,
+  calendarSource: CalendarSource,
+): Promise<{ status: number; body: GoogleCalendarResponse }> {
+  const url = new URL(
+    `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events`,
+  );
+  url.searchParams.set('key', apiKey);
+  url.searchParams.set('timeMin', timeMin);
+  url.searchParams.set('timeMax', timeMax);
+  url.searchParams.set('singleEvents', 'true');
+  url.searchParams.set('orderBy', 'startTime');
+  url.searchParams.set('maxResults', '250');
+
+  const upstream = await fetch(url.toString());
+  const body = (await upstream.json()) as GoogleCalendarResponse;
+  if (upstream.ok) {
+    body.items = (body.items ?? []).map((item) => ({
+      ...item,
+      calendarSource,
+    }));
+  }
+  return { status: upstream.status, body };
 }
 
 export const calendarProxy = onRequest(
@@ -55,21 +99,31 @@ export const calendarProxy = onRequest(
       return;
     }
 
-    const url = new URL(
-      `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events`,
-    );
-    url.searchParams.set('key', apiKey);
-    url.searchParams.set('timeMin', timeMin);
-    url.searchParams.set('timeMax', timeMax);
-    url.searchParams.set('singleEvents', 'true');
-    url.searchParams.set('orderBy', 'startTime');
-    url.searchParams.set('maxResults', '250');
-
     try {
-      const upstream = await fetch(url.toString());
-      const body = await upstream.json();
       res.set('Cache-Control', 'no-store');
-      res.status(upstream.status).json(body);
+      const [attention, holidays] = await Promise.all([
+        fetchCalendar(CALENDAR_ID, apiKey, timeMin, timeMax, 'attention'),
+        fetchCalendar(HOLIDAY_CALENDAR_ID, apiKey, timeMin, timeMax, 'holiday'),
+      ]);
+
+      if (attention.status >= 400) {
+        res.status(attention.status).json(attention.body);
+        return;
+      }
+      if (holidays.status >= 400) {
+        logger.warn('holiday calendar upstream failed', holidays.body);
+      }
+
+      const items = [
+        ...(attention.body.items ?? []),
+        ...(holidays.status < 400 ? (holidays.body.items ?? []) : []),
+      ].sort((a, b) => {
+        const aStart = a.start?.dateTime ?? a.start?.date ?? '';
+        const bStart = b.start?.dateTime ?? b.start?.date ?? '';
+        return aStart.localeCompare(bStart);
+      });
+
+      res.status(200).json({ ...attention.body, items });
     } catch (err) {
       logger.error('calendar upstream failed', err);
       res.status(502).json({ error: 'upstream_failed' });

@@ -4,12 +4,15 @@ export interface CalendarEvent {
   start: string;
   end: string | null;
   allDay: boolean;
+  kind: "attention" | "holiday";
 }
 
 interface GoogleEvent {
   id: string;
+  summary?: string;
   start?: { dateTime?: string; date?: string };
   end?: { dateTime?: string; date?: string };
+  calendarSource?: "attention" | "holiday";
 }
 
 interface GoogleResponse {
@@ -36,12 +39,14 @@ export async function fetchCalendarEvents(
     const startIso = ev.start?.dateTime ?? ev.start?.date ?? "";
     const endIso = ev.end?.dateTime ?? ev.end?.date ?? null;
     const allDay = !ev.start?.dateTime && Boolean(ev.start?.date);
+    const kind = ev.calendarSource ?? "attention";
     return {
       id: ev.id,
-      title: "Horario de atención",
+      title: kind === "holiday" ? (ev.summary ?? "Feriado") : "Atención",
       start: startIso,
       end: endIso,
       allDay,
+      kind,
     };
   });
 }

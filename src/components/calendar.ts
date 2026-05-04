@@ -78,11 +78,19 @@ async function renderCalendar(root: HTMLDivElement): Promise<void> {
               start: ev.start,
               ...(ev.end ? { end: ev.end } : {}),
               allDay: ev.allDay,
+              classNames: [`notaria-calendar-event--${ev.kind}`],
             })),
           );
         } catch (err) {
           failure(err as Error);
         }
+      },
+      eventDisplay: "block",
+      displayEventEnd: true,
+      eventTimeFormat: {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
       },
     });
 

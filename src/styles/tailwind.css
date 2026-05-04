@@ -44,3 +44,99 @@
     outline-offset: 2px;
   }
 }
+
+@layer components {
+  .fc {
+    --fc-border-color: var(--color-line);
+    --fc-button-bg-color: var(--color-navy);
+    --fc-button-border-color: var(--color-navy);
+    --fc-button-hover-bg-color: var(--color-navy-light);
+    --fc-button-hover-border-color: var(--color-navy-light);
+    --fc-button-active-bg-color: var(--color-navy-light);
+    --fc-button-active-border-color: var(--color-navy-light);
+    --fc-event-border-color: transparent;
+    --fc-event-text-color: var(--color-ink);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+  }
+
+  .fc .fc-toolbar-title {
+    color: var(--color-navy);
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 2vw, 1.75rem);
+  }
+
+  .fc .fc-daygrid-day-number,
+  .fc .fc-col-header-cell-cushion {
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+
+  .fc .fc-daygrid-day-frame {
+    min-height: 7.5rem;
+  }
+
+  .fc .fc-daygrid-event {
+    align-items: flex-start;
+    border-radius: 0.45rem;
+    margin-top: 0.2rem;
+    padding: 0.15rem 0.35rem;
+    white-space: normal;
+  }
+
+  .fc .fc-daygrid-event-dot {
+    margin-top: 0.45rem;
+  }
+
+  .fc .fc-event-main,
+  .fc .fc-event-title,
+  .fc .fc-event-time {
+    overflow: visible;
+    white-space: normal;
+  }
+
+  .fc .fc-event-title {
+    font-weight: 650;
+    line-height: 1.2;
+  }
+
+  .notaria-calendar-event--attention {
+    background: color-mix(in srgb, var(--color-gold) 20%, white);
+    color: var(--color-navy);
+  }
+
+  .notaria-calendar-event--attention .fc-daygrid-event-dot {
+    border-color: var(--color-gold);
+  }
+
+  .notaria-calendar-event--holiday {
+    background: color-mix(in srgb, #2f855a 18%, white);
+    color: #17422f;
+  }
+
+  .notaria-calendar-event--holiday .fc-daygrid-event-dot {
+    border-color: #2f855a;
+  }
+
+  @media (max-width: 640px) {
+    .fc .fc-toolbar {
+      align-items: stretch;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .fc .fc-toolbar-chunk {
+      display: flex;
+      justify-content: center;
+    }
+
+    .fc .fc-daygrid-day-frame {
+      min-height: 6rem;
+    }
+
+    .fc .fc-daygrid-event {
+      font-size: 0.68rem;
+      padding-inline: 0.25rem;
+    }
+  }
+}
