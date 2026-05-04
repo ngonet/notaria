@@ -127,7 +127,7 @@
   }
 
   .notaria-calendar-event--attention {
-    background: color-mix(in srgb, var(--color-gold) 24%, white) !important;
+    background: var(--color-gold) !important;
     color: var(--color-navy) !important;
   }
 
@@ -136,7 +136,7 @@
   }
 
   .notaria-calendar-event--holiday {
-    background: #2f855a !important;
+    background: var(--color-navy) !important;
     color: white !important;
   }
 
