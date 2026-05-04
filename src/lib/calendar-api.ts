@@ -1,3 +1,5 @@
+import { site } from "@/content/site";
+
 export interface CalendarEvent {
   id: string;
   title: string;
@@ -42,7 +44,10 @@ export async function fetchCalendarEvents(
     const kind = ev.calendarSource ?? "attention";
     return {
       id: ev.id,
-      title: kind === "holiday" ? (ev.summary ?? "Feriado") : "Atención",
+      title:
+        kind === "holiday"
+          ? (ev.summary ?? site.calendar.eventLabels.holidayFallback)
+          : site.calendar.eventLabels.attention,
       start: startIso,
       end: endIso,
       allDay,

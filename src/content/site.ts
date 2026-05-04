@@ -415,8 +415,20 @@ export const site = {
   } satisfies ContactInfo,
 
   calendar: {
+    eyebrow: "Calendario",
     heading: "Calendario de atención",
     lead: "Días y horarios de atención publicados por la notaría. Disponibilidad actualizada en tiempo real.",
+    loadingLabel: "Cargando calendario…",
+    todayLabel: "Hoy",
+    errorMessage: "No fue posible cargar el calendario. Intente más tarde.",
+    eventLabels: {
+      attention: "Atención",
+      holidayFallback: "Feriado",
+    },
+    reservationNote: {
+      beforePhone: "Horarios sujetos a confirmación. Contáctenos al",
+      afterPhone: "para reservar.",
+    },
   },
 
   footer: {

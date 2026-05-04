@@ -1,13 +1,14 @@
 import { site } from "@/content/site";
 
 export function mountCalendar(el: HTMLElement): void {
-  const { heading, lead } = site.calendar;
+  const { eyebrow, heading, lead, loadingLabel, reservationNote } =
+    site.calendar;
 
   el.innerHTML = `
     <div class="border-t border-line bg-surface">
       <div class="mx-auto max-w-(--container-content) px-6 py-20 md:py-28">
         <header class="mx-auto max-w-3xl text-center">
-          <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">Calendario</p>
+          <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">${eyebrow}</p>
           <h2 id="calendario-heading" class="mt-3 font-display text-3xl text-navy md:text-4xl">${heading}</h2>
           <p class="mt-4 text-base text-muted md:text-lg">${lead}</p>
         </header>
@@ -18,14 +19,14 @@ export function mountCalendar(el: HTMLElement): void {
           aria-busy="true"
         >
           <p class="flex h-72 items-center justify-center text-sm text-muted" data-calendar-loading>
-            Cargando calendario…
+            ${loadingLabel}
           </p>
         </div>
 
         <p class="mt-6 text-center text-xs text-muted">
-          Horarios sujetos a confirmación. Contáctenos al
+          ${reservationNote.beforePhone}
           <a class="font-semibold text-navy hover:underline" href="tel:${site.contact.phoneE164}">${site.contact.phoneDisplay}</a>
-          para reservar.
+          ${reservationNote.afterPhone}
         </p>
       </div>
     </div>
@@ -67,7 +68,7 @@ async function renderCalendar(root: HTMLDivElement): Promise<void> {
       firstDay: 1,
       height: "auto",
       headerToolbar: { left: "prev,next today", center: "title", right: "" },
-      buttonText: { today: "Hoy" },
+      buttonText: { today: site.calendar.todayLabel },
       events: async (info, success, failure) => {
         try {
           const events = await fetchCalendarEvents(info.startStr, info.endStr);
@@ -98,8 +99,7 @@ async function renderCalendar(root: HTMLDivElement): Promise<void> {
   } catch (err) {
     console.error("[notaria] calendar failed to load", err);
     if (loading) {
-      loading.textContent =
-        "No fue posible cargar el calendario. Intente más tarde.";
+      loading.textContent = site.calendar.errorMessage;
     }
     root.removeAttribute("aria-busy");
   }
