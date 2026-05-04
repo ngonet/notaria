@@ -46,7 +46,7 @@ jobs:
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
         run: |
-          npx firebase-tools@13 deploy \
+          npx -y firebase-tools@latest deploy \
             --only hosting,functions \
             --project notaria-melipilla \
             --non-interactive

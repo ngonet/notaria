@@ -8,7 +8,6 @@ export interface CalendarEvent {
 
 interface GoogleEvent {
   id: string;
-  summary?: string;
   start?: { dateTime?: string; date?: string };
   end?: { dateTime?: string; date?: string };
 }
@@ -39,7 +38,7 @@ export async function fetchCalendarEvents(
     const allDay = !ev.start?.dateTime && Boolean(ev.start?.date);
     return {
       id: ev.id,
-      title: ev.summary ?? "Evento",
+      title: "Horario de atención",
       start: startIso,
       end: endIso,
       allDay,

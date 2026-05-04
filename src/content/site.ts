@@ -416,7 +416,7 @@ export const site = {
 
   calendar: {
     heading: "Calendario de atención",
-    lead: "Horarios de atención, reservas y sesiones remotas. Disponibilidad actualizada en tiempo real.",
+    lead: "Días y horarios de atención publicados por la notaría. Disponibilidad actualizada en tiempo real.",
   },
 
   footer: {
