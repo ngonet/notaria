@@ -68,7 +68,7 @@ export const calendarProxy = onRequest(
     try {
       const upstream = await fetch(url.toString());
       const body = await upstream.json();
-      res.set('Cache-Control', 'public, max-age=300, s-maxage=600');
+      res.set('Cache-Control', 'no-store');
       res.status(upstream.status).json(body);
     } catch (err) {
       logger.error('calendar upstream failed', err);
