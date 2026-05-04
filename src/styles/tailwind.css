@@ -129,7 +129,7 @@
 
   .notaria-calendar-event--attention {
     --fc-event-text-color: var(--color-navy);
-    background: var(--color-gold-light) !important;
+    background: color-mix(in oklab, var(--color-gold) 15%, transparent);
     color: var(--color-navy) !important;
   }
 
