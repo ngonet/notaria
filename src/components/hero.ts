@@ -28,7 +28,7 @@ export function mountHero(el: HTMLElement): void {
                 </div>
                 <div class="relative mx-auto aspect-[4/3] w-full max-w-xl overflow-hidden rounded-card shadow-2xl ring-1 ring-white/10">
                   <picture>
-                    <source srcset="${slide.image.replace(/\.(jpg|png)$/, '.webp')}" type="image/webp" />
+                    <source srcset="${slide.image.replace(/\.(jpg|png)$/, ".webp")}" type="image/webp" />
                     <img
                       src="${slide.image}"
                       alt="${slide.alt}"

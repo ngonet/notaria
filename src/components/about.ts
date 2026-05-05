@@ -30,7 +30,7 @@ export function mountAbout(el: HTMLElement): void {
           </div>
           <div class="overflow-hidden rounded-card ring-1 ring-line">
             <picture>
-              <source srcset="${commitment.image.replace(/\.(jpg|png)$/, '.webp')}" type="image/webp" />
+              <source srcset="${commitment.image.replace(/\.(jpg|png)$/, ".webp")}" type="image/webp" />
               <img src="${commitment.image}" alt="${commitment.imageAlt}" loading="lazy" decoding="async" width="400" height="400" class="h-full w-full object-cover" />
             </picture>
           </div>
