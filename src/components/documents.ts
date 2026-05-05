@@ -16,12 +16,13 @@ function svg(name: keyof typeof ICONS): string {
 }
 
 export function mountDocuments(el: HTMLElement): void {
-  const { heading, lead, downloads, fojas } = site.documents;
+  const { eyebrow, heading, lead, downloads, downloadCtaLabel, fojas } =
+    site.documents;
 
   el.innerHTML = `
     <div class="mx-auto max-w-(--container-content) px-6 py-20 md:py-28">
       <header class="mx-auto max-w-3xl text-center">
-        <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">Documentos</p>
+        <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">${eyebrow}</p>
         <h2 id="documentos-heading" class="mt-3 font-display text-3xl text-navy md:text-4xl">${heading}</h2>
         <p class="mt-4 text-base text-muted md:text-lg">${lead}</p>
       </header>
@@ -40,7 +41,7 @@ export function mountDocuments(el: HTMLElement): void {
                   rel="noopener noreferrer"
                   class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-navy underline-offset-4 hover:underline"
                 >
-                  Descargar PDF
+                  ${downloadCtaLabel}
                   <span aria-hidden="true">↗</span>
                 </a>
               </li>
@@ -51,7 +52,7 @@ export function mountDocuments(el: HTMLElement): void {
 
       <article class="mt-16 grid gap-10 rounded-card border border-line bg-surface px-8 py-12 shadow-card md:grid-cols-[1.2fr_1fr] md:items-center md:px-12">
         <div>
-          <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">Portal Fojas</p>
+          <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">${fojas.eyebrow}</p>
           <h3 class="mt-3 font-display text-2xl text-navy md:text-3xl">${fojas.heading}</h3>
           <p class="mt-4 text-sm leading-relaxed text-muted md:text-base">${fojas.body}</p>
           <a
@@ -60,14 +61,14 @@ export function mountDocuments(el: HTMLElement): void {
             rel="noopener noreferrer"
             class="mt-6 inline-flex items-center gap-2 rounded-md bg-navy px-5 py-3 text-sm font-semibold text-white transition hover:bg-navy-light"
           >
-            Ir a Fojas.cl
+            ${fojas.ctaLabel}
             <span aria-hidden="true">↗</span>
           </a>
         </div>
         <div class="flex items-center justify-center">
           <picture>
             <source srcset="${fojas.logo.replace(/\.(jpg|png)$/, ".webp")}" type="image/webp" />
-            <img src="${fojas.logo}" alt="Logo Fojas.cl" loading="lazy" decoding="async" width="200" height="128" class="max-h-32 w-auto" />
+            <img src="${fojas.logo}" alt="${fojas.logoAlt}" loading="lazy" decoding="async" width="200" height="128" class="max-h-32 w-auto" />
           </picture>
         </div>
       </article>

@@ -3,7 +3,13 @@ import { site } from "@/content/site";
 const AUTOPLAY_MS = 7000;
 
 export function mountHero(el: HTMLElement): void {
-  const slides = site.hero.slides;
+  const {
+    slides,
+    ctaPrimaryLabel,
+    ctaSecondaryLabel,
+    carouselAriaLabel,
+    slideAriaLabelPrefix,
+  } = site.hero;
 
   el.innerHTML = `
     <section class="relative isolate overflow-hidden bg-navy text-white">
@@ -22,8 +28,8 @@ export function mountHero(el: HTMLElement): void {
                   <p class="mt-6 text-lg text-white/85 md:text-xl">${slide.subtitle}</p>
                   <p class="mt-3 text-base text-white/65">${slide.caption}</p>
                   <div class="mt-8 flex flex-wrap gap-3">
-                    <a href="#servicios" class="inline-flex items-center gap-2 rounded-md bg-gold px-5 py-3 font-semibold text-navy transition hover:bg-gold-soft">Ver servicios</a>
-                    <a href="#contacto" class="inline-flex items-center gap-2 rounded-md border border-white/30 px-5 py-3 font-semibold text-white transition hover:border-white hover:bg-white/10">Contactar</a>
+                    <a href="#servicios" class="inline-flex items-center gap-2 rounded-md bg-gold px-5 py-3 font-semibold text-navy transition hover:bg-gold-soft">${ctaPrimaryLabel}</a>
+                    <a href="#contacto" class="inline-flex items-center gap-2 rounded-md border border-white/30 px-5 py-3 font-semibold text-white transition hover:border-white hover:bg-white/10">${ctaSecondaryLabel}</a>
                   </div>
                 </div>
                 <div class="relative mx-auto aspect-[4/3] w-full max-w-xl overflow-hidden rounded-card shadow-2xl ring-1 ring-white/10">
@@ -47,7 +53,7 @@ export function mountHero(el: HTMLElement): void {
           .join("")}
       </div>
 
-      <div class="absolute inset-x-0 bottom-6 flex items-center justify-center gap-3 md:bottom-10" role="tablist" aria-label="Carrusel de presentación">
+      <div class="absolute inset-x-0 bottom-6 flex items-center justify-center gap-3 md:bottom-10" role="tablist" aria-label="${carouselAriaLabel}">
         ${slides
           .map(
             (_, index) => `
@@ -55,7 +61,7 @@ export function mountHero(el: HTMLElement): void {
                 type="button"
                 role="tab"
                 aria-selected="${index === 0}"
-                aria-label="Ir al slide ${index + 1}"
+                aria-label="${slideAriaLabelPrefix} ${index + 1}"
                 class="h-2.5 w-8 rounded-full transition ${index === 0 ? "bg-gold" : "bg-white/30 hover:bg-white/60"}"
                 data-hero-dot
                 data-index="${index}"

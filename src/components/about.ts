@@ -36,7 +36,7 @@ export function mountAbout(el: HTMLElement): void {
           </div>
         </article>
 
-        <section class="mt-20" aria-label="Historia y trayectoria">
+        <section class="mt-20" aria-label="${trajectory.ariaLabel}">
           <header class="mx-auto max-w-3xl text-center">
             <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">${trajectory.heading}</p>
             <h3 class="mt-3 font-display text-2xl text-navy md:text-3xl">${trajectory.title}</h3>

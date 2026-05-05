@@ -80,6 +80,10 @@ export const site = {
   ] satisfies NavLink[],
 
   hero: {
+    ctaPrimaryLabel: "Ver servicios",
+    ctaSecondaryLabel: "Contactar",
+    carouselAriaLabel: "Carrusel de presentación",
+    slideAriaLabelPrefix: "Ir al slide",
     slides: [
       {
         title: "Notaría de Melipilla",
@@ -315,6 +319,7 @@ export const site = {
     trajectory: {
       heading: "Trayectoria",
       title: "Más de 15 años de experiencia notarial",
+      ariaLabel: "Historia y trayectoria",
     },
 
     timeline: [
@@ -358,6 +363,8 @@ export const site = {
   },
 
   documents: {
+    eyebrow: "Documentos",
+    downloadCtaLabel: "Descargar PDF",
     heading: "Documentos online e información",
     lead: "Descargue, complete y reúna los documentos necesarios para su trámite. Todo documento debe ser firmado por el usuario ante el notario.",
     downloads: [
@@ -392,8 +399,11 @@ export const site = {
     ] satisfies DocumentDownload[],
 
     fojas: {
+      eyebrow: "Portal Fojas",
       heading: "Copias digitales online",
       body: "Obtenga una copia digital de sus documentos tramitados en nuestra notaría a través del Portal Fojas.cl. Seleccione “Notaría René Alejandro Martínez Loaiza” e ingrese su número de certificado.",
+      ctaLabel: "Ir a Fojas.cl",
+      logoAlt: "Logo Fojas.cl",
       href: "https://www.fojas.cl",
       logo: "/images/fojas2.png",
     },
