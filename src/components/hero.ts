@@ -27,15 +27,18 @@ export function mountHero(el: HTMLElement): void {
                   </div>
                 </div>
                 <div class="relative mx-auto aspect-[4/3] w-full max-w-xl overflow-hidden rounded-card shadow-2xl ring-1 ring-white/10">
-                  <img
-                    src="${slide.image}"
-                    alt="${slide.alt}"
-                    loading="${index === 0 ? "eager" : "lazy"}"
-                    decoding="async"
-                    width="800"
-                    height="600"
-                    class="h-full w-full object-cover"
-                  />
+                  <picture>
+                    <source srcset="${slide.image.replace(/\.(jpg|png)$/, '.webp')}" type="image/webp" />
+                    <img
+                      src="${slide.image}"
+                      alt="${slide.alt}"
+                      loading="${index === 0 ? "eager" : "lazy"}"
+                      decoding="async"
+                      width="800"
+                      height="600"
+                      class="h-full w-full object-cover"
+                    />
+                  </picture>
                   <div class="absolute inset-0 bg-gradient-to-tr from-navy/40 via-transparent to-transparent"></div>
                 </div>
               </article>
