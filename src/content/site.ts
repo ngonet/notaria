@@ -218,7 +218,7 @@ export const site = {
         title: "Escrituras públicas",
         note: "Arancel notarial actualizado a diciembre de 2023. Se aplica recargo de 1‰ sobre el monto del acto o contrato (límite $319.232.000).",
         source: {
-          href: "https://www.bcn.cl/leychile/navegar?idNorma=129528",
+          href: "https://www.bcn.cl/leychile/navegar?idNorma=127917",
           label: "Decreto Exento N° 587",
         },
         items: [
@@ -243,7 +243,7 @@ export const site = {
         title: "Instrumentos privados",
         note: "Arancel notarial actualizado a diciembre de 2023.",
         source: {
-          href: "https://www.bcn.cl/leychile/navegar?idNorma=129528",
+          href: "https://www.bcn.cl/leychile/navegar?idNorma=127917",
           label: "Decreto Exento N° 587",
         },
         items: [
