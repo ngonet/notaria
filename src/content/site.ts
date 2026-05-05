@@ -201,8 +201,12 @@ export const site = {
   },
 
   aranceles: {
+    eyebrow: "Tarifas",
     heading: "Aranceles",
     lead: "Valores vigentes para los principales servicios notariales.",
+    serviceHeader: "Servicio",
+    amountHeader: "Monto",
+    sourcePrefix: "Fuente oficial:",
     disclaimer:
       "Aranceles referenciales. Escrituras públicas e instrumentos privados actualizados a diciembre de 2023. Valores del Registro de Bienes Raíces y Comercio actualizados a abril de 2023. Fuentes normativas: Decreto Exento N° 587 y Decreto Exento N° 588 del Ministerio de Justicia.",
     document: {

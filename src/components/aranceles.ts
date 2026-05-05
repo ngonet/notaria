@@ -1,12 +1,22 @@
 import { site } from "@/content/site";
 
 export function renderAranceles(): string {
-  const { heading, lead, areas, disclaimer, document } = site.aranceles;
+  const {
+    eyebrow,
+    heading,
+    lead,
+    serviceHeader,
+    amountHeader,
+    sourcePrefix,
+    areas,
+    disclaimer,
+    document,
+  } = site.aranceles;
 
   return `
     <section id="aranceles" class="scroll-mt-24" aria-labelledby="aranceles-heading">
       <header class="mx-auto max-w-3xl text-center">
-        <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">Tarifas</p>
+        <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">${eyebrow}</p>
         <h3 id="aranceles-heading" class="mt-3 font-display text-2xl text-navy md:text-3xl">${heading}</h3>
         <p class="mt-4 text-base text-muted md:text-lg">${lead}</p>
       </header>
@@ -21,15 +31,15 @@ export function renderAranceles(): string {
                   ${area.note ? `<p class="mt-1 text-xs text-muted">${area.note}</p>` : ""}
                   ${
                     area.source
-                      ? `<a class="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-navy underline-offset-4 hover:underline" href="${area.source.href}" target="_blank" rel="noopener noreferrer">Fuente oficial: ${area.source.label}<span aria-hidden="true">↗</span></a>`
+                      ? `<a class="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-navy underline-offset-4 hover:underline" href="${area.source.href}" target="_blank" rel="noopener noreferrer">${sourcePrefix} ${area.source.label}<span aria-hidden="true">↗</span></a>`
                       : ""
                   }
                 </div>
                 <table class="w-full text-sm">
                   <thead class="sr-only">
                     <tr>
-                      <th scope="col">Servicio</th>
-                      <th scope="col">Monto</th>
+                      <th scope="col">${serviceHeader}</th>
+                      <th scope="col">${amountHeader}</th>
                     </tr>
                   </thead>
                   <tbody>
