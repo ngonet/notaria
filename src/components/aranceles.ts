@@ -1,7 +1,7 @@
 import { site } from "@/content/site";
 
 export function renderAranceles(): string {
-  const { heading, lead, areas, disclaimer } = site.aranceles;
+  const { heading, lead, areas, disclaimer, document } = site.aranceles;
 
   return `
     <section id="aranceles" class="scroll-mt-24" aria-labelledby="aranceles-heading">
@@ -19,6 +19,11 @@ export function renderAranceles(): string {
                 <div class="px-6 py-5 border-b border-line">
                   <h4 class="font-display text-lg font-semibold text-navy capitalize">${area.title}</h4>
                   ${area.note ? `<p class="mt-1 text-xs text-muted">${area.note}</p>` : ""}
+                  ${
+                    area.source
+                      ? `<a class="mt-2 inline-flex items-center gap-1 text-xs font-semibold text-navy underline-offset-4 hover:underline" href="${area.source.href}" target="_blank" rel="noopener noreferrer">Fuente oficial: ${area.source.label}<span aria-hidden="true">↗</span></a>`
+                      : ""
+                  }
                 </div>
                 <table class="w-full text-sm">
                   <thead class="sr-only">
@@ -46,7 +51,13 @@ export function renderAranceles(): string {
           .join("")}
       </div>
 
-      <p class="mx-auto mt-10 max-w-3xl text-center text-xs leading-relaxed text-muted">${disclaimer}</p>
+      <div class="mx-auto mt-10 max-w-3xl text-center">
+        <p class="text-xs leading-relaxed text-muted">${disclaimer}</p>
+        <a class="mt-4 inline-flex items-center gap-2 rounded-md border border-line bg-surface px-4 py-2 text-xs font-semibold text-navy shadow-card transition hover:border-gold/60" href="${document.href}" target="_blank" rel="noopener noreferrer">
+          ${document.label}
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
     </section>
   `;
 }

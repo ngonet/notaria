@@ -37,6 +37,12 @@ export interface ArancelArea {
   title: string;
   items: ArancelItem[];
   note?: string;
+  source?: { href: string; label: string };
+}
+
+export interface ArancelDocument {
+  href: string;
+  label: string;
 }
 
 export interface TimelineEntry {
@@ -198,11 +204,19 @@ export const site = {
     heading: "Aranceles",
     lead: "Valores vigentes para los principales servicios notariales.",
     disclaimer:
-      "Aranceles referenciales. Escrituras públicas e instrumentos privados actualizados a diciembre de 2023. Valores del Registro de Bienes Raíces y Comercio corresponden al Decreto 588 de 1998, sujetos a reajuste.",
+      "Aranceles referenciales. Escrituras públicas e instrumentos privados actualizados a diciembre de 2023. Valores del Registro de Bienes Raíces y Comercio actualizados a abril de 2023. Fuentes normativas: Decreto Exento N° 587 y Decreto Exento N° 588 del Ministerio de Justicia.",
+    document: {
+      href: "/docs/arancel-notarios-actualizado-diciembre-2023.pdf",
+      label: "Ver respaldo de arancel notarial actualizado a diciembre de 2023",
+    } satisfies ArancelDocument,
     areas: [
       {
         title: "Escrituras públicas",
         note: "Arancel notarial actualizado a diciembre de 2023. Se aplica recargo de 1‰ sobre el monto del acto o contrato (límite $319.232.000).",
+        source: {
+          href: "https://www.bcn.cl/leychile/navegar?idNorma=129528",
+          label: "Decreto Exento N° 587",
+        },
         items: [
           { service: "Otorgamiento de escritura pública", amount: "$6.235" },
           {
@@ -224,6 +238,10 @@ export const site = {
       {
         title: "Instrumentos privados",
         note: "Arancel notarial actualizado a diciembre de 2023.",
+        source: {
+          href: "https://www.bcn.cl/leychile/navegar?idNorma=129528",
+          label: "Decreto Exento N° 587",
+        },
         items: [
           {
             service: "Autorización de firma (cuantía hasta $50.000)",
@@ -235,7 +253,7 @@ export const site = {
           },
           {
             service: "Autorización de firma sin apreciación pecuniaria",
-            amount: "$1.195",
+            amount: "$1.995",
           },
           {
             service: "Certificado de supervivencia o de estado civil",
@@ -248,7 +266,7 @@ export const site = {
           {
             service:
               "Carta de poder (para cobro de beneficios sociales: exento)",
-            amount: "$1.195",
+            amount: "$0",
           },
           { service: "Declaración con una o más firmas", amount: "$1.247" },
           {
@@ -264,42 +282,46 @@ export const site = {
       },
       {
         title: "Registro de bienes raíces y comercio",
-        note: "Valores base según Decreto 588 de 1998. Sujetos a reajuste legal.",
+        note: "Arancel de conservadores actualizado a abril de 2023. Valores sujetos a reajuste legal.",
+        source: {
+          href: "https://bcn.cl/3los9",
+          label: "Decreto Exento N° 588",
+        },
         items: [
           {
             service:
               "Inscripción (incluye anotación, citas y certificación en el título)",
-            amount: "$2.000",
+            amount: "$4.902",
           },
           {
             service:
               "Inscripción sin cuantía (prohibiciones, embargos, reglamentos de copropiedad)",
-            amount: "$3.500",
+            amount: "$8.579",
           },
-          { service: "Subinscripción o anotación", amount: "$1.500" },
+          { service: "Subinscripción o anotación", amount: "$3.677" },
           {
             service: "Certificado de inscripción o subinscripción",
-            amount: "$1.500",
+            amount: "$3.677",
           },
           {
             service:
               "Certificado de gravámenes o prohibiciones (hasta 10 años)",
-            amount: "$1.500",
+            amount: "$3.677",
           },
           {
             service:
               "Certificado de gravámenes o prohibiciones (más de 10 años)",
-            amount: "$2.500",
+            amount: "$6.128",
           },
-          { service: "Inscripción de testamento", amount: "$2.500" },
-          { service: "Inscripción especial de herencia", amount: "$2.000" },
+          { service: "Inscripción de testamento", amount: "$6.128" },
+          { service: "Inscripción especial de herencia", amount: "$4.902" },
           {
             service: "Protocolización, agregación o archivo de documentos",
-            amount: "$2.000",
+            amount: "$4.902",
           },
           {
             service: "Autorización de la matriz, copias y certificaciones",
-            amount: "$500",
+            amount: "$1.226",
           },
         ],
       },
