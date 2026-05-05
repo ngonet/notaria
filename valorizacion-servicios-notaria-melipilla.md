@@ -24,6 +24,7 @@ Se desarrolló y modernizó una landing page institucional para la Notaría de M
 - Integración con calendario mediante una capa intermedia de consumo API.
 - Publicación sobre infraestructura Firebase.
 - Implementación con comportamiento PWA (Progressive Web App): posibilidad de instalación desde navegador, iconografía de aplicación y experiencia similar a una app en dispositivos compatibles.
+- Estructura semántica y de contenido compatible con funciones de accesibilidad y lectura en voz alta disponibles en navegadores móviles compatibles.
 - Enfoque en rendimiento, orden estructural y estándar técnico moderno.
 
 ## Detalle de actividades valorizadas
