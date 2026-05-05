@@ -27,20 +27,9 @@ export interface FuncionariosGroup {
   members: string[];
 }
 
-export interface ArancelItem {
-  service: string;
-  amount: string;
-  note?: string;
-}
-
-export interface ArancelArea {
-  title: string;
-  items: ArancelItem[];
-  note?: string;
-  source?: { href: string; label: string };
-}
-
 export interface ArancelDocument {
+  title: string;
+  description: string;
   href: string;
   label: string;
 }
@@ -203,133 +192,32 @@ export const site = {
   aranceles: {
     eyebrow: "Tarifas",
     heading: "Aranceles",
-    lead: "Valores vigentes para los principales servicios notariales.",
-    serviceHeader: "Servicio",
-    amountHeader: "Monto",
-    sourcePrefix: "Fuente oficial:",
+    lead: "Consulte y descargue los documentos oficiales de aranceles disponibles.",
     disclaimer:
-      "Aranceles referenciales. Escrituras públicas e instrumentos privados actualizados a diciembre de 2023. Valores del Registro de Bienes Raíces y Comercio actualizados a abril de 2023. Fuentes normativas: Decreto Exento N° 587 y Decreto Exento N° 588 del Ministerio de Justicia.",
-    document: {
-      href: "/docs/arancel-notarios-actualizado-diciembre-2023.pdf",
-      label: "Ver respaldo de arancel notarial actualizado a diciembre de 2023",
-    } satisfies ArancelDocument,
-    areas: [
+      "Los aranceles publicados corresponden a los documentos oficiales disponibles en PDF.",
+    documents: [
       {
-        title: "Escrituras públicas",
-        note: "Arancel notarial actualizado a diciembre de 2023. Se aplica recargo de 1‰ sobre el monto del acto o contrato (límite $319.232.000).",
-        source: {
-          href: "https://www.bcn.cl/leychile/navegar?idNorma=127917",
-          label: "Decreto Exento N° 587",
-        },
-        items: [
-          { service: "Otorgamiento de escritura pública", amount: "$6.235" },
-          {
-            service:
-              "Escritura sin apreciación pecuniaria (mandatos, reglamentos de copropiedad, prohibiciones)",
-            amount: "$6.235",
-          },
-          { service: "Diligencia anexa a escritura", amount: "$3.741" },
-          { service: "Otorgamiento de testamento abierto", amount: "$18.705" },
-          { service: "Otorgamiento de testamento cerrado", amount: "$24.940" },
-          { service: "Protocolización de instrumento", amount: "$4.988" },
-          { service: "Autorización de copia", amount: "$1.247" },
-          {
-            service: "Por cada página de escritura matriz o carilla de copia",
-            amount: "$748",
-          },
-        ],
+        title: "Arancel notarial actualizado a diciembre de 2023",
+        description:
+          "Documento con los valores actualizados de precios notariales, publicado como referencia principal para consulta del público.",
+        href: "/docs/arancel-notarios-actualizado-diciembre-2023.pdf",
+        label: "Ver PDF de precios actualizados",
       },
       {
-        title: "Instrumentos privados",
-        note: "Arancel notarial actualizado a diciembre de 2023.",
-        source: {
-          href: "https://www.bcn.cl/leychile/navegar?idNorma=127917",
-          label: "Decreto Exento N° 587",
-        },
-        items: [
-          {
-            service: "Autorización de firma (cuantía hasta $50.000)",
-            amount: "$1.247",
-          },
-          {
-            service: "Autorización de firma (cuantía sobre $500.000)",
-            amount: "$7.482",
-          },
-          {
-            service: "Autorización de firma sin apreciación pecuniaria",
-            amount: "$1.995",
-          },
-          {
-            service: "Certificado de supervivencia o de estado civil",
-            amount: "$624",
-          },
-          {
-            service: "Autorización para salir del país (con tres copias)",
-            amount: "$3.741",
-          },
-          {
-            service:
-              "Carta de poder (para cobro de beneficios sociales: exento)",
-            amount: "$0",
-          },
-          { service: "Declaración con una o más firmas", amount: "$1.247" },
-          {
-            service: "Compraventa de cosas muebles (más 1‰ sobre el monto)",
-            amount: "$6.235",
-          },
-          { service: "Certificación de documentos", amount: "$1.247" },
-          {
-            service: "Protesto de letras (sobre $5.000.000)",
-            amount: "$14.964",
-          },
-        ],
+        title: "Decreto Exento N° 587",
+        description:
+          "Texto del decreto exento que regula el arancel de notarios y sirve como respaldo normativo del arancel publicado.",
+        href: "/docs/decreto-exento-587.pdf",
+        label: "Ver PDF del Decreto Exento N° 587",
       },
       {
-        title: "Registro de bienes raíces y comercio",
-        note: "Arancel de conservadores actualizado a abril de 2023. Valores sujetos a reajuste legal.",
-        source: {
-          href: "https://bcn.cl/3los9",
-          label: "Decreto Exento N° 588",
-        },
-        items: [
-          {
-            service:
-              "Inscripción (incluye anotación, citas y certificación en el título)",
-            amount: "$4.902",
-          },
-          {
-            service:
-              "Inscripción sin cuantía (prohibiciones, embargos, reglamentos de copropiedad)",
-            amount: "$8.579",
-          },
-          { service: "Subinscripción o anotación", amount: "$3.677" },
-          {
-            service: "Certificado de inscripción o subinscripción",
-            amount: "$3.677",
-          },
-          {
-            service:
-              "Certificado de gravámenes o prohibiciones (hasta 10 años)",
-            amount: "$3.677",
-          },
-          {
-            service:
-              "Certificado de gravámenes o prohibiciones (más de 10 años)",
-            amount: "$6.128",
-          },
-          { service: "Inscripción de testamento", amount: "$6.128" },
-          { service: "Inscripción especial de herencia", amount: "$4.902" },
-          {
-            service: "Protocolización, agregación o archivo de documentos",
-            amount: "$4.902",
-          },
-          {
-            service: "Autorización de la matriz, copias y certificaciones",
-            amount: "$1.226",
-          },
-        ],
+        title: "Decreto Exento N° 588",
+        description:
+          "Texto del decreto exento aplicable al arancel de conservadores, disponible como respaldo documental complementario.",
+        href: "/docs/decreto-exento-588.pdf",
+        label: "Ver PDF del Decreto Exento N° 588",
       },
-    ] satisfies ArancelArea[],
+    ] satisfies ArancelDocument[],
   },
 
   about: {
