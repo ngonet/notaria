@@ -65,7 +65,7 @@ export function mountDocuments(el: HTMLElement): void {
           </a>
         </div>
         <div class="flex items-center justify-center">
-          <img src="${fojas.logo}" alt="Logo Fojas.cl" loading="lazy" decoding="async" class="max-h-32 w-auto" />
+          <img src="${fojas.logo}" alt="Logo Fojas.cl" loading="lazy" decoding="async" width="200" height="128" class="max-h-32 w-auto" />
         </div>
       </article>
     </div>

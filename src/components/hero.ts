@@ -32,6 +32,8 @@ export function mountHero(el: HTMLElement): void {
                     alt="${slide.alt}"
                     loading="${index === 0 ? "eager" : "lazy"}"
                     decoding="async"
+                    width="800"
+                    height="600"
                     class="h-full w-full object-cover"
                   />
                   <div class="absolute inset-0 bg-gradient-to-tr from-navy/40 via-transparent to-transparent"></div>

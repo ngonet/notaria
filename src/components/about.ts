@@ -29,7 +29,7 @@ export function mountAbout(el: HTMLElement): void {
             <p class="mt-5 text-sm leading-relaxed text-ink md:text-base">${commitment.body}</p>
           </div>
           <div class="overflow-hidden rounded-card ring-1 ring-line">
-            <img src="${commitment.image}" alt="${commitment.imageAlt}" loading="lazy" decoding="async" class="h-full w-full object-cover" />
+            <img src="${commitment.image}" alt="${commitment.imageAlt}" loading="lazy" decoding="async" width="400" height="400" class="h-full w-full object-cover" />
           </div>
         </article>
 
