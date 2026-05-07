@@ -68,6 +68,9 @@ node_modules/
 # dataconnect generated files
 .dataconnect
 
+# Vite build output
+dist/
+
 # AI/Agent configs
 .agents/
 .claude/
