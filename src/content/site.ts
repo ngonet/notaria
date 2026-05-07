@@ -365,7 +365,7 @@ export const site = {
     email: "notaria.martinez@notariamelipilla.cl",
     schedule: {
       weekdays: "Lunes a viernes · 09:00 a 17:00",
-      saturdays: "Sábados · 09:45 a 12:45",
+      saturdays: "Sábados · 09:30 a 12:45",
     },
   } satisfies ContactInfo,
 
