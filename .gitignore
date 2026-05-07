@@ -74,6 +74,7 @@ dist/
 # AI/Agent configs
 .agents/
 .claude/
+.claudeignore
 .gga
 .atl/
 
