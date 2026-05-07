@@ -9,7 +9,7 @@ export function mountContact(el: HTMLElement): void {
         <header class="mx-auto max-w-3xl text-center">
           <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">Contacto</p>
           <h2 id="contacto-heading" class="mt-3 font-display text-3xl text-navy md:text-4xl">Visítenos o escríbanos</h2>
-          <p class="mt-4 text-base text-muted md:text-lg">${c.legalName}, en pleno centro de ${c.city}.</p>
+          <p class="mt-4 text-base text-muted md:text-lg">${c.legalName}, en pleno centro de ${c.city}, al costado del mall Melipilla.</p>
         </header>
 
         <div class="mt-12 grid gap-6 lg:grid-cols-3">

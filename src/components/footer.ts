@@ -37,7 +37,10 @@ export function mountFooter(el: HTMLElement): void {
       </div>
 
       <div class="border-t border-white/10">
-        <p class="mx-auto max-w-(--container-content) px-6 py-6 text-center text-xs text-white/60">${site.footer.copyright}</p>
+        <div class="mx-auto flex max-w-(--container-content) flex-col items-center gap-2 px-6 py-6 text-center text-xs text-white/60 sm:flex-row sm:justify-between">
+          <p>${site.footer.copyright}</p>
+          <a class="hover:text-white/80 underline underline-offset-2" href="${site.footer.transparency.href}" target="_blank" rel="noopener noreferrer">${site.footer.transparency.label} ↗</a>
+        </div>
       </div>
     </footer>
   `;
