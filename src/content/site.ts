@@ -61,6 +61,21 @@ export interface ContactInfo {
   schedule: { weekdays: string; saturdays: string };
 }
 
+export interface ContactFormContent {
+  heading: string;
+  lead: string;
+  nameLabel: string;
+  emailLabel: string;
+  phoneLabel: string;
+  phoneNote: string;
+  subjectLabel: string;
+  messageLabel: string;
+  submitLabel: string;
+  sendingLabel: string;
+  successMessage: string;
+  errorMessage: string;
+}
+
 export const site = {
   brand: "Notaría Martínez",
   tagline: "Notario y Conservador de Comercio de Melipilla",
@@ -322,6 +337,22 @@ export const site = {
       logo: "/images/fojas2.png",
     },
   },
+
+  contactForm: {
+    heading: "Envíenos un mensaje",
+    lead: "Complete el formulario y nos pondremos en contacto a la brevedad.",
+    nameLabel: "Nombre completo",
+    emailLabel: "Correo electrónico",
+    phoneLabel: "Teléfono",
+    phoneNote: "(opcional)",
+    subjectLabel: "Asunto",
+    messageLabel: "Mensaje",
+    submitLabel: "Enviar mensaje",
+    sendingLabel: "Enviando…",
+    successMessage: "Mensaje enviado. Nos pondremos en contacto a la brevedad.",
+    errorMessage:
+      "No fue posible enviar el mensaje. Intente nuevamente o contáctenos por teléfono.",
+  } satisfies ContactFormContent,
 
   contact: {
     legalName: "Notaría René A. Martínez Loaiza",

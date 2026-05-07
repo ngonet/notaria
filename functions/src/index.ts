@@ -2,10 +2,23 @@ import { onRequest } from 'firebase-functions/v2/https';
 import { defineSecret } from 'firebase-functions/params';
 import { setGlobalOptions } from 'firebase-functions/v2';
 import { logger } from 'firebase-functions/v2';
+import * as nodemailer from 'nodemailer';
 
 setGlobalOptions({ region: 'us-central1', maxInstances: 10 });
 
 const CALENDAR_API_KEY = defineSecret('GOOGLE_CALENDAR_API_KEY');
+const GMAIL_USER = defineSecret('GMAIL_USER');
+const GMAIL_APP_PASSWORD = defineSecret('GMAIL_APP_PASSWORD');
+
+const CONTACT_TO = 'instrumentosprivados@notariamelipilla.cl';
+
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
 const CALENDAR_ID = 'soporte@notariamelipilla.cl';
 const HOLIDAY_CALENDAR_ID = 'es.cl#holiday@group.v.calendar.google.com';
 
@@ -127,6 +140,90 @@ export const calendarProxy = onRequest(
     } catch (err) {
       logger.error('calendar upstream failed', err);
       res.status(502).json({ error: 'upstream_failed' });
+    }
+  },
+);
+
+interface ContactBody {
+  name?: unknown;
+  email?: unknown;
+  phone?: unknown;
+  subject?: unknown;
+  message?: unknown;
+}
+
+export const contactForm = onRequest(
+  { secrets: [GMAIL_USER, GMAIL_APP_PASSWORD], memory: '256MiB', cors: false },
+  async (req, res) => {
+    const origin = req.get('origin') ?? '';
+    if (ALLOWED_ORIGINS.has(origin)) {
+      res.set('Access-Control-Allow-Origin', origin);
+      res.set('Vary', 'Origin');
+    }
+    res.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.set('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') {
+      res.status(204).send('');
+      return;
+    }
+    if (req.method !== 'POST') {
+      res.status(405).json({ error: 'method_not_allowed' });
+      return;
+    }
+
+    const body = req.body as ContactBody;
+    const name = typeof body.name === 'string' ? body.name.trim().slice(0, 200) : '';
+    const email = typeof body.email === 'string' ? body.email.trim().slice(0, 200) : '';
+    const phone = typeof body.phone === 'string' ? body.phone.trim().slice(0, 50) : '';
+    const subject = typeof body.subject === 'string' ? body.subject.trim().slice(0, 300) : '';
+    const message = typeof body.message === 'string' ? body.message.trim().slice(0, 2000) : '';
+
+    if (!name || !email || !subject || !message) {
+      res.status(400).json({ error: 'missing_fields' });
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      res.status(400).json({ error: 'invalid_email' });
+      return;
+    }
+
+    const gmailUser = GMAIL_USER.value();
+    const gmailPass = GMAIL_APP_PASSWORD.value();
+    if (!gmailUser || !gmailPass) {
+      logger.error('Gmail secrets missing');
+      res.status(500).json({ error: 'missing_credentials' });
+      return;
+    }
+
+    const html = [
+      `<p><strong>Nombre:</strong> ${escapeHtml(name)}</p>`,
+      `<p><strong>Correo:</strong> ${escapeHtml(email)}</p>`,
+      phone ? `<p><strong>Teléfono:</strong> ${escapeHtml(phone)}</p>` : '',
+      `<p><strong>Asunto:</strong> ${escapeHtml(subject)}</p>`,
+      `<p><strong>Mensaje:</strong></p><p>${escapeHtml(message).replace(/\n/g, '<br>')}</p>`,
+    ]
+      .filter(Boolean)
+      .join('\n');
+
+    try {
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: { user: gmailUser, pass: gmailPass },
+      });
+
+      await transporter.sendMail({
+        from: `Formulario Web Notaría <${gmailUser}>`,
+        to: CONTACT_TO,
+        replyTo: email,
+        subject: `Formulario de contacto: ${subject}`,
+        html,
+      });
+
+      res.status(200).json({ success: true });
+    } catch (err) {
+      logger.error('Gmail send failed', err);
+      res.status(502).json({ error: 'email_send_failed' });
     }
   },
 );

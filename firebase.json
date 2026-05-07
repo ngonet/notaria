@@ -11,6 +11,13 @@
         }
       },
       {
+        "source": "/api/contact",
+        "function": {
+          "functionId": "contactForm",
+          "region": "us-central1"
+        }
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
