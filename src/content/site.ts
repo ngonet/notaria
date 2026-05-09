@@ -295,7 +295,7 @@ export const site = {
     eyebrow: "Documentos",
     downloadCtaLabel: "Hacer una copia",
     heading: "Documentos online e información",
-    lead: "Descargue, complete y reúna los documentos necesarios para su trámite. Todo documento debe ser firmado por el usuario ante el notario.",
+    lead: "Haz clic en el documento que necesitas, crea tu copia y complétalo con tus datos e imprímelo. Todo documento debe ser firmado por el interesado ante el notario.",
     downloads: [
       {
         title: "Autorización trabajo menor de edad",
