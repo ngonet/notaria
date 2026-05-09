@@ -5,6 +5,7 @@ const ICONS: Record<string, string> = {
   plane: `<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>`,
   bolt: `<path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/>`,
   bookmark: `<path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16Z"/>`,
+  scroll: `<path d="M8 21h12a2 2 0 0 0 2-2v-2H10v2a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v3h4"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/>`,
 };
 
 function svg(name: keyof typeof ICONS): string {
@@ -27,7 +28,7 @@ export function mountDocuments(el: HTMLElement): void {
         <p class="mt-4 text-base text-muted md:text-lg">${lead}</p>
       </header>
 
-      <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         ${downloads
           .map(
             (doc) => `

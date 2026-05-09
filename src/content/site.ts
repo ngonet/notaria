@@ -47,7 +47,7 @@ export interface DocumentDownload {
   title: string;
   description: string;
   href: string;
-  icon: "check" | "plane" | "bolt" | "bookmark";
+  icon: "check" | "plane" | "bolt" | "bookmark" | "scroll";
 }
 
 export interface ContactInfo {
@@ -293,7 +293,7 @@ export const site = {
 
   documents: {
     eyebrow: "Documentos",
-    downloadCtaLabel: "Descargar PDF",
+    downloadCtaLabel: "Hacer una copia",
     heading: "Documentos online e información",
     lead: "Descargue, complete y reúna los documentos necesarios para su trámite. Todo documento debe ser firmado por el usuario ante el notario.",
     downloads: [
@@ -301,29 +301,36 @@ export const site = {
         title: "Autorización trabajo menor de edad",
         description:
           "La concurrencia personal del interesado, con cédula de identidad o pasaporte vigente, es requisito esencial para autorizar instrumentos en este oficio.",
-        href: "https://drive.google.com/file/d/1zHkTW4IGhXv1g_QAF6TV1FCUZOg2V8hY/view?usp=sharing",
+        href: "https://docs.google.com/document/d/11oc45ydx-j5emTHNzaKVxnGQmHXjjqd6XcBbJ5walAU/copy",
         icon: "check",
       },
       {
         title: "Autorización viaje menor de edad",
         description:
           "Solicitud notarial necesaria para que un menor de edad pueda viajar dentro o fuera del país sin la compañía de sus padres.",
-        href: "https://drive.google.com/file/d/1B20NJEUlOpcY78UPdZsbyqlR0mVjMF3X/view?usp=sharing",
+        href: "https://docs.google.com/document/d/1q3KVDIg7ZuCue7a930jeLbJvyFOH4kwskrG017TMKZg/copy",
         icon: "plane",
       },
       {
         title: "Carta de poder",
         description:
           "Instrumento que faculta a una persona para actuar en nombre de otra en trámites y gestiones específicas.",
-        href: "https://drive.google.com/file/d/1r2LZRZliZu5_J6QJGfhmIo_xD51n8RYT/view?usp=sharing",
+        href: "https://docs.google.com/document/d/1o1IS8FolssJEalAruYsqcxWQO4ux4dd-8a5CnXuW0qA/copy",
         icon: "bolt",
       },
       {
         title: "Declaración jurada",
         description:
           "Documento en el que el otorgante declara, bajo juramento, hechos que pueden ser usados como prueba legal.",
-        href: "https://drive.google.com/file/d/1t9u9l6xLt071G6NiQrwO2SZdAMyfh2qt/view?usp=sharing",
+        href: "https://docs.google.com/document/d/1anHy5zPvectHTBeR5zkSHO2dZW245La5VusLeuvKygc/copy",
         icon: "bookmark",
+      },
+      {
+        title: "Declaración Ley de Alcoholes",
+        description:
+          "Declaración requerida para actos relacionados con establecimientos de expendio de bebidas alcohólicas. Complete el documento antes de acudir al oficio.",
+        href: "https://docs.google.com/document/d/154XCd61Sj3VuHRkhLtmemJj7FmgVAZUD5IoolbAHaBQ/copy",
+        icon: "scroll",
       },
     ] satisfies DocumentDownload[],
 
