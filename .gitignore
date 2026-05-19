@@ -77,6 +77,10 @@ dist/
 .claudeignore
 .gga
 .atl/
+.pi/
+.pi-lens/
+**/.pi/
+**/.pi-lens/
 
 # Functions build output
 functions/lib/
