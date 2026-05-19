@@ -3,9 +3,9 @@ import { site } from "@/content/site";
 const SALARY_MODAL_ID = "funcionarios-salary-modal";
 
 export function renderFuncionarios(): string {
-	const { eyebrow, heading, lead, groups, salaryModal } = site.funcionarios;
+  const { eyebrow, heading, lead, groups, salaryModal } = site.funcionarios;
 
-	return `
+  return `
     <section id="funcionarios" class="scroll-mt-24" aria-labelledby="funcionarios-heading">
       <header class="mx-auto max-w-3xl text-center">
         <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">${eyebrow}</p>
@@ -15,26 +15,26 @@ export function renderFuncionarios(): string {
 
       <ul class="mt-12 grid gap-6 md:grid-cols-3">
         ${groups
-					.map(
-						(group) => `
+          .map(
+            (group) => `
               <li class="flex h-full flex-col rounded-card border border-line bg-bg p-6 shadow-card">
                 <h4 class="font-display text-base font-semibold text-navy">${group.title}</h4>
                 <ul class="mt-4 flex-1 space-y-2">
                   ${group.members
-										.map(
-											(name) => `
+                    .map(
+                      (name) => `
                         <li class="flex items-start gap-2 text-sm text-muted">
                           <span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-gold" aria-hidden="true"></span>
                           ${name}
                         </li>
                       `,
-										)
-										.join("")}
+                    )
+                    .join("")}
                 </ul>
               </li>
             `,
-					)
-					.join("")}
+          )
+          .join("")}
       </ul>
 
       <div class="mt-10 flex justify-center">
@@ -66,15 +66,15 @@ export function renderFuncionarios(): string {
               </thead>
               <tbody>
                 ${salaryModal.rows
-									.map(
-										(row) => `
+                  .map(
+                    (row) => `
                       <tr class="border-b border-line/70 last:border-b-0">
                         <td class="px-2 py-3 font-medium text-ink">${row.rut}</td>
                         <td class="px-2 py-3 font-semibold text-navy">${row.baseSalary}</td>
                       </tr>
                     `,
-									)
-									.join("")}
+                  )
+                  .join("")}
               </tbody>
             </table>
           </div>
@@ -85,42 +85,42 @@ export function renderFuncionarios(): string {
 }
 
 export function setupFuncionariosModal(root: ParentNode): void {
-	const modal = root.querySelector<HTMLElement>("[data-funcionarios-modal]");
-	if (!modal) return;
+  const modal = root.querySelector<HTMLElement>("[data-funcionarios-modal]");
+  if (!modal) return;
 
-	const openButtons = root.querySelectorAll<HTMLButtonElement>(
-		"[data-funcionarios-modal-open]",
-	);
-	const closeButtons = modal.querySelectorAll<HTMLButtonElement>(
-		"[data-funcionarios-modal-close], [data-funcionarios-modal-overlay]",
-	);
+  const openButtons = root.querySelectorAll<HTMLButtonElement>(
+    "[data-funcionarios-modal-open]",
+  );
+  const closeButtons = modal.querySelectorAll<HTMLButtonElement>(
+    "[data-funcionarios-modal-close], [data-funcionarios-modal-overlay]",
+  );
 
-	const openModal = (): void => {
-		modal.classList.remove("hidden");
-		modal.setAttribute("aria-hidden", "false");
-		document.body.classList.add("overflow-hidden");
-	};
+  const openModal = (): void => {
+    modal.classList.remove("hidden");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("overflow-hidden");
+  };
 
-	const closeModal = (): void => {
-		modal.classList.add("hidden");
-		modal.setAttribute("aria-hidden", "true");
-		document.body.classList.remove("overflow-hidden");
-	};
+  const closeModal = (): void => {
+    modal.classList.add("hidden");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("overflow-hidden");
+  };
 
-	openButtons.forEach((button) => {
-		button.addEventListener("click", openModal);
-	});
+  openButtons.forEach((button) => {
+    button.addEventListener("click", openModal);
+  });
 
-	closeButtons.forEach((button) => {
-		button.addEventListener("click", closeModal);
-	});
+  closeButtons.forEach((button) => {
+    button.addEventListener("click", closeModal);
+  });
 
-	document.addEventListener("keydown", (event) => {
-		if (
-			event.key === "Escape" &&
-			modal.getAttribute("aria-hidden") === "false"
-		) {
-			closeModal();
-		}
-	});
+  document.addEventListener("keydown", (event) => {
+    if (
+      event.key === "Escape" &&
+      modal.getAttribute("aria-hidden") === "false"
+    ) {
+      closeModal();
+    }
+  });
 }
