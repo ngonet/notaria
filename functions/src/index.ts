@@ -10,7 +10,7 @@ const CALENDAR_API_KEY = defineSecret("GOOGLE_CALENDAR_API_KEY");
 const GMAIL_USER = defineSecret("GMAIL_USER");
 const GMAIL_APP_PASSWORD = defineSecret("GMAIL_APP_PASSWORD");
 
-const CONTACT_TO = "notaria.martinez@notariamelipilla.cl";
+const CONTACT_TO = "notaria.martinez@gmail.com";
 
 function escapeHtml(s: string): string {
 	return s
@@ -219,10 +219,14 @@ export const contactForm = onRequest(
 				auth: { user: gmailUser, pass: gmailPass },
 			});
 
+			const safeReplyName = name.replace(/["<>]/g, "").trim();
+			const replyTo = safeReplyName ? `${safeReplyName} <${email}>` : email;
+
 			await transporter.sendMail({
 				from: `Formulario Web Notaría <${gmailUser}>`,
 				to: CONTACT_TO,
-				replyTo: email,
+				replyTo,
+				headers: { "Reply-To": replyTo },
 				subject: `Formulario de contacto: ${subject}`,
 				html,
 			});
