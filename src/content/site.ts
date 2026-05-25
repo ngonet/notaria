@@ -413,6 +413,13 @@ export const site = {
           href: "/docs/visitas/visita-notaria-martinez-2025-6to-bimestre.pdf",
           label: "Ver PDF 6° bimestre",
         },
+        {
+          title: "Balance general AT 2026",
+          description:
+            "Balance general anual de Notaría Martínez, disponible para consulta pública.",
+          href: "/docs/balance-general-notaria-at-2026.pdf",
+          label: "Ver balance general",
+        },
       ] satisfies VisitDocument[],
     },
 
