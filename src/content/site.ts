@@ -66,6 +66,13 @@ export interface DocumentDownload {
   icon: "check" | "plane" | "bolt" | "bookmark" | "scroll";
 }
 
+export interface VisitDocument {
+  title: string;
+  description: string;
+  href: string;
+  label: string;
+}
+
 export interface ContactInfo {
   legalName: string;
   street: string;
@@ -379,6 +386,35 @@ export const site = {
         icon: "scroll",
       },
     ] satisfies DocumentDownload[],
+
+    visitas: {
+      eyebrow: "Fiscalización",
+      heading: "Visitas notariales",
+      lead: "Auditorías de rutina o extraordinarias destinadas a fiscalizar el correcto funcionamiento de la notaría, revisar protocolos y libros de registros, y resguardar los estándares de fe pública.",
+      documents: [
+        {
+          title: "Visita 2025 · 4° bimestre",
+          description:
+            "Acta de visita correspondiente al cuarto bimestre de 2025 para Notaría Martínez y Conservador de Comercio.",
+          href: "/docs/visitas/visita-notaria-martinez-2025-4to-bimestre.pdf",
+          label: "Ver PDF 4° bimestre",
+        },
+        {
+          title: "Visita 2025 · 5° bimestre",
+          description:
+            "Acta de visita correspondiente al quinto bimestre de 2025 para Notaría Martínez y Conservador de Comercio.",
+          href: "/docs/visitas/visita-notaria-martinez-2025-5to-bimestre.pdf",
+          label: "Ver PDF 5° bimestre",
+        },
+        {
+          title: "Visita 2025 · 6° bimestre",
+          description:
+            "Acta de visita correspondiente al sexto bimestre de 2025 para Notaría Martínez y Conservador de Comercio.",
+          href: "/docs/visitas/visita-notaria-martinez-2025-6to-bimestre.pdf",
+          label: "Ver PDF 6° bimestre",
+        },
+      ] satisfies VisitDocument[],
+    },
 
     fojas: {
       eyebrow: "Portal Fojas",
