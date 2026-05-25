@@ -479,7 +479,7 @@ export const site = {
     copyright: `Copyright © ${new Date().getFullYear()} Notaría Martínez · Todos los derechos reservados.`,
     transparency: {
       label: "Declaración de patrimonio e intereses",
-      href: "https://www.infoprobidad.cl/Declaracion/Declaracion?ID=5100712",
+      href: "https://www.infoprobidad.cl/Declaracion/Declaracion?ID=5114744",
     },
   },
 } as const;
