@@ -21,7 +21,13 @@ export function mountAbout(el: HTMLElement): void {
   el.innerHTML = `
     <div class="border-y border-line bg-surface">
       <div class="mx-auto max-w-(--container-content) px-6 py-20 md:py-28">
-        <article class="grid gap-10 rounded-card border border-line bg-bg px-8 py-12 md:grid-cols-[1.1fr_1fr] md:items-center md:px-12">
+        <header class="mx-auto max-w-3xl text-center">
+          <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">Nosotros</p>
+          <h2 id="nosotros-heading" class="mt-3 font-display text-3xl text-navy md:text-4xl">Quiénes somos</h2>
+          <p class="mt-4 text-base text-muted md:text-lg">Conocé nuestra trayectoria, nuestro equipo y el compromiso que nos define.</p>
+        </header>
+
+        <article class="mt-16 grid gap-10 rounded-card border border-line bg-bg px-8 py-12 md:grid-cols-[1.1fr_1fr] md:items-center md:px-12">
           <div>
             <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">${commitment.heading}</p>
             <h3 class="mt-3 font-display text-2xl text-navy md:text-3xl">${commitment.title}</h3>

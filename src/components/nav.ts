@@ -2,7 +2,7 @@ import { site } from "@/content/site";
 
 export function mountNav(el: HTMLElement): void {
   el.innerHTML = `
-    <nav class="sticky top-0 z-40 border-b border-line/70 bg-surface/85 backdrop-blur supports-[backdrop-filter]:bg-surface/70">
+    <nav class="border-b border-line/70 bg-surface/85 backdrop-blur supports-[backdrop-filter]:bg-surface/70">
       <div class="mx-auto flex max-w-(--container-content) items-center justify-between gap-6 px-6 py-4">
         <a href="#page-top" class="flex items-baseline gap-2 text-navy">
           <span class="font-display text-xl font-semibold tracking-tight">${site.brand}</span>
