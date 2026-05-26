@@ -16,15 +16,15 @@ function timelineIcon(name: keyof typeof ICONS): string {
 }
 
 export function mountAbout(el: HTMLElement): void {
-  const { commitment, trajectory, timeline } = site.about;
+  const { section, commitment, trajectory, timeline } = site.about;
 
   el.innerHTML = `
     <div class="border-y border-line bg-surface">
       <div class="mx-auto max-w-(--container-content) px-6 py-20 md:py-28">
         <header class="mx-auto max-w-3xl text-center">
-          <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">Nosotros</p>
-          <h2 id="nosotros-heading" class="mt-3 font-display text-3xl text-navy md:text-4xl">Quiénes somos</h2>
-          <p class="mt-4 text-base text-muted md:text-lg">Conocé nuestra trayectoria, nuestro equipo y el compromiso que nos define.</p>
+          <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">${section.eyebrow}</p>
+          <h2 id="nosotros-heading" class="mt-3 font-display text-3xl text-navy md:text-4xl">${section.heading}</h2>
+          <p class="mt-4 text-base text-muted md:text-lg">${section.lead}</p>
         </header>
 
         <article class="mt-16 grid gap-10 rounded-card border border-line bg-bg px-8 py-12 md:grid-cols-[1.1fr_1fr] md:items-center md:px-12">

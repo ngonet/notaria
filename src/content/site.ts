@@ -289,6 +289,11 @@ export const site = {
   },
 
   about: {
+    section: {
+      eyebrow: "Nosotros",
+      heading: "Quiénes somos",
+      lead: "Conocé nuestra trayectoria, nuestro equipo y el compromiso que nos define.",
+    },
     commitment: {
       heading: "Nuestro compromiso",
       lead: "En Notaría Melipilla sabemos que lo más importante son nuestros clientes.",
