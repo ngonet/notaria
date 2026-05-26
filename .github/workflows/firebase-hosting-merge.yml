@@ -49,4 +49,5 @@ jobs:
           npx -y firebase-tools@latest deploy \
             --only hosting,functions \
             --project notaria-melipilla \
-            --non-interactive
+            --non-interactive \
+            --force
