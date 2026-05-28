@@ -17,9 +17,16 @@ export interface ServiceCard {
 }
 
 export interface FeatureBlock {
-  icon: "newspaper" | "file" | "users" | "eraser";
+  icon: "newspaper" | "file" | "users" | "eraser" | "stamp";
   title: string;
   description: string;
+  requiredDocuments?: string[];
+  email?: { address: string; subject: string; label: string };
+}
+
+export interface FeatureGroup {
+  eyebrow: string;
+  items: FeatureBlock[];
 }
 
 export interface FuncionariosGroup {
@@ -181,32 +188,54 @@ export const site = {
       },
     },
 
-    secondary: [
-      {
-        icon: "newspaper",
-        title: "Escrituras públicas",
-        description:
-          "Instrumento público otorgado con las solemnidades que fija la ley, por el competente notario, e incorporado en su protocolo o registro público.",
+    secondary: {
+      instrumentos: {
+        eyebrow: "Instrumentos notariales",
+        items: [
+          {
+            icon: "newspaper",
+            title: "Escrituras públicas",
+            description:
+              "Instrumento público otorgado con las solemnidades que fija la ley, por el competente notario, e incorporado en su protocolo o registro público.",
+          },
+          {
+            icon: "file",
+            title: "Documentos privados",
+            description:
+              "Instrumentos privados que las partes otorgantes suscriben en el oficio y retiran para los fines que han sido otorgados.",
+          },
+        ],
       },
-      {
-        icon: "file",
-        title: "Documentos privados",
-        description:
-          "Instrumentos privados que las partes otorgantes suscriben en el oficio y retiran para los fines que han sido otorgados.",
+      conservador: {
+        eyebrow: "Conservador de Comercio",
+        items: [
+          {
+            icon: "users",
+            title: "Constitución de sociedad",
+            description:
+              "Inscribimos su sociedad en el Registro de Comercio de Melipilla una vez emitido el extracto de la escritura de constitución.",
+          },
+          {
+            icon: "eraser",
+            title: "Modificaciones",
+            description:
+              "Cambios en el objeto social, capital, socios o representante legal, y rectificación de información societaria.",
+          },
+          {
+            icon: "stamp",
+            title: "Inscripción de comercio",
+            description:
+              "Tramitamos la inscripción de actos societarios en el Registro de Comercio. Envíe los documentos requeridos al correo del Conservador.",
+            requiredDocuments: ["Extracto", "Escritura Pública"],
+            email: {
+              address: "conservadordecomercio@notariamelipilla.cl",
+              subject: "Solicitud de inscripción de comercio",
+              label: "Enviar solicitud por correo",
+            },
+          },
+        ],
       },
-      {
-        icon: "users",
-        title: "Constitución de sociedad",
-        description:
-          "Permite inscribirse en el Registro de Comercio del Conservador de Melipilla una vez emitido el extracto de la escritura de constitución.",
-      },
-      {
-        icon: "eraser",
-        title: "Modificaciones",
-        description:
-          "Modificación del objeto social, ingreso o retiro de socios, cambio del representante legal, modificación del capital y rectificación de información.",
-      },
-    ] satisfies FeatureBlock[],
+    } satisfies Record<"instrumentos" | "conservador", FeatureGroup>,
   },
 
   funcionarios: {

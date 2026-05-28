@@ -1,4 +1,4 @@
-import { site } from "@/content/site";
+import { site, type FeatureBlock, type FeatureGroup } from "@/content/site";
 import { renderAranceles } from "./aranceles";
 
 const ICONS: Record<string, string> = {
@@ -6,6 +6,7 @@ const ICONS: Record<string, string> = {
   file: `<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/>`,
   users: `<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>`,
   eraser: `<path d="m17 14 3-3-7-7-9 9 4 4h6"/><path d="M14 21h7"/><path d="m9 11 4 4"/>`,
+  stamp: `<path d="M5 22h14"/><path d="M19.27 13.73A2.5 2.5 0 0 0 17.5 13h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-1.5c0-.66-.26-1.3-.73-1.77Z"/><path d="M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-3-3c-1.66 0-3 1-3 3s1 1 1 3.5V13"/>`,
 };
 
 function svg(name: keyof typeof ICONS): string {
@@ -13,6 +14,63 @@ function svg(name: keyof typeof ICONS): string {
     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       ${ICONS[name] ?? ""}
     </svg>
+  `;
+}
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function renderFeatureCard(item: FeatureBlock): string {
+  const documents = item.requiredDocuments?.length
+    ? `
+        <ul class="mt-4 space-y-1.5 text-sm text-muted">
+          ${item.requiredDocuments
+            .map(
+              (doc) => `
+                <li class="flex items-start gap-2">
+                  <span class="mt-2 inline-block h-1 w-1 flex-none rounded-full bg-gold" aria-hidden="true"></span>
+                  <span>${doc}</span>
+                </li>
+              `,
+            )
+            .join("")}
+        </ul>
+      `
+    : "";
+
+  const emailCta = item.email
+    ? `
+        <a class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-navy underline-offset-4 hover:underline" href="mailto:${escapeHtml(item.email.address)}?subject=${encodeURIComponent(item.email.subject)}">
+          ${item.email.label} ↗
+        </a>
+      `
+    : "";
+
+  return `
+    <li class="flex h-full flex-col rounded-card border border-line bg-surface p-6 shadow-card">
+      <div class="flex h-12 w-12 items-center justify-center rounded-full bg-gold/15 text-navy">${svg(item.icon)}</div>
+      <h3 class="mt-5 font-display text-lg font-semibold text-navy">${item.title}</h3>
+      <p class="mt-3 text-sm leading-relaxed text-muted">${item.description}</p>
+      ${documents}
+      <div class="mt-auto">${emailCta}</div>
+    </li>
+  `;
+}
+
+function renderFeatureGroup(group: FeatureGroup, gridClasses: string): string {
+  return `
+    <div>
+      <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">${group.eyebrow}</p>
+      <ul class="mt-6 grid gap-6 ${gridClasses}">
+        ${group.items.map(renderFeatureCard).join("")}
+      </ul>
+    </div>
   `;
 }
 
@@ -83,19 +141,10 @@ export function mountServices(el: HTMLElement): void {
         </div>
       </article>
 
-      <ul class="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        ${secondary
-          .map(
-            (item) => `
-              <li class="rounded-card border border-line bg-surface p-6 shadow-card">
-                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-gold/15 text-navy">${svg(item.icon)}</div>
-                <h3 class="mt-5 font-display text-lg font-semibold text-navy">${item.title}</h3>
-                <p class="mt-3 text-sm leading-relaxed text-muted">${item.description}</p>
-              </li>
-            `,
-          )
-          .join("")}
-      </ul>
+      <div class="mt-16 space-y-12">
+        ${renderFeatureGroup(secondary.instrumentos, "md:grid-cols-2")}
+        ${renderFeatureGroup(secondary.conservador, "md:grid-cols-2 lg:grid-cols-3")}
+      </div>
 
       <div class="mt-20 md:mt-24 border-t border-line/60 pt-16 md:pt-20">
         ${renderAranceles()}
