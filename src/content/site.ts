@@ -146,6 +146,9 @@ export const site = {
   },
 
   services: {
+    eyebrow: "Servicios",
+    heading: "Trámites notariales con respaldo y experiencia",
+    lead: "Atención personalizada en escrituras públicas, instrumentos privados y trámites del Conservador de Comercio.",
     primary: [
       {
         title: "Contratos",
@@ -170,8 +173,10 @@ export const site = {
     ] satisfies ServiceCard[],
 
     notary: {
+      label: "Notario titular",
       name: "René A. Martínez Loaiza",
       role: "Notario y Conservador de Comercio",
+      substituteLabel: "Notarios suplentes",
       substituteNotaries: [
         "Jose Mellado Ramirez",
         "Juan Pablo Cerda Torrejón",
@@ -185,6 +190,7 @@ export const site = {
       decree: {
         text: "Nombramiento del Ministerio de Justicia según decreto N° 118 con fecha 22 de febrero de 2012",
         href: "http://transparencia.minjusticia.gob.cl/justicia/2012/efectos_terceros/archivos/Dto.%20118-%202012.pdf",
+        label: "Ver decreto",
       },
     },
 
@@ -213,25 +219,19 @@ export const site = {
             icon: "users",
             title: "Constitución de sociedad",
             description:
-              "Inscribimos su sociedad en el Registro de Comercio de Melipilla una vez emitido el extracto de la escritura de constitución.",
+              "Inscribimos su sociedad en el Registro de Comercio de Melipilla una vez emitido el extracto de la escritura de constitución. Envíe los documentos requeridos al correo conservadordecomercio@notariamelipilla.cl",
+            requiredDocuments: ["Extracto", "Escritura Pública"],
+            email: {
+              address: "conservadordecomercio@notariamelipilla.cl",
+              subject: "Solicitud de constitución de sociedad",
+              label: "Enviar solicitud por correo",
+            },
           },
           {
             icon: "eraser",
             title: "Modificaciones",
             description:
               "Cambios en el objeto social, capital, socios o representante legal, y rectificación de información societaria.",
-          },
-          {
-            icon: "stamp",
-            title: "Inscripción de comercio",
-            description:
-              "Tramitamos la inscripción de actos societarios en el Registro de Comercio. Envíe los documentos requeridos al correo del Conservador.",
-            requiredDocuments: ["Extracto", "Escritura Pública"],
-            email: {
-              address: "conservadordecomercio@notariamelipilla.cl",
-              subject: "Solicitud de inscripción de comercio",
-              label: "Enviar solicitud por correo",
-            },
           },
         ],
       },
