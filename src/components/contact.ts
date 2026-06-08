@@ -12,8 +12,8 @@ export function mountContact(el: HTMLElement): void {
     <div class="border-t border-line bg-bg">
       <div class="mx-auto max-w-(--container-content) px-6 py-20 md:py-28">
         <header class="mx-auto max-w-3xl text-center">
-          <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">Contacto</p>
-          <h2 id="contacto-heading" class="mt-3 font-display text-3xl text-navy md:text-4xl">Visítenos o escríbanos</h2>
+          <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">Reclamos</p>
+          <h2 id="contacto-heading" class="mt-3 font-display text-3xl text-navy md:text-4xl">Ingrese un reclamo o visítenos</h2>
           <p class="mt-4 text-base text-muted md:text-lg">${c.legalName}, en pleno centro de ${c.city}, al costado del mall Melipilla.</p>
         </header>
 
@@ -76,8 +76,11 @@ export function mountContact(el: HTMLElement): void {
                 <input id="cf-phone" name="phone" type="tel" autocomplete="tel" class="${INPUT_CLASS}" />
               </div>
               <div>
-                <label for="cf-subject" class="${LABEL_CLASS}">${cf.subjectLabel}</label>
-                <input id="cf-subject" name="subject" type="text" required class="${INPUT_CLASS}" />
+                <label for="cf-subject" class="${LABEL_CLASS}">${cf.claimTypeLabel}</label>
+                <select id="cf-subject" name="subject" required class="${INPUT_CLASS}">
+                  <option value="">— Seleccione —</option>
+                  ${cf.claimTypes.map(t => `<option value="${t}">${t}</option>`).join("")}
+                </select>
               </div>
             </div>
             <div class="mt-4">

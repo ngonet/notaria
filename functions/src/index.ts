@@ -207,8 +207,8 @@ export const contactForm = onRequest(
 			`<p><strong>Nombre:</strong> ${escapeHtml(name)}</p>`,
 			`<p><strong>Correo:</strong> ${escapeHtml(email)}</p>`,
 			phone ? `<p><strong>Teléfono:</strong> ${escapeHtml(phone)}</p>` : "",
-			`<p><strong>Asunto:</strong> ${escapeHtml(subject)}</p>`,
-			`<p><strong>Mensaje:</strong></p><p>${escapeHtml(message).replace(/\n/g, "<br>")}</p>`,
+			`<p><strong>Tipo de reclamo:</strong> ${escapeHtml(subject)}</p>`,
+			`<p><strong>Descripción:</strong></p><p>${escapeHtml(message).replace(/\n/g, "<br>")}</p>`,
 		]
 			.filter(Boolean)
 			.join("\n");
@@ -227,7 +227,7 @@ export const contactForm = onRequest(
 				to: CONTACT_TO,
 				replyTo,
 				headers: { "Reply-To": replyTo },
-				subject: `Formulario de contacto: ${subject}`,
+				subject: `Reclamo: ${subject}`,
 				html,
 			});
 
