@@ -116,7 +116,7 @@ export const site = {
     { href: "#servicios", label: "Servicios" },
     { href: "#nosotros", label: "Nosotros" },
     { href: "#documentos", label: "Documentos" },
-    { href: "#contacto", label: "Reclamos" },
+    { href: "#contacto", label: "Contactos" },
     { href: "#calendario", label: "Calendario" },
   ] satisfies NavLink[],
 

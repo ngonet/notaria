@@ -12,8 +12,8 @@ export function mountContact(el: HTMLElement): void {
     <div class="border-t border-line bg-bg">
       <div class="mx-auto max-w-(--container-content) px-6 py-20 md:py-28">
         <header class="mx-auto max-w-3xl text-center">
-          <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">Reclamos</p>
-          <h2 id="contacto-heading" class="mt-3 font-display text-3xl text-navy md:text-4xl">Ingrese un reclamo o visítenos</h2>
+          <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">Contactos</p>
+          <h2 id="contacto-heading" class="mt-3 font-display text-3xl text-navy md:text-4xl">Atendemos sus sugerencias o reclamos</h2>
           <p class="mt-4 text-base text-muted md:text-lg">${c.legalName}, en pleno centro de ${c.city}, al costado del mall Melipilla.</p>
         </header>
 
