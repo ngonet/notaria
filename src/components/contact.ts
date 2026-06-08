@@ -79,7 +79,7 @@ export function mountContact(el: HTMLElement): void {
                 <label for="cf-subject" class="${LABEL_CLASS}">${cf.claimTypeLabel}</label>
                 <select id="cf-subject" name="subject" required class="${INPUT_CLASS}">
                   <option value="">— Seleccione —</option>
-                  ${cf.claimTypes.map(t => `<option value="${t}">${t}</option>`).join("")}
+                  ${cf.claimTypes.map((t) => `<option value="${t}">${t}</option>`).join("")}
                 </select>
               </div>
             </div>
