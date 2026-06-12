@@ -455,6 +455,13 @@ export const site = {
           href: "/docs/balance-general-notaria-at-2025.pdf",
           label: "Ver balance general",
         },
+        {
+          title: "Índice Registro de Comercio 2024",
+          description:
+            "Índice anual del Registro de Comercio de Melipilla correspondiente a 2024, con las inscripciones de constituciones, modificaciones y actas.",
+          href: "/docs/comercio/ind-com-2024.pdf",
+          label: "Ver índice 2024",
+        },
       ] satisfies VisitDocument[],
     },
 
