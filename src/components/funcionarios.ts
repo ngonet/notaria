@@ -90,6 +90,8 @@ export function setupFuncionariosModal(root: ParentNode): void {
   const modal = root.querySelector<HTMLElement>("[data-funcionarios-modal]");
   if (!modal) return;
 
+  const dialog = modal.querySelector<HTMLElement>('[role="dialog"]');
+
   const openButtons = root.querySelectorAll<HTMLButtonElement>(
     "[data-funcionarios-modal-open]",
   );
@@ -97,16 +99,62 @@ export function setupFuncionariosModal(root: ParentNode): void {
     "[data-funcionarios-modal-close], [data-funcionarios-modal-overlay]",
   );
 
+  let previouslyFocused: HTMLElement | null = null;
+
+  function getFocusable(): HTMLElement[] {
+    if (!dialog) return [];
+    return Array.from(
+      dialog.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
+      ),
+    ).filter((el) => !el.hasAttribute("disabled"));
+  }
+
+  const handleKeydown = (event: KeyboardEvent): void => {
+    if (event.key === "Escape") {
+      closeModal();
+      return;
+    }
+    if (event.key === "Tab") {
+      const focusable = getFocusable();
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey) {
+        if (document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    }
+  };
+
   const openModal = (): void => {
+    previouslyFocused = document.activeElement as HTMLElement | null;
     modal.classList.remove("hidden");
     modal.setAttribute("aria-hidden", "false");
     document.body.classList.add("overflow-hidden");
+    document.addEventListener("keydown", handleKeydown);
+    const focusable = getFocusable();
+    if (focusable.length > 0) {
+      focusable[0].focus();
+    }
   };
 
   const closeModal = (): void => {
     modal.classList.add("hidden");
     modal.setAttribute("aria-hidden", "true");
     document.body.classList.remove("overflow-hidden");
+    document.removeEventListener("keydown", handleKeydown);
+    if (previouslyFocused) {
+      previouslyFocused.focus();
+      previouslyFocused = null;
+    }
   };
 
   openButtons.forEach((button) => {
@@ -115,14 +163,5 @@ export function setupFuncionariosModal(root: ParentNode): void {
 
   closeButtons.forEach((button) => {
     button.addEventListener("click", closeModal);
-  });
-
-  document.addEventListener("keydown", (event) => {
-    if (
-      event.key === "Escape" &&
-      modal.getAttribute("aria-hidden") === "false"
-    ) {
-      closeModal();
-    }
   });
 }
