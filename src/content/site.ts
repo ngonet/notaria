@@ -462,6 +462,13 @@ export const site = {
           href: "/docs/comercio/ind-com-2024.pdf",
           label: "Ver índice 2024",
         },
+        {
+          title: "Índice Registro de Comercio 2025",
+          description:
+            "Índice anual del Registro de Comercio de Melipilla correspondiente a 2025, con las inscripciones de constituciones, modificaciones y actas.",
+          href: "/docs/comercio/ind-com-2025.pdf",
+          label: "Ver índice 2025",
+        },
       ] satisfies VisitDocument[],
     },
 
