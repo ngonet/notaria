@@ -3,6 +3,12 @@ import { defineSecret } from "firebase-functions/params";
 import { setGlobalOptions } from "firebase-functions/v2";
 import { logger } from "firebase-functions/v2";
 import * as nodemailer from "nodemailer";
+import { initializeApp, getApps } from "firebase-admin/app";
+import { getAppCheck } from "firebase-admin/app-check";
+
+if (getApps().length === 0) {
+	initializeApp();
+}
 
 setGlobalOptions({ region: "us-central1", maxInstances: 10 });
 
@@ -50,6 +56,12 @@ function isIsoLike(value: string): boolean {
 	return /^\d{4}-\d{2}-\d{2}T?[\d:.\-+Z]*$/.test(value) && value.length <= 40;
 }
 
+function setSecurityHeaders(res: import("express").Response): void {
+	res.set("X-Content-Type-Options", "nosniff");
+	res.set("X-Frame-Options", "SAMEORIGIN");
+	res.set("Referrer-Policy", "strict-origin-when-cross-origin");
+}
+
 async function fetchCalendar(
 	calendarId: string,
 	apiKey: string,
@@ -88,6 +100,7 @@ export const calendarProxy = onRequest(
 		}
 		res.set("Access-Control-Allow-Methods", "GET, OPTIONS");
 		res.set("Access-Control-Allow-Headers", "Content-Type");
+		setSecurityHeaders(res);
 
 		if (req.method === "OPTIONS") {
 			res.status(204).send("");
@@ -120,7 +133,8 @@ export const calendarProxy = onRequest(
 			]);
 
 			if (attention.status >= 400) {
-				res.status(attention.status).json(attention.body);
+				logger.error("attention calendar upstream failed", attention.body);
+				res.status(502).json({ error: "calendar_upstream_error" });
 				return;
 			}
 			if (holidays.status >= 400) {
@@ -136,13 +150,14 @@ export const calendarProxy = onRequest(
 				return aStart.localeCompare(bStart);
 			});
 
-			res.status(200).json({ ...attention.body, items });
+			res.status(200).json({ items });
 		} catch (err) {
 			logger.error("calendar upstream failed", err);
 			res.status(502).json({ error: "upstream_failed" });
 		}
 	},
 );
+
 
 interface ContactBody {
 	name?: unknown;
@@ -161,7 +176,8 @@ export const contactForm = onRequest(
 			res.set("Vary", "Origin");
 		}
 		res.set("Access-Control-Allow-Methods", "POST, OPTIONS");
-		res.set("Access-Control-Allow-Headers", "Content-Type");
+		res.set("Access-Control-Allow-Headers", "Content-Type, X-Firebase-AppCheck");
+		setSecurityHeaders(res);
 
 		if (req.method === "OPTIONS") {
 			res.status(204).send("");
@@ -169,6 +185,23 @@ export const contactForm = onRequest(
 		}
 		if (req.method !== "POST") {
 			res.status(405).json({ error: "method_not_allowed" });
+			return;
+		}
+
+		const appCheckToken = req.get("X-Firebase-AppCheck");
+		if (!appCheckToken) {
+			res.status(401).json({ error: "app_check_required" });
+			return;
+		}
+		try {
+			const appCheckResult = await getAppCheck().verifyToken(appCheckToken, { consume: true });
+			if (appCheckResult.alreadyConsumed) {
+				logger.warn("App Check token replay detected");
+				res.status(403).json({ error: "app_check_replay" });
+				return;
+			}
+		} catch {
+			res.status(403).json({ error: "app_check_invalid" });
 			return;
 		}
 
@@ -219,15 +252,15 @@ export const contactForm = onRequest(
 				auth: { user: gmailUser, pass: gmailPass },
 			});
 
-			const safeReplyName = name.replace(/["<>]/g, "").trim();
+			const safeReplyName = name.replace(/[\r\n"<>]/g, "").trim();
 			const replyTo = safeReplyName ? `${safeReplyName} <${email}>` : email;
+			const safeSubject = subject.replace(/[\r\n]/g, " ");
 
 			await transporter.sendMail({
 				from: `Formulario Web Notaría <${gmailUser}>`,
 				to: CONTACT_TO,
 				replyTo,
-				headers: { "Reply-To": replyTo },
-				subject: `Reclamo: ${subject}`,
+				subject: `Reclamo: ${safeSubject}`,
 				html,
 			});
 

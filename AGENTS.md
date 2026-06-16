@@ -28,6 +28,6 @@
 - Manual deploy target is `firebase deploy --only hosting,functions --project notaria-melipilla` after building both packages.
 
 ## Repo-Specific Gotchas
-- CI checks for leaked Google API keys with `rg -F 'AIzaSy' dist/`; run that check yourself if you touch calendar or deploy-related code.
+- CI checks for leaked Google API keys by extracting every `AIzaSy*` token from `dist/` and failing on any that is not the allowlisted public Firebase web apiKey (`AIzaSyAn2A233ZY1y6C85uJvntgZFbENmWGg9C0`, required in the bundle for App Check). The `GOOGLE_CALENDAR_API_KEY` secret must never appear in `dist/`. Run the check yourself if you touch calendar, App Check, or deploy-related code.
 - `firebase.json` also builds functions on deploy via predeploy, but CI explicitly builds `functions/` first; preserve that workflow when validating changes.
 - Vite build uses `sourcemap: false`; do not expect generated source maps in `dist/`.

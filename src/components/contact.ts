@@ -1,4 +1,5 @@
 import { site } from "@/content/site";
+import { getAppCheckHeader } from "@/lib/firebase";
 
 const INPUT_CLASS =
   "mt-1 w-full rounded border border-line bg-bg px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-gold/60";
@@ -139,9 +140,10 @@ export function mountContact(el: HTMLElement): void {
     errorEl.classList.add("hidden");
 
     try {
+      const appCheckHeaders = await getAppCheckHeader();
       const res = await fetch("/api/contact", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...appCheckHeaders },
         body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error(`${res.status}`);
