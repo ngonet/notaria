@@ -24,9 +24,7 @@ if (import.meta.env.DEV) {
 }
 
 export const appCheck: AppCheck = initializeAppCheck(app, {
-  provider: new ReCaptchaV3Provider(
-    "6LcVziEtAAAAAIHV0oppDC-fBRZ-Nwg5DMFLcLlp",
-  ),
+  provider: new ReCaptchaV3Provider("6LcVziEtAAAAAIHV0oppDC-fBRZ-Nwg5DMFLcLlp"),
   isTokenAutoRefreshEnabled: true,
 });
 
