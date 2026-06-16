@@ -34,8 +34,14 @@ jobs:
 
       - name: Verify no API keys in dist
         run: |
-          if rg -F 'AIzaSy' dist/; then
-            echo "::error::Google API key leaked into dist/"
+          # The Firebase web apiKey (AIzaSyAn2A...) is public by design and is
+          # required in the client bundle for App Check. Allowlist it and fail on
+          # any other AIzaSy-prefixed key (e.g. the GOOGLE_CALENDAR_API_KEY secret).
+          leaked=$(rg -o 'AIzaSy[0-9A-Za-z_-]+' dist/ | sort -u \
+            | grep -vF 'AIzaSyAn2A233ZY1y6C85uJvntgZFbENmWGg9C0' || true)
+          if [ -n "$leaked" ]; then
+            echo "::error::Non-allowlisted Google API key leaked into dist/"
+            echo "$leaked"
             exit 1
           fi
 

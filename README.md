@@ -57,11 +57,15 @@ npm run check       # tsc + prettier
 npm run build       # tsc + vite build → dist/
 ```
 
-Antes de cada deploy CI verifica que **no haya API keys filtradas**:
+Antes de cada deploy CI verifica que **no haya API keys filtradas**. El web
+apiKey de Firebase (`AIzaSyAn2A...`) es público por diseño y debe estar en el
+bundle para App Check, así que está en allowlist; cualquier otra key `AIzaSy*`
+(p. ej. el `GOOGLE_CALENDAR_API_KEY`) hace fallar el check:
 
 ```bash
-rg -F 'AIzaSy' dist/        # debe retornar 0 matches
-rg -F 'AIzaSy' functions/lib/   # también 0 matches
+# debe retornar 0 (ninguna key no-allowlisted)
+rg -o 'AIzaSy[0-9A-Za-z_-]+' dist/ | sort -u \
+  | grep -vF 'AIzaSyAn2A233ZY1y6C85uJvntgZFbENmWGg9C0'
 ```
 
 ## Cloud Function: calendarProxy
