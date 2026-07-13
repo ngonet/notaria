@@ -477,11 +477,11 @@ export const site = {
           label: "Ver índice 2026",
         },
         {
-          title: "Índice de instrumentos protocolizados 2026",
+          title: "Repertorio de Instrumentos Protocolizados 2026",
           description:
-            "Índice de instrumentos protocolizados en Notaría Martínez correspondiente a 2026, disponible para consulta pública.",
+            "Repertorio de Instrumentos Protocolizados de Notaría Martínez correspondiente a 2026, disponible para consulta pública.",
           href: "/docs/instrumentos-protocolizados-2026.pdf",
-          label: "Ver índice de protocolizaciones",
+          label: "Ver repertorio de protocolizaciones",
         },
       ] satisfies VisitDocument[],
     },
