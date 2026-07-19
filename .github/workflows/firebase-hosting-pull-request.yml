@@ -28,6 +28,12 @@ jobs:
       - name: Build functions
         run: npm --prefix functions run build
 
+      - name: Test functions
+        run: npm --prefix functions run test
+
+      - name: Test site
+        run: npm run test
+
       - name: Lint and typecheck
         run: npm run check
 
