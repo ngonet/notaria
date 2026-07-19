@@ -1,47 +1,102 @@
 import { site } from "@/content/site";
 
+function createTextElement<K extends keyof HTMLElementTagNameMap>(
+  tag: K,
+  className: string,
+  text: string,
+): HTMLElementTagNameMap[K] {
+  const element = document.createElement(tag);
+  element.className = className;
+  element.textContent = text;
+  return element;
+}
+
 export function mountFooter(el: HTMLElement): void {
   const c = site.contact;
+  const footer = document.createElement("footer");
+  footer.className = "bg-navy text-white";
 
-  el.innerHTML = `
-    <footer class="bg-navy text-white">
-      <div class="mx-auto grid max-w-(--container-content) gap-10 px-6 py-14 md:grid-cols-[1.2fr_1fr_1fr]">
-        <div>
-          <p class="font-display text-xl font-semibold">${site.brand}</p>
-          <p class="mt-2 text-sm text-white/70">${site.tagline}</p>
-          <p class="mt-6 text-sm text-white/70">${c.street} · ${c.city}</p>
-          <a class="mt-2 inline-block text-sm font-semibold text-gold hover:text-gold-soft" href="tel:${c.phoneE164}">${c.phoneDisplay}</a>
-        </div>
+  const content = document.createElement("div");
+  content.className =
+    "mx-auto grid max-w-(--container-content) gap-10 px-6 py-14 md:grid-cols-[1.2fr_1fr_1fr]";
 
-        <nav aria-label="Enlaces de pie">
-          <p class="font-display text-sm uppercase tracking-[0.22em] text-gold">Sitio</p>
-          <ul class="mt-4 space-y-2 text-sm text-white/80">
-            ${site.nav
-              .map(
-                (link) => `
-                  <li><a class="hover:text-white" href="${link.href}">${link.label}</a></li>
-                `,
-              )
-              .join("")}
-          </ul>
-        </nav>
+  const brand = document.createElement("div");
+  const phoneLink = createTextElement(
+    "a",
+    "mt-2 inline-block text-sm font-semibold text-gold hover:text-gold-soft",
+    c.phoneDisplay,
+  );
+  phoneLink.href = `tel:${c.phoneE164}`;
+  brand.append(
+    createTextElement("p", "font-display text-xl font-semibold", site.brand),
+    createTextElement("p", "mt-2 text-sm text-white/70", site.tagline),
+    createTextElement(
+      "p",
+      "mt-6 text-sm text-white/70",
+      `${c.street} · ${c.city}`,
+    ),
+    phoneLink,
+  );
 
-        <div>
-          <p class="font-display text-sm uppercase tracking-[0.22em] text-gold">Atención</p>
-          <ul class="mt-4 space-y-2 text-sm text-white/80">
-            <li>${c.schedule.weekdays}</li>
-            <li>${c.schedule.saturdays}</li>
-            <li><a class="hover:text-white" href="mailto:${c.email}">${c.email}</a></li>
-          </ul>
-        </div>
-      </div>
+  const nav = document.createElement("nav");
+  nav.setAttribute("aria-label", site.footer.navLabel);
+  const navList = document.createElement("ul");
+  navList.className = "mt-4 space-y-2 text-sm text-white/80";
+  site.nav.forEach((link) => {
+    const item = document.createElement("li");
+    const anchor = createTextElement("a", "hover:text-white", link.label);
+    anchor.href = link.href;
+    item.append(anchor);
+    navList.append(item);
+  });
+  nav.append(
+    createTextElement(
+      "p",
+      "font-display text-sm uppercase tracking-[0.22em] text-gold",
+      site.footer.siteHeading,
+    ),
+    navList,
+  );
 
-      <div class="border-t border-white/10">
-        <div class="mx-auto flex max-w-(--container-content) flex-col items-center gap-2 px-6 py-6 text-center text-xs text-white/60 sm:flex-row sm:justify-between">
-          <p>${site.footer.copyright}</p>
-          <a class="hover:text-white/80 underline underline-offset-2" href="${site.footer.transparency.href}" target="_blank" rel="noopener noreferrer">${site.footer.transparency.label} ↗</a>
-        </div>
-      </div>
-    </footer>
-  `;
+  const hours = document.createElement("div");
+  const hoursList = document.createElement("ul");
+  hoursList.className = "mt-4 space-y-2 text-sm text-white/80";
+  const emailItem = document.createElement("li");
+  const emailLink = createTextElement("a", "hover:text-white", c.email);
+  emailLink.href = `mailto:${c.email}`;
+  emailItem.append(emailLink);
+  hoursList.append(
+    createTextElement("li", "", c.schedule.weekdays),
+    createTextElement("li", "", c.schedule.saturdays),
+    emailItem,
+  );
+  hours.append(
+    createTextElement(
+      "p",
+      "font-display text-sm uppercase tracking-[0.22em] text-gold",
+      site.footer.attentionHeading,
+    ),
+    hoursList,
+  );
+  content.append(brand, nav, hours);
+
+  const copyrightBorder = document.createElement("div");
+  copyrightBorder.className = "border-t border-white/10";
+  const copyright = document.createElement("div");
+  copyright.className =
+    "mx-auto flex max-w-(--container-content) flex-col items-center gap-2 px-6 py-6 text-center text-xs text-white/60 sm:flex-row sm:justify-between";
+  const transparencyLink = createTextElement(
+    "a",
+    "hover:text-white/80 underline underline-offset-2",
+    site.footer.transparencyLinkLabel,
+  );
+  transparencyLink.href = "#transparencia";
+  copyright.append(
+    createTextElement("p", "", site.footer.copyright),
+    transparencyLink,
+  );
+  copyrightBorder.append(copyright);
+
+  footer.append(content, copyrightBorder);
+  el.replaceChildren(footer);
 }

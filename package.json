@@ -9,16 +9,19 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
     "check": "tsc --noEmit && prettier --check \"src/**/*.{ts,css}\" README.md firebase.json package.json index.html .github/workflows/*.yml && prettier --check --parser json .firebaserc",
     "format": "prettier --write \"src/**/*.{ts,css}\" README.md firebase.json package.json index.html .github/workflows/*.yml && prettier --write --parser json .firebaserc"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.13",
     "@types/node": "^22.9.0",
+    "jsdom": "^29.1.1",
     "prettier": "^3.6.2",
     "tailwindcss": "^4.1.13",
     "typescript": "^5.7.2",
-    "vite": "^7.1.11"
+    "vite": "^7.1.11",
+    "vitest": "^4.1.10"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.15",

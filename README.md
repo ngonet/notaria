@@ -33,7 +33,7 @@ src/
   components/             # mountX(el): void por sección
   lib/                    # utilidades (fetch al proxy)
 public/                   # favicons, manifest, /images/*
-functions/                # Cloud Function calendarProxy
+  functions/                # Cloud Functions calendarProxy, contactForm y mountFailureTelemetry
 dist/                     # output de vite build (publicado por Firebase)
 ```
 
@@ -47,12 +47,52 @@ npm run dev                              # Vite en :5173
 firebase emulators:start --only functions,hosting   # con Function local
 ```
 
-El frontend hace `fetch('/api/calendar/events?…')` — same-origin gracias al rewrite de Firebase Hosting hacia `calendarProxy`.
+El frontend hace `fetch('/api/calendar/events?…')` con un token limitado de App Check — same-origin gracias al rewrite de Firebase Hosting hacia `calendarProxy`.
+
+## Contratos HTTP públicos
+
+Firebase Hosting enruta los endpoints same-origin a Functions en `us-central1`. Los clientes web deben obtener un token limitado de App Check y enviarlo como `X-Firebase-AppCheck`; no deben llamar las URLs directas de Cloud Functions.
+
+### `POST /api/contact`
+
+Envía un reclamo o consulta. El cliente establece `Content-Type: application/json`, agrega `X-Firebase-AppCheck`, espera hasta 10 segundos y puede reintentar después de cualquier respuesta no exitosa o timeout.
+
+```http
+POST /api/contact
+Content-Type: application/json
+X-Firebase-AppCheck: <limited-use-token>
+
+{"name":"Ada Lovelace","email":"ada@example.com","phone":"+56 9 1234 5678","subject":"Reclamo","message":"Necesito ayuda."}
+```
+
+Respuesta exitosa: `200 {"success":true}`. Errores: `400 missing_fields|invalid_email`, `401 app_check_required`, `403 app_check_invalid|app_check_replay`, `405 method_not_allowed`, `500 missing_credentials` y `502 email_send_failed`. El formulario conserva sus datos y vuelve a habilitar el envío al fallar.
+
+### `POST /api/telemetry/mount-failure`
+
+Registra un fallo de montaje del frontend. Solo acepta el origen permitido, App Check y un identificador de montaje ASCII de 1 a 64 caracteres; no acepta ni almacena el mensaje de excepción ni datos de formulario.
+
+```http
+POST /api/telemetry/mount-failure
+Content-Type: application/json
+X-Firebase-AppCheck: <limited-use-token>
+
+{"mount":"contact"}
+```
+
+Respuesta exitosa: `204` sin cuerpo. Errores: `400 invalid_mount`, `401 app_check_required`, `403 origin_not_allowed|app_check_invalid|app_check_replay`, `405 method_not_allowed` y `500 telemetry_unavailable`. El listener del navegador la emite sin bloquear el fallback visual, con timeout de 3 segundos; los clientes no deben reintentarla.
+
+### `GET /api/calendar/events`
+
+Entrega solo `id`, `start`, `end` y `calendarSource` (`attention|holiday`); no expone summaries ni el payload de Google Calendar. Requiere un origen permitido y `X-Firebase-AppCheck` con token limitado. Errores: `400 invalid_time_range`, `401 app_check_required`, `403 origin_not_allowed|app_check_invalid|app_check_replay`, `405 method_not_allowed` y `502 calendar_upstream_error|upstream_failed`.
+
+El cliente aplica timeout de 5 segundos y, solo ante una falla transitoria, hace un segundo intento con un token fresco. Si ambos fallan, ofrece un botón para reintentar y emite telemetría de fallo sin impedir que carguen las demás secciones.
 
 ## Verificación
 
 ```bash
 npm run typecheck
+npm run test        # pruebas unitarias del frontend
+npm --prefix functions run test # pruebas de contrato de Functions
 npm run check       # tsc + prettier
 npm run build       # tsc + vite build → dist/
 ```
@@ -105,7 +145,7 @@ firebase deploy --only hosting,functions --project notaria-melipilla
 ## Firebase
 
 - Proyecto: `notaria-melipilla` (`.firebaserc`).
-- `firebase.json` publica `dist/` y declara rewrite `/api/calendar/**` → `calendarProxy` (region `us-central1`).
+- `firebase.json` publica `dist/` y declara rewrites para `/api/calendar/**`, `/api/contact` y `/api/telemetry/mount-failure` (region `us-central1`).
 - Region debe coincidir con `setGlobalOptions({ region: 'us-central1' })` en `functions/src/index.ts`.
 
 ## Notas de migración
