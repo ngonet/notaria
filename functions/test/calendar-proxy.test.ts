@@ -166,6 +166,23 @@ describe("calendar proxy", () => {
     });
   });
 
+  it("rejects a localhost origin when not running under the emulator", async () => {
+    // The test process has no FUNCTIONS_EMULATOR, so this exercises the deployed
+    // path: the dev origins are absent from the allowlist and must be rejected.
+    const res = response();
+    await handleCalendarProxy(
+      request({
+        get: (name: string) =>
+          name === "origin" ? "http://localhost:5173" : "valid-token",
+      }) as never,
+      res as never,
+    );
+
+    expect(res.status).toHaveBeenCalledWith(403);
+    expect(res.json).toHaveBeenCalledWith({ error: "origin_not_allowed" });
+    expect(verifyToken).not.toHaveBeenCalled();
+  });
+
   it("rejects invalid and replayed App Check tokens", async () => {
     verifyToken.mockRejectedValueOnce(new Error("invalid token"));
     const invalidResponse = response();
