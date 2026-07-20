@@ -97,6 +97,68 @@ function setSecurityHeaders(res: import("express").Response): void {
   res.set("Referrer-Policy", "strict-origin-when-cross-origin");
 }
 
+interface RequestGuardConfig {
+  method: "GET" | "POST";
+  allowHeaders: string;
+  // Handler-specific replay log; the message differs per endpoint.
+  onReplay: () => void;
+}
+
+/**
+ * Runs the origin, CORS, method and App Check checks shared by every HTTP
+ * handler, so a change to that security prologue lands in one place instead of
+ * three that have already drifted apart.
+ *
+ * Returns `true` when the caller should proceed, and `false` when it has already
+ * written a terminal response (403/401/405/204 preflight) — the caller must
+ * `return` immediately in that case.
+ */
+async function guardRequest(
+  req: import("express").Request,
+  res: import("express").Response,
+  config: RequestGuardConfig,
+): Promise<boolean> {
+  const origin = req.get("origin") ?? "";
+  if (!ALLOWED_ORIGINS.has(origin)) {
+    res.status(403).json({ error: "origin_not_allowed" });
+    return false;
+  }
+  res.set("Access-Control-Allow-Origin", origin);
+  res.set("Vary", "Origin");
+  res.set("Access-Control-Allow-Methods", `${config.method}, OPTIONS`);
+  res.set("Access-Control-Allow-Headers", config.allowHeaders);
+  setSecurityHeaders(res);
+
+  if (req.method === "OPTIONS") {
+    res.status(204).send("");
+    return false;
+  }
+  if (req.method !== config.method) {
+    res.status(405).json({ error: "method_not_allowed" });
+    return false;
+  }
+
+  const appCheckToken = req.get("X-Firebase-AppCheck");
+  if (!appCheckToken) {
+    res.status(401).json({ error: "app_check_required" });
+    return false;
+  }
+  try {
+    const appCheckResult = await getAppCheck().verifyToken(appCheckToken, {
+      consume: true,
+    });
+    if (appCheckResult.alreadyConsumed) {
+      config.onReplay();
+      res.status(403).json({ error: "app_check_replay" });
+      return false;
+    }
+  } catch {
+    res.status(403).json({ error: "app_check_invalid" });
+    return false;
+  }
+  return true;
+}
+
 async function fetchCalendar(
   calendarId: string,
   apiKey: string,
@@ -141,44 +203,12 @@ export async function handleCalendarProxy(
   req: import("express").Request,
   res: import("express").Response,
 ): Promise<void> {
-  const origin = req.get("origin") ?? "";
-  if (!ALLOWED_ORIGINS.has(origin)) {
-    res.status(403).json({ error: "origin_not_allowed" });
-    return;
-  }
-  res.set("Access-Control-Allow-Origin", origin);
-  res.set("Vary", "Origin");
-  res.set("Access-Control-Allow-Methods", "GET, OPTIONS");
-  res.set("Access-Control-Allow-Headers", "X-Firebase-AppCheck");
-  setSecurityHeaders(res);
-
-  if (req.method === "OPTIONS") {
-    res.status(204).send("");
-    return;
-  }
-  if (req.method !== "GET") {
-    res.status(405).json({ error: "method_not_allowed" });
-    return;
-  }
-
-  const appCheckToken = req.get("X-Firebase-AppCheck");
-  if (!appCheckToken) {
-    res.status(401).json({ error: "app_check_required" });
-    return;
-  }
-  try {
-    const appCheckResult = await getAppCheck().verifyToken(appCheckToken, {
-      consume: true,
-    });
-    if (appCheckResult.alreadyConsumed) {
-      logger.warn("Calendar App Check token replay detected");
-      res.status(403).json({ error: "app_check_replay" });
-      return;
-    }
-  } catch {
-    res.status(403).json({ error: "app_check_invalid" });
-    return;
-  }
+  const proceed = await guardRequest(req, res, {
+    method: "GET",
+    allowHeaders: "X-Firebase-AppCheck",
+    onReplay: () => logger.warn("Calendar App Check token replay detected"),
+  });
+  if (!proceed) return;
 
   const timeMin = String(req.query.timeMin ?? "");
   const timeMax = String(req.query.timeMax ?? "");
@@ -258,39 +288,15 @@ export async function handleMountFailureTelemetry(
   req: import("express").Request,
   res: import("express").Response,
 ): Promise<void> {
-  const origin = req.get("origin") ?? "";
-  if (!ALLOWED_ORIGINS.has(origin)) {
-    res.status(403).json({ error: "origin_not_allowed" });
-    return;
-  }
-
-  setSecurityHeaders(res);
-  if (req.method !== "POST") {
-    res.status(405).json({ error: "method_not_allowed" });
-    return;
-  }
-
-  const appCheckToken = req.get("X-Firebase-AppCheck");
-  if (!appCheckToken) {
-    res.status(401).json({ error: "app_check_required" });
-    return;
-  }
-
-  try {
-    const appCheckResult = await getAppCheck().verifyToken(appCheckToken, {
-      consume: true,
-    });
-    if (appCheckResult.alreadyConsumed) {
+  const proceed = await guardRequest(req, res, {
+    method: "POST",
+    allowHeaders: "Content-Type, X-Firebase-AppCheck",
+    onReplay: () =>
       logger.warn("Mount telemetry App Check token replay detected", {
         event: "notaria:mount-failed",
-      });
-      res.status(403).json({ error: "app_check_replay" });
-      return;
-    }
-  } catch {
-    res.status(403).json({ error: "app_check_invalid" });
-    return;
-  }
+      }),
+  });
+  if (!proceed) return;
 
   const mount = (req.body as MountFailureBody | undefined)?.mount;
   if (typeof mount !== "string" || !/^[a-z][a-z0-9-]{0,63}$/.test(mount)) {
@@ -325,47 +331,12 @@ export const contactForm = onRequest(
     timeoutSeconds: CONTACT_TIMEOUT_SECONDS,
   },
   async (req, res) => {
-    const origin = req.get("origin") ?? "";
-    if (!ALLOWED_ORIGINS.has(origin)) {
-      res.status(403).json({ error: "origin_not_allowed" });
-      return;
-    }
-    res.set("Access-Control-Allow-Origin", origin);
-    res.set("Vary", "Origin");
-    res.set("Access-Control-Allow-Methods", "POST, OPTIONS");
-    res.set(
-      "Access-Control-Allow-Headers",
-      "Content-Type, X-Firebase-AppCheck",
-    );
-    setSecurityHeaders(res);
-
-    if (req.method === "OPTIONS") {
-      res.status(204).send("");
-      return;
-    }
-    if (req.method !== "POST") {
-      res.status(405).json({ error: "method_not_allowed" });
-      return;
-    }
-
-    const appCheckToken = req.get("X-Firebase-AppCheck");
-    if (!appCheckToken) {
-      res.status(401).json({ error: "app_check_required" });
-      return;
-    }
-    try {
-      const appCheckResult = await getAppCheck().verifyToken(appCheckToken, {
-        consume: true,
-      });
-      if (appCheckResult.alreadyConsumed) {
-        logger.warn("App Check token replay detected");
-        res.status(403).json({ error: "app_check_replay" });
-        return;
-      }
-    } catch {
-      res.status(403).json({ error: "app_check_invalid" });
-      return;
-    }
+    const proceed = await guardRequest(req, res, {
+      method: "POST",
+      allowHeaders: "Content-Type, X-Firebase-AppCheck",
+      onReplay: () => logger.warn("Contact App Check token replay detected"),
+    });
+    if (!proceed) return;
 
     const body = req.body as ContactBody;
     const name =
