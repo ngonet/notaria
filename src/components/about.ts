@@ -1,5 +1,6 @@
 import { site } from "@/content/site";
 import { createNotaryArticle } from "./services";
+import { makeElement } from "@/lib/dom";
 
 type SvgShape = {
   tag: "path" | "circle";
@@ -30,17 +31,6 @@ const ICONS: Record<string, SvgShape[]> = {
     },
   ],
 };
-
-function createTextElement<K extends keyof HTMLElementTagNameMap>(
-  tag: K,
-  className: string,
-  text: string,
-): HTMLElementTagNameMap[K] {
-  const element = document.createElement(tag);
-  element.className = className;
-  element.textContent = text;
-  return element;
-}
 
 function createTimelineIcon(name: keyof typeof ICONS): SVGSVGElement {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -77,20 +67,20 @@ function createFuncionariosSection(): HTMLElement {
 
   const header = document.createElement("header");
   header.className = "mx-auto max-w-3xl text-center";
-  const title = createTextElement(
+  const title = makeElement(
     "h3",
     "mt-3 font-display text-2xl text-navy md:text-3xl",
     heading,
   );
   title.id = "funcionarios-heading";
   header.append(
-    createTextElement(
+    makeElement(
       "p",
       "font-display text-sm uppercase tracking-[0.28em] text-gold",
       eyebrow,
     ),
     title,
-    createTextElement("p", "mt-4 text-base text-muted md:text-lg", lead),
+    makeElement("p", "mt-4 text-base text-muted md:text-lg", lead),
   );
 
   const groupsList = document.createElement("ul");
@@ -111,7 +101,7 @@ function createFuncionariosSection(): HTMLElement {
       members.append(member);
     });
     groupItem.append(
-      createTextElement(
+      makeElement(
         "h4",
         "font-display text-base font-semibold text-navy",
         group.title,
@@ -135,24 +125,20 @@ export function mountAbout(el: HTMLElement): void {
 
   const header = document.createElement("header");
   header.className = "mx-auto max-w-3xl text-center";
-  const heading = createTextElement(
+  const heading = makeElement(
     "h2",
     "mt-3 font-display text-3xl text-navy md:text-4xl",
     section.heading,
   );
   heading.id = "nosotros-heading";
   header.append(
-    createTextElement(
+    makeElement(
       "p",
       "font-display text-sm uppercase tracking-[0.28em] text-gold",
       section.eyebrow,
     ),
     heading,
-    createTextElement(
-      "p",
-      "mt-4 text-base text-muted md:text-lg",
-      section.lead,
-    ),
+    makeElement("p", "mt-4 text-base text-muted md:text-lg", section.lead),
   );
 
   const commitmentArticle = document.createElement("article");
@@ -160,22 +146,18 @@ export function mountAbout(el: HTMLElement): void {
     "mt-16 grid gap-10 rounded-card border border-line bg-bg px-8 py-12 md:grid-cols-[1.1fr_1fr] md:items-center md:px-12";
   const commitmentContent = document.createElement("div");
   commitmentContent.append(
-    createTextElement(
+    makeElement(
       "p",
       "font-display text-sm uppercase tracking-[0.28em] text-gold",
       commitment.heading,
     ),
-    createTextElement(
+    makeElement(
       "h3",
       "mt-3 font-display text-2xl text-navy md:text-3xl",
       commitment.title,
     ),
-    createTextElement(
-      "p",
-      "mt-2 text-sm text-muted md:text-base",
-      commitment.lead,
-    ),
-    createTextElement(
+    makeElement("p", "mt-2 text-sm text-muted md:text-base", commitment.lead),
+    makeElement(
       "p",
       "mt-5 text-sm leading-relaxed text-ink md:text-base",
       commitment.body,
@@ -208,12 +190,12 @@ export function mountAbout(el: HTMLElement): void {
   const trajectoryHeader = document.createElement("header");
   trajectoryHeader.className = "mx-auto max-w-3xl text-center";
   trajectoryHeader.append(
-    createTextElement(
+    makeElement(
       "p",
       "font-display text-sm uppercase tracking-[0.28em] text-gold",
       trajectory.heading,
     ),
-    createTextElement(
+    makeElement(
       "h3",
       "mt-3 font-display text-2xl text-navy md:text-3xl",
       trajectory.title,
@@ -234,12 +216,12 @@ export function mountAbout(el: HTMLElement): void {
     iconWrap.append(createTimelineIcon(entry.icon));
     const dates = document.createElement("div");
     dates.append(
-      createTextElement(
+      makeElement(
         "p",
         "text-xs font-semibold uppercase tracking-[0.18em] text-muted",
         entry.period,
       ),
-      createTextElement(
+      makeElement(
         "p",
         "font-display text-sm font-semibold text-navy",
         entry.date,
@@ -248,12 +230,12 @@ export function mountAbout(el: HTMLElement): void {
     top.append(iconWrap, dates);
     item.append(
       top,
-      createTextElement(
+      makeElement(
         "h4",
         "mt-5 font-display text-base font-semibold text-navy",
         entry.title,
       ),
-      createTextElement(
+      makeElement(
         "p",
         "mt-2 flex-1 text-sm leading-relaxed text-muted",
         entry.description,

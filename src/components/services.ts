@@ -4,6 +4,7 @@ import {
   type FeatureGroup,
   type ServiceCard,
 } from "@/content/site";
+import { makeElement } from "@/lib/dom";
 
 type SvgShape = {
   tag: "path" | "circle";
@@ -59,17 +60,6 @@ const ICONS: Record<FeatureBlock["icon"], SvgShape[]> = {
   ],
 };
 
-function createTextElement<K extends keyof HTMLElementTagNameMap>(
-  tag: K,
-  className: string,
-  text: string,
-): HTMLElementTagNameMap[K] {
-  const element = document.createElement(tag);
-  element.className = className;
-  element.textContent = text;
-  return element;
-}
-
 function createIcon(name: FeatureBlock["icon"]): SVGSVGElement {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.setAttribute("width", "28");
@@ -105,7 +95,7 @@ function createPrimaryCard(item: ServiceCard, index: number): HTMLLIElement {
   badge.className =
     "flex h-10 w-10 items-center justify-center rounded-full bg-navy/5 text-navy transition group-hover:bg-gold/15 group-hover:text-navy";
   badge.append(
-    createTextElement(
+    makeElement(
       "span",
       "font-display text-base font-semibold",
       `0${index + 1}`,
@@ -114,12 +104,12 @@ function createPrimaryCard(item: ServiceCard, index: number): HTMLLIElement {
 
   card.append(
     badge,
-    createTextElement(
+    makeElement(
       "h3",
       "mt-5 font-display text-lg font-semibold text-navy",
       item.title,
     ),
-    createTextElement(
+    makeElement(
       "p",
       "mt-3 text-sm leading-relaxed text-muted",
       item.description,
@@ -141,12 +131,12 @@ function createFeatureCard(item: FeatureBlock): HTMLLIElement {
 
   card.append(
     iconWrap,
-    createTextElement(
+    makeElement(
       "h3",
       "mt-5 font-display text-lg font-semibold text-navy",
       item.title,
     ),
-    createTextElement(
+    makeElement(
       "p",
       "mt-3 text-sm leading-relaxed text-muted",
       item.description,
@@ -166,7 +156,7 @@ function createFeatureCard(item: FeatureBlock): HTMLLIElement {
         "mt-2 inline-block h-1 w-1 flex-none rounded-full bg-gold";
       bullet.setAttribute("aria-hidden", "true");
 
-      listItem.append(bullet, createTextElement("span", "", documentName));
+      listItem.append(bullet, makeElement("span", "", documentName));
       list.append(listItem);
     });
 
@@ -195,7 +185,7 @@ function createFeatureGroup(
 ): HTMLDivElement {
   const wrapper = document.createElement("div");
   wrapper.append(
-    createTextElement(
+    makeElement(
       "p",
       "font-display text-sm uppercase tracking-[0.28em] text-gold",
       group.eyebrow,
@@ -218,24 +208,20 @@ export function createNotaryArticle(): HTMLElement {
 
   const left = document.createElement("div");
   left.append(
-    createTextElement(
+    makeElement(
       "p",
       "font-display text-sm uppercase tracking-[0.28em] text-gold",
       notary.label,
     ),
-    createTextElement(
-      "h3",
-      "mt-3 font-display text-2xl md:text-3xl",
-      notary.name,
-    ),
-    createTextElement("p", "mt-2 text-base text-white/75", notary.role),
+    makeElement("h3", "mt-3 font-display text-2xl md:text-3xl", notary.name),
+    makeElement("p", "mt-2 text-base text-white/75", notary.role),
   );
 
   if (notary.substituteNotaries?.length) {
     const substitutes = document.createElement("div");
     substitutes.className = "mt-6";
     substitutes.append(
-      createTextElement(
+      makeElement(
         "p",
         "font-display text-xs uppercase tracking-[0.22em] text-gold/85",
         notary.substituteLabel,
@@ -245,7 +231,7 @@ export function createNotaryArticle(): HTMLElement {
     const list = document.createElement("ul");
     list.className = "mt-3 space-y-1 text-sm text-white/85";
     notary.substituteNotaries.forEach((name) =>
-      list.append(createTextElement("li", "", name)),
+      list.append(makeElement("li", "", name)),
     );
     substitutes.append(list);
     left.append(substitutes);
@@ -256,21 +242,13 @@ export function createNotaryArticle(): HTMLElement {
     const prosecutor = document.createElement("div");
     prosecutor.className = "";
     prosecutor.append(
-      createTextElement(
+      makeElement(
         "p",
         "font-display text-xs uppercase tracking-[0.22em] text-gold/85",
         notary.prosecutor.label,
       ),
-      createTextElement(
-        "p",
-        "mt-2 text-sm text-white/85",
-        notary.prosecutor.name,
-      ),
-      createTextElement(
-        "p",
-        "mt-1 text-sm text-white/75",
-        notary.prosecutor.office,
-      ),
+      makeElement("p", "mt-2 text-sm text-white/85", notary.prosecutor.name),
+      makeElement("p", "mt-1 text-sm text-white/75", notary.prosecutor.office),
     );
     right.append(prosecutor);
   }
@@ -297,14 +275,14 @@ export function mountServices(el: HTMLElement): void {
   const header = document.createElement("header");
   header.className = "mx-auto max-w-3xl text-center";
   header.append(
-    createTextElement(
+    makeElement(
       "p",
       "font-display text-sm uppercase tracking-[0.28em] text-gold",
       eyebrow,
     ),
   );
 
-  const heading = createTextElement(
+  const heading = makeElement(
     "h2",
     "mt-3 font-display text-3xl text-navy md:text-4xl",
     sectionHeading,
@@ -312,7 +290,7 @@ export function mountServices(el: HTMLElement): void {
   heading.id = "servicios-heading";
   header.append(
     heading,
-    createTextElement("p", "mt-4 text-base text-muted md:text-lg", lead),
+    makeElement("p", "mt-4 text-base text-muted md:text-lg", lead),
   );
   container.append(header);
 

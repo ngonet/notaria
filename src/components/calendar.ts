@@ -1,15 +1,5 @@
 import { site } from "@/content/site";
-
-function createTextElement<K extends keyof HTMLElementTagNameMap>(
-  tag: K,
-  className: string,
-  text: string,
-): HTMLElementTagNameMap[K] {
-  const element = document.createElement(tag);
-  element.className = className;
-  element.textContent = text;
-  return element;
-}
+import { makeElement } from "@/lib/dom";
 
 export function reportCalendarFailure(): void {
   window.dispatchEvent(
@@ -27,13 +17,13 @@ export function showCalendarRecovery(
   const recovery = document.createElement("div");
   recovery.className = "mt-4 flex flex-wrap items-center justify-center gap-4";
   recovery.dataset.calendarRecovery = "";
-  const message = createTextElement(
+  const message = makeElement(
     "p",
     "text-sm text-muted",
     site.calendar.errorMessage,
   );
   message.setAttribute("role", "alert");
-  const button = createTextElement(
+  const button = makeElement(
     "button",
     "rounded-md border border-navy px-4 py-2 text-sm font-semibold text-navy transition hover:bg-navy hover:text-white",
     site.calendar.retryLabel,
@@ -52,20 +42,20 @@ export function mountCalendar(el: HTMLElement): void {
   wrapper.className = "mt-16 border-t border-line/60 pt-16";
   const header = document.createElement("header");
   header.className = "mx-auto max-w-3xl text-center";
-  const title = createTextElement(
+  const title = makeElement(
     "h3",
     "mt-3 font-display text-2xl text-navy md:text-3xl",
     heading,
   );
   title.id = "calendario-heading";
   header.append(
-    createTextElement(
+    makeElement(
       "p",
       "font-display text-sm uppercase tracking-[0.28em] text-gold",
       eyebrow,
     ),
     title,
-    createTextElement("p", "mt-4 text-base text-muted md:text-lg", lead),
+    makeElement("p", "mt-4 text-base text-muted md:text-lg", lead),
   );
 
   const root = document.createElement("div");
@@ -73,7 +63,7 @@ export function mountCalendar(el: HTMLElement): void {
     "mt-12 min-h-[420px] rounded-card border border-line bg-surface p-4 shadow-card md:p-6";
   root.dataset.calendarRoot = "";
   root.setAttribute("aria-busy", "true");
-  const loading = createTextElement(
+  const loading = makeElement(
     "p",
     "flex h-72 items-center justify-center text-sm text-muted",
     loadingLabel,
@@ -81,12 +71,12 @@ export function mountCalendar(el: HTMLElement): void {
   loading.dataset.calendarLoading = "";
   root.append(loading);
 
-  const reservation = createTextElement(
+  const reservation = makeElement(
     "p",
     "mt-6 text-center text-xs text-muted",
     reservationNote.beforePhone,
   );
-  const phoneLink = createTextElement(
+  const phoneLink = makeElement(
     "a",
     "font-semibold text-navy hover:underline",
     site.contact.phoneDisplay,

@@ -1,4 +1,5 @@
 import { site } from "@/content/site";
+import { makeElement } from "@/lib/dom";
 
 const ICON_PATHS = {
   check: ["M20 6 9 17l-5-5"],
@@ -13,23 +14,12 @@ const ICON_PATHS = {
   ],
 };
 
-function el<K extends keyof HTMLElementTagNameMap>(
-  tag: K,
-  className?: string,
-  text?: string,
-): HTMLElementTagNameMap[K] {
-  const node = document.createElement(tag);
-  if (className) node.className = className;
-  if (text !== undefined) node.textContent = text;
-  return node;
-}
-
 function append(parent: Node, ...children: Node[]): void {
   children.forEach((child) => parent.appendChild(child));
 }
 
 function externalLink(href: string, className: string): HTMLAnchorElement {
-  const link = el("a", className);
+  const link = makeElement("a", className);
   link.href = href;
   link.target = "_blank";
   link.rel = "noopener noreferrer";
@@ -63,33 +53,37 @@ export function mountDocuments(root: HTMLElement): void {
 
   root.textContent = "";
 
-  const wrapper = el(
+  const wrapper = makeElement(
     "div",
     "mx-auto max-w-(--container-content) px-6 py-20 md:py-28",
   );
-  const header = el("header", "mx-auto max-w-3xl text-center");
+  const header = makeElement("header", "mx-auto max-w-3xl text-center");
   append(
     header,
-    el(
+    makeElement(
       "p",
       "font-display text-sm uppercase tracking-[0.28em] text-gold",
       eyebrow,
     ),
-    el("h2", "mt-3 font-display text-3xl text-navy md:text-4xl", heading),
-    el("p", "mt-4 text-base text-muted md:text-lg", lead),
+    makeElement(
+      "h2",
+      "mt-3 font-display text-3xl text-navy md:text-4xl",
+      heading,
+    ),
+    makeElement("p", "mt-4 text-base text-muted md:text-lg", lead),
   );
   header.querySelector("h2")?.setAttribute("id", "documentos-heading");
 
-  const downloadsList = el(
+  const downloadsList = makeElement(
     "ul",
     "mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3",
   );
   downloads.forEach((doc) => {
-    const item = el(
+    const item = makeElement(
       "li",
       "flex h-full flex-col rounded-card border border-line bg-surface p-6 shadow-card transition hover:-translate-y-1 hover:border-gold/60",
     );
-    const iconWrap = el(
+    const iconWrap = makeElement(
       "span",
       "flex h-12 w-12 items-center justify-center rounded-full bg-gold/15 text-navy",
     );
@@ -102,15 +96,19 @@ export function mountDocuments(root: HTMLElement): void {
     append(
       link,
       document.createTextNode(downloadCtaLabel),
-      el("span", "", "↗"),
+      makeElement("span", "", "↗"),
     );
     link.lastElementChild?.setAttribute("aria-hidden", "true");
 
     append(
       item,
       iconWrap,
-      el("h3", "mt-5 font-display text-lg font-semibold text-navy", doc.title),
-      el(
+      makeElement(
+        "h3",
+        "mt-5 font-display text-lg font-semibold text-navy",
+        doc.title,
+      ),
+      makeElement(
         "p",
         "mt-3 flex-1 text-sm leading-relaxed text-muted",
         doc.description,
@@ -120,11 +118,11 @@ export function mountDocuments(root: HTMLElement): void {
     downloadsList.appendChild(item);
   });
 
-  const fojasArticle = el(
+  const fojasArticle = makeElement(
     "article",
     "mt-16 grid gap-10 rounded-card border border-line bg-surface px-8 py-12 shadow-card md:grid-cols-[1.2fr_1fr] md:items-center md:px-12",
   );
-  const fojasContent = el("div");
+  const fojasContent = makeElement("div");
   const fojasLink = externalLink(
     fojas.href,
     "mt-6 inline-flex items-center gap-2 rounded-md bg-navy px-5 py-3 text-sm font-semibold text-white transition hover:bg-navy-light",
@@ -132,22 +130,30 @@ export function mountDocuments(root: HTMLElement): void {
   append(
     fojasLink,
     document.createTextNode(fojas.ctaLabel),
-    el("span", "", "↗"),
+    makeElement("span", "", "↗"),
   );
   fojasLink.lastElementChild?.setAttribute("aria-hidden", "true");
   append(
     fojasContent,
-    el(
+    makeElement(
       "p",
       "font-display text-sm uppercase tracking-[0.28em] text-gold",
       fojas.eyebrow,
     ),
-    el("h3", "mt-3 font-display text-2xl text-navy md:text-3xl", fojas.heading),
-    el("p", "mt-4 text-sm leading-relaxed text-muted md:text-base", fojas.body),
+    makeElement(
+      "h3",
+      "mt-3 font-display text-2xl text-navy md:text-3xl",
+      fojas.heading,
+    ),
+    makeElement(
+      "p",
+      "mt-4 text-sm leading-relaxed text-muted md:text-base",
+      fojas.body,
+    ),
     fojasLink,
   );
 
-  const imageWrap = el("div", "flex items-center justify-center");
+  const imageWrap = makeElement("div", "flex items-center justify-center");
   const picture = document.createElement("picture");
   const source = document.createElement("source");
   source.srcset = fojas.logo.replace(/\.(jpg|png)$/, ".webp");
