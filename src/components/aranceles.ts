@@ -1,15 +1,5 @@
 import { site } from "@/content/site";
-
-function createTextElement<K extends keyof HTMLElementTagNameMap>(
-  tag: K,
-  className: string,
-  text: string,
-): HTMLElementTagNameMap[K] {
-  const element = document.createElement(tag);
-  element.className = className;
-  element.textContent = text;
-  return element;
-}
+import { makeElement } from "@/lib/dom";
 
 export function createArancelesSection(): HTMLElement {
   const { eyebrow, heading, lead, documents, disclaimer } = site.aranceles;
@@ -22,14 +12,14 @@ export function createArancelesSection(): HTMLElement {
   const header = document.createElement("header");
   header.className = "mx-auto max-w-3xl text-center";
   header.append(
-    createTextElement(
+    makeElement(
       "p",
       "font-display text-sm uppercase tracking-[0.28em] text-gold",
       eyebrow,
     ),
   );
 
-  const title = createTextElement(
+  const title = makeElement(
     "h3",
     "mt-3 font-display text-2xl text-navy md:text-3xl",
     heading,
@@ -37,7 +27,7 @@ export function createArancelesSection(): HTMLElement {
   title.id = "aranceles-heading";
   header.append(
     title,
-    createTextElement("p", "mt-4 text-base text-muted md:text-lg", lead),
+    makeElement("p", "mt-4 text-base text-muted md:text-lg", lead),
   );
   section.append(header);
 
@@ -63,12 +53,12 @@ export function createArancelesSection(): HTMLElement {
     link.append(arrow);
 
     item.append(
-      createTextElement(
+      makeElement(
         "h4",
         "font-display text-lg font-semibold text-navy",
         documentItem.title,
       ),
-      createTextElement(
+      makeElement(
         "p",
         "mt-3 flex-1 text-sm leading-relaxed text-muted",
         documentItem.description,
@@ -84,7 +74,7 @@ export function createArancelesSection(): HTMLElement {
   const footer = document.createElement("div");
   footer.className = "mx-auto mt-10 max-w-3xl text-center";
   footer.append(
-    createTextElement("p", "text-xs leading-relaxed text-muted", disclaimer),
+    makeElement("p", "text-xs leading-relaxed text-muted", disclaimer),
   );
   section.append(footer);
 
