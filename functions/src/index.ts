@@ -78,13 +78,19 @@ const CONTACT_TIMEOUT_SECONDS = 9;
 // Google call surfaces as a 502 rather than being cut off mid-response by the platform.
 const UPSTREAM_TIMEOUT_MS = 3_000;
 
+// Origin is caller-controlled, so the allowlist is defense-in-depth behind App
+// Check, not the primary gate. The localhost dev origins would still let any
+// non-browser client pass the check by spoofing that Origin, so they are only
+// admitted when the code runs under the Functions emulator — FUNCTIONS_EMULATOR
+// is set to "true" there and is never present in a deployed instance.
 const ALLOWED_ORIGINS = new Set([
   "https://notariamelipilla.cl",
   "https://www.notariamelipilla.cl",
   "https://notaria-melipilla.web.app",
   "https://notaria-melipilla.firebaseapp.com",
-  "http://localhost:5173",
-  "http://localhost:5000",
+  ...(process.env.FUNCTIONS_EMULATOR === "true"
+    ? ["http://localhost:5173", "http://localhost:5000"]
+    : []),
 ]);
 
 function isIsoLike(value: string): boolean {

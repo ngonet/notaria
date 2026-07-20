@@ -58,7 +58,10 @@ jobs:
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/sa.json
         run: |
-          npx -y firebase-tools@latest deploy \
+          # Pinned so a re-run against an older commit uses the same deploy tool.
+          # --force is required for unattended CI: without it, removing a function
+          # prompts for confirmation, which --non-interactive then fails on.
+          npx -y firebase-tools@15.24.0 deploy \
             --only hosting,functions \
             --project notaria-melipilla \
             --non-interactive \
