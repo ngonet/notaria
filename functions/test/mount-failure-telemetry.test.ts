@@ -55,6 +55,29 @@ describe("mount failure telemetry API", () => {
     logger.error.mockReset();
   });
 
+  it("answers the CORS preflight without verifying a token", async () => {
+    const res = response();
+
+    await handleMountFailureTelemetry(
+      request({ method: "OPTIONS" }) as never,
+      res as never,
+    );
+
+    expect(verifyToken).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(204);
+  });
+
+  it("sets the allowed-origin CORS header on a trusted request", async () => {
+    const res = response();
+
+    await handleMountFailureTelemetry(request() as never, res as never);
+
+    expect(res.set).toHaveBeenCalledWith(
+      "Access-Control-Allow-Origin",
+      "https://notariamelipilla.cl",
+    );
+  });
+
   it("accepts a valid same-origin App Check request and writes a structured log", async () => {
     const req = request();
     const res = response();
