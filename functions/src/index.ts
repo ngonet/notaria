@@ -50,6 +50,46 @@ interface PublicCalendarEvent {
   calendarSource: CalendarSource;
 }
 
+const SANTIAGO_DAY = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "America/Santiago",
+});
+
+/**
+ * Ordering key for merging the attention and holiday feeds.
+ *
+ * The two feeds carry different shapes and cannot be compared as raw strings.
+ * Timed events arrive with their own UTC offset, and Chile alternates between
+ * -03:00 and -04:00, so lexicographic order stops being chronological across a
+ * DST boundary. All-day events (the entire holiday feed) arrive date-only and
+ * have no instant at all; parsing them yields UTC midnight, which is three to
+ * four hours before the Chilean day they belong to.
+ *
+ * Both are therefore reduced to the local Santiago day first, then to an instant
+ * within it. All-day events lead their own day; undated events keep the leading
+ * position the previous string comparison gave them.
+ */
+function eventOrder(event: GoogleCalendarEvent): { day: string; at: number } {
+  const dateTime = event.start?.dateTime;
+  if (dateTime) {
+    const at = Date.parse(dateTime);
+    if (!Number.isNaN(at)) return { day: SANTIAGO_DAY.format(at), at };
+  }
+  const date = event.start?.date;
+  return {
+    day: date ?? "",
+    at: Number.NEGATIVE_INFINITY,
+  };
+}
+
+/** Compares without subtraction, so two undated events cannot yield NaN. */
+function compareEvents(a: GoogleCalendarEvent, b: GoogleCalendarEvent): number {
+  const left = eventOrder(a);
+  const right = eventOrder(b);
+  if (left.day !== right.day) return left.day < right.day ? -1 : 1;
+  if (left.at === right.at) return 0;
+  return left.at < right.at ? -1 : 1;
+}
+
 function publicCalendarTime(
   value: GoogleCalendarEvent["start"] | GoogleCalendarEvent["end"],
 ): { dateTime?: string; date?: string } | undefined {
@@ -219,11 +259,7 @@ export async function handleCalendarProxy(
       ...("result" in holidays && holidays.result.status < 400
         ? (holidays.result.body.items ?? [])
         : []),
-    ].sort((a, b) => {
-      const aStart = a.start?.dateTime ?? a.start?.date ?? "";
-      const bStart = b.start?.dateTime ?? b.start?.date ?? "";
-      return aStart.localeCompare(bStart);
-    });
+    ].sort(compareEvents);
 
     const publicItems: PublicCalendarEvent[] = items.map((item) => {
       const start = publicCalendarTime(item.start);
