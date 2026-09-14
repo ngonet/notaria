@@ -27,20 +27,42 @@ function isExpired(activeUntil: string): boolean {
   return Date.now() > end.getTime();
 }
 
+function highlightTimes(text: string): string {
+  return text.replace(
+    /\d{1,2}:\d{2}(?:\s?hrs?\.?)?/g,
+    (match) => `<strong class="font-semibold text-navy">${match}</strong>`,
+  );
+}
+
 function render(): string {
   const { id, title, body, closeLabel } = site.announcement;
 
   return `
     <div id="${ANNOUNCEMENT_MODAL_ID}" data-announcement-modal data-announcement-id="${id}" class="fixed inset-0 z-50 hidden grid place-items-center px-4 py-8" aria-hidden="true">
       <button type="button" data-announcement-modal-overlay class="absolute inset-0 bg-navy/70" aria-label="${closeLabel}"></button>
-      <div role="dialog" aria-modal="true" aria-labelledby="announcement-modal-title" class="relative z-10 w-full max-w-lg overflow-hidden rounded-card border border-line bg-bg shadow-card">
-        <header class="flex items-center justify-between border-b border-line px-6 py-4">
-          <h4 id="announcement-modal-title" class="font-display text-lg text-navy">${title}</h4>
-          <button type="button" data-announcement-modal-close class="rounded-full px-3 py-1.5 text-sm font-semibold text-navy transition hover:bg-navy/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy">${closeLabel}</button>
+      <div role="dialog" aria-modal="true" aria-labelledby="announcement-modal-title" class="relative z-10 w-full max-w-md overflow-hidden rounded-card border border-line bg-surface shadow-card">
+        <div class="h-1 w-full bg-[linear-gradient(90deg,var(--color-navy)_0%,var(--color-gold)_100%)]"></div>
+
+        <header class="flex items-start justify-between gap-4 px-6 pt-6 pb-4">
+          <div class="flex min-w-0 items-start gap-3.5">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-navy">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-gold)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="8" r="5"></circle>
+                <path d="M8.5 12.5 6 21l6-3 6 3-2.5-8.5"></path>
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <p class="font-display text-xs font-semibold uppercase tracking-[0.28em] text-gold">Aviso</p>
+              <h4 id="announcement-modal-title" class="mt-1 font-display text-xl font-semibold leading-tight text-navy">${title}</h4>
+            </div>
+          </div>
+          <button type="button" data-announcement-modal-close class="shrink-0 rounded-full px-3.5 py-1.5 text-sm font-semibold text-navy transition hover:bg-navy/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy">${closeLabel}</button>
         </header>
 
-        <div class="p-6">
-          <p class="text-base text-ink">${body}</p>
+        <div class="mx-6 h-px bg-[linear-gradient(90deg,var(--color-line)_0%,var(--color-gold-soft)_50%,var(--color-line)_100%)]"></div>
+
+        <div class="px-6 pt-5 pb-7">
+          <p class="text-base leading-relaxed text-ink">${highlightTimes(body)}</p>
         </div>
       </div>
     </div>
