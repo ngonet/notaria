@@ -18,6 +18,13 @@
         }
       },
       {
+        "source": "/api/telemetry/mount-failure",
+        "function": {
+          "functionId": "mountFailureTelemetry",
+          "region": "us-central1"
+        }
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }

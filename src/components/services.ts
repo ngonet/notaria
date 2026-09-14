@@ -4,7 +4,6 @@ import {
   type FeatureGroup,
   type ServiceCard,
 } from "@/content/site";
-import { createArancelesSection } from "./aranceles";
 
 type SvgShape = {
   tag: "path" | "circle";
@@ -211,7 +210,7 @@ function createFeatureGroup(
   return wrapper;
 }
 
-function createNotaryArticle(): HTMLElement {
+export function createNotaryArticle(): HTMLElement {
   const { notary } = site.services;
   const article = document.createElement("article");
   article.className =
@@ -253,30 +252,9 @@ function createNotaryArticle(): HTMLElement {
   }
 
   const right = document.createElement("div");
-  const decree = createTextElement(
-    "p",
-    "text-sm leading-relaxed text-white/85 md:text-base",
-    `${notary.decree.text}. `,
-  );
-
-  const decreeLink = document.createElement("a");
-  decreeLink.className =
-    "ml-1 inline-flex items-center gap-1 font-semibold text-gold underline-offset-4 hover:underline";
-  decreeLink.href = notary.decree.href;
-  decreeLink.target = "_blank";
-  decreeLink.rel = "noopener noreferrer";
-  decreeLink.append(document.createTextNode(notary.decree.label));
-
-  const arrow = document.createElement("span");
-  arrow.setAttribute("aria-hidden", "true");
-  arrow.textContent = "↗";
-  decreeLink.append(arrow);
-  decree.append(decreeLink);
-  right.append(decree);
-
   if (notary.prosecutor) {
     const prosecutor = document.createElement("div");
-    prosecutor.className = "mt-6";
+    prosecutor.className = "";
     prosecutor.append(
       createTextElement(
         "p",
@@ -343,7 +321,7 @@ export function mountServices(el: HTMLElement): void {
   primary.forEach((item, index) =>
     primaryList.append(createPrimaryCard(item, index)),
   );
-  container.append(primaryList, createNotaryArticle());
+  container.append(primaryList);
 
   const secondaryWrapper = document.createElement("div");
   secondaryWrapper.className = "mt-16 space-y-12";
@@ -352,12 +330,6 @@ export function mountServices(el: HTMLElement): void {
     createFeatureGroup(secondary.conservador, "md:grid-cols-2"),
   );
   container.append(secondaryWrapper);
-
-  const arancelesWrapper = document.createElement("div");
-  arancelesWrapper.className =
-    "mt-20 md:mt-24 border-t border-line/60 pt-16 md:pt-20";
-  arancelesWrapper.append(createArancelesSection());
-  container.append(arancelesWrapper);
 
   el.append(container);
 }

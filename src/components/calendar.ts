@@ -1,43 +1,108 @@
 import { site } from "@/content/site";
 
+function createTextElement<K extends keyof HTMLElementTagNameMap>(
+  tag: K,
+  className: string,
+  text: string,
+): HTMLElementTagNameMap[K] {
+  const element = document.createElement(tag);
+  element.className = className;
+  element.textContent = text;
+  return element;
+}
+
+export function reportCalendarFailure(): void {
+  window.dispatchEvent(
+    new CustomEvent("notaria:mount-failed", {
+      detail: { mount: "calendar", message: "request_failed" },
+    }),
+  );
+}
+
+export function showCalendarRecovery(
+  root: HTMLDivElement,
+  retry: () => void,
+): void {
+  root.querySelector("[data-calendar-recovery]")?.remove();
+  const recovery = document.createElement("div");
+  recovery.className = "mt-4 flex flex-wrap items-center justify-center gap-4";
+  recovery.dataset.calendarRecovery = "";
+  const message = createTextElement(
+    "p",
+    "text-sm text-muted",
+    site.calendar.errorMessage,
+  );
+  message.setAttribute("role", "alert");
+  const button = createTextElement(
+    "button",
+    "rounded-md border border-navy px-4 py-2 text-sm font-semibold text-navy transition hover:bg-navy hover:text-white",
+    site.calendar.retryLabel,
+  );
+  button.type = "button";
+  button.addEventListener("click", retry);
+  recovery.append(message, button);
+  root.append(recovery);
+}
+
 export function mountCalendar(el: HTMLElement): void {
   const { eyebrow, heading, lead, loadingLabel, reservationNote } =
     site.calendar;
 
-  el.innerHTML = `
-    <div class="border-t border-line bg-surface">
-      <div class="mx-auto max-w-(--container-content) px-6 py-20 md:py-28">
-        <header class="mx-auto max-w-3xl text-center">
-          <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">${eyebrow}</p>
-          <h2 id="calendario-heading" class="mt-3 font-display text-3xl text-navy md:text-4xl">${heading}</h2>
-          <p class="mt-4 text-base text-muted md:text-lg">${lead}</p>
-        </header>
+  const wrapper = document.createElement("div");
+  wrapper.className = "mt-16 border-t border-line/60 pt-16";
+  const header = document.createElement("header");
+  header.className = "mx-auto max-w-3xl text-center";
+  const title = createTextElement(
+    "h3",
+    "mt-3 font-display text-2xl text-navy md:text-3xl",
+    heading,
+  );
+  title.id = "calendario-heading";
+  header.append(
+    createTextElement(
+      "p",
+      "font-display text-sm uppercase tracking-[0.28em] text-gold",
+      eyebrow,
+    ),
+    title,
+    createTextElement("p", "mt-4 text-base text-muted md:text-lg", lead),
+  );
 
-        <div
-          class="mt-12 min-h-[420px] rounded-card border border-line bg-bg p-4 shadow-card md:p-6"
-          data-calendar-root
-          aria-busy="true"
-        >
-          <p class="flex h-72 items-center justify-center text-sm text-muted" data-calendar-loading>
-            ${loadingLabel}
-          </p>
-        </div>
+  const root = document.createElement("div");
+  root.className =
+    "mt-12 min-h-[420px] rounded-card border border-line bg-surface p-4 shadow-card md:p-6";
+  root.dataset.calendarRoot = "";
+  root.setAttribute("aria-busy", "true");
+  const loading = createTextElement(
+    "p",
+    "flex h-72 items-center justify-center text-sm text-muted",
+    loadingLabel,
+  );
+  loading.dataset.calendarLoading = "";
+  root.append(loading);
 
-        <p class="mt-6 text-center text-xs text-muted">
-          ${reservationNote.beforePhone}
-          <a class="font-semibold text-navy hover:underline" href="tel:${site.contact.phoneE164}">${site.contact.phoneDisplay}</a>
-          ${reservationNote.afterPhone}
-        </p>
-      </div>
-    </div>
-  `;
+  const reservation = createTextElement(
+    "p",
+    "mt-6 text-center text-xs text-muted",
+    reservationNote.beforePhone,
+  );
+  const phoneLink = createTextElement(
+    "a",
+    "font-semibold text-navy hover:underline",
+    site.contact.phoneDisplay,
+  );
+  phoneLink.href = `tel:${site.contact.phoneE164}`;
+  reservation.append(
+    phoneLink,
+    document.createTextNode(reservationNote.afterPhone),
+  );
 
-  const root = el.querySelector<HTMLDivElement>("[data-calendar-root]");
-  if (!root) return;
+  wrapper.append(header, root, reservation);
+  el.replaceChildren(wrapper);
 
   const observer = new IntersectionObserver(
     async (entries) => {
-      const visible = entries.some((e) => e.isIntersecting);
+      const visible = entries.some((entry) => entry.isIntersecting);
       if (!visible) return;
       observer.disconnect();
       await renderCalendar(root);
@@ -48,7 +113,7 @@ export function mountCalendar(el: HTMLElement): void {
   observer.observe(root);
 }
 
-async function renderCalendar(root: HTMLDivElement): Promise<void> {
+export async function renderCalendar(root: HTMLDivElement): Promise<void> {
   const loading = root.querySelector<HTMLElement>("[data-calendar-loading]");
 
   try {
@@ -61,7 +126,8 @@ async function renderCalendar(root: HTMLDivElement): Promise<void> {
     loading?.remove();
     root.removeAttribute("aria-busy");
 
-    const calendar = new Calendar(root, {
+    let calendar: { refetchEvents: () => void; render: () => void };
+    calendar = new Calendar(root, {
       plugins: [dayGrid.default],
       initialView: "dayGridMonth",
       locale: "es",
@@ -70,21 +136,27 @@ async function renderCalendar(root: HTMLDivElement): Promise<void> {
       headerToolbar: { left: "prev,next today", center: "title", right: "" },
       buttonText: { today: site.calendar.todayLabel },
       events: async (info, success, failure) => {
+        root.setAttribute("aria-busy", "true");
         try {
           const events = await fetchCalendarEvents(info.startStr, info.endStr);
+          root.querySelector("[data-calendar-recovery]")?.remove();
           success(
-            events.map((ev) => ({
-              id: ev.id,
-              title: ev.title,
-              start: ev.start,
-              ...(ev.end ? { end: ev.end } : {}),
-              allDay: ev.allDay,
-              classNames: [`notaria-calendar-event--${ev.kind}`],
-              extendedProps: { kind: ev.kind },
+            events.map((event) => ({
+              id: event.id,
+              title: event.title,
+              start: event.start,
+              ...(event.end ? { end: event.end } : {}),
+              allDay: event.allDay,
+              classNames: [`notaria-calendar-event--${event.kind}`],
+              extendedProps: { kind: event.kind },
             })),
           );
         } catch (err) {
+          reportCalendarFailure();
+          showCalendarRecovery(root, () => calendar.refetchEvents());
           failure(err as Error);
+        } finally {
+          root.removeAttribute("aria-busy");
         }
       },
       eventDisplay: "block",

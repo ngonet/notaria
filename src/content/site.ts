@@ -81,6 +81,7 @@ export interface VisitDocument {
 }
 
 export interface ContactInfo {
+  section: { eyebrow: string; heading: string; lead: string };
   legalName: string;
   street: string;
   city: string;
@@ -89,6 +90,13 @@ export interface ContactInfo {
   phoneE164: string;
   email: string;
   schedule: { weekdays: string; saturdays: string };
+  labels: {
+    address: string;
+    mapsLink: string;
+    phoneAndEmail: string;
+    schedule: string;
+    mapTitle: string;
+  };
 }
 
 export interface ContactFormContent {
@@ -99,6 +107,7 @@ export interface ContactFormContent {
   phoneLabel: string;
   phoneNote: string;
   claimTypeLabel: string;
+  claimTypePlaceholder: string;
   claimTypes: string[];
   messageLabel: string;
   submitLabel: string;
@@ -112,16 +121,22 @@ export const site = {
   tagline: "Notario y Conservador de Comercio de Melipilla",
   url: "https://notariamelipilla.cl",
 
+  bootstrap: {
+    mountErrorMessage:
+      "No fue posible cargar esta sección. Intente recargar la página.",
+  },
+
   nav: [
-    { href: "#servicios", label: "Servicios" },
-    { href: "#nosotros", label: "Nosotros" },
-    { href: "#documentos", label: "Documentos" },
-    { href: "#contacto", label: "Contactos" },
-    { href: "#calendario", label: "Calendario" },
+    { href: "#page-top", label: "Inicio" },
+    { href: "#servicios", label: "Trámites" },
+    { href: "#documentos", label: "Documentos y copias" },
+    { href: "#transparencia", label: "Transparencia" },
+    { href: "#nosotros", label: "La Notaría" },
+    { href: "#contacto", label: "Contacto" },
   ] satisfies NavLink[],
 
   hero: {
-    ctaPrimaryLabel: "Ver servicios",
+    ctaPrimaryLabel: "Ver trámites",
     ctaSecondaryLabel: "Contactar",
     carouselAriaLabel: "Carrusel de presentación",
     slideAriaLabelPrefix: "Ir al slide",
@@ -147,7 +162,7 @@ export const site = {
   },
 
   services: {
-    eyebrow: "Servicios",
+    eyebrow: "Trámites",
     heading: "Trámites notariales con respaldo y experiencia",
     lead: "Atención personalizada en escrituras públicas, instrumentos privados y trámites del Conservador de Comercio.",
     primary: [
@@ -187,11 +202,6 @@ export const site = {
         label: "Fiscal",
         name: "Anamaría del Pilar Quintero Harvey",
         office: "Cuarta Fiscalía de la Corte de Apelaciones de San Miguel",
-      },
-      decree: {
-        text: "Nombramiento del Ministerio de Justicia según decreto N° 118 con fecha 22 de febrero de 2012",
-        href: "http://transparencia.minjusticia.gob.cl/justicia/2012/efectos_terceros/archivos/Dto.%20118-%202012.pdf",
-        label: "Ver decreto",
       },
     },
 
@@ -320,9 +330,9 @@ export const site = {
 
   about: {
     section: {
-      eyebrow: "Nosotros",
-      heading: "Quiénes somos",
-      lead: "Conocé nuestra trayectoria, nuestro equipo y el compromiso que nos define.",
+      eyebrow: "La Notaría",
+      heading: "Conozca la notaría",
+      lead: "Conozca a nuestro equipo, trayectoria y compromiso de atención.",
     },
     commitment: {
       heading: "Nuestro compromiso",
@@ -355,10 +365,6 @@ export const site = {
           "El Ministerio de Justicia nombra a Don René Martínez Loaiza en el cargo de Notario de Melipilla.",
         period: "Nombramiento",
         date: "Febrero 2012",
-        link: {
-          href: "http://transparencia.minjusticia.gob.cl/justicia/2012/efectos_terceros/archivos/Dto.%20118-%202012.pdf",
-          label: "Decreto N° 118",
-        },
       },
       {
         icon: "university",
@@ -380,9 +386,9 @@ export const site = {
   },
 
   documents: {
-    eyebrow: "Documentos",
+    eyebrow: "Documentos y copias",
     downloadCtaLabel: "Hacer una copia",
-    heading: "Documentos online e información",
+    heading: "Documentos, plantillas y copias digitales",
     lead: "Haz clic en el documento que necesitas, crea tu copia y complétalo con tus datos e imprímelo. Todo documento debe ser firmado por el interesado ante el notario.",
     downloads: [
       {
@@ -498,13 +504,14 @@ export const site = {
   },
 
   contactForm: {
-    heading: "Ingrese un reclamo",
+    heading: "Reclamos y sugerencias",
     lead: "Complete el formulario. Su reclamo será atendido a la brevedad.",
     nameLabel: "Nombre completo",
     emailLabel: "Correo electrónico",
     phoneLabel: "Teléfono",
     phoneNote: "(opcional)",
     claimTypeLabel: "Tipo de reclamo",
+    claimTypePlaceholder: "— Seleccione —",
     claimTypes: [
       "Demora en trámite",
       "Cobros / honorarios",
@@ -521,6 +528,11 @@ export const site = {
   } satisfies ContactFormContent,
 
   contact: {
+    section: {
+      eyebrow: "Contacto",
+      heading: "Información de contacto",
+      lead: "Encuentre nuestra dirección, horarios y canales de atención.",
+    },
     legalName: "Notaría René A. Martínez Loaiza",
     street: "Avenida Serrano 369, oficina 11",
     city: "Melipilla, Chile",
@@ -533,15 +545,23 @@ export const site = {
       weekdays: "Lunes a viernes · 09:00 a 17:00",
       saturdays: "Sábados · 09:30 a 12:45",
     },
+    labels: {
+      address: "Dirección",
+      mapsLink: "Ver en Google Maps",
+      phoneAndEmail: "Teléfono y correo",
+      schedule: "Horario de atención",
+      mapTitle: "Ubicación de",
+    },
   } satisfies ContactInfo,
 
   calendar: {
-    eyebrow: "Calendario",
+    eyebrow: "Agenda de atención",
     heading: "Calendario de atención",
     lead: "Días y horarios de atención publicados por la notaría. Disponibilidad actualizada en tiempo real.",
     loadingLabel: "Cargando calendario…",
     todayLabel: "Hoy",
     errorMessage: "No fue posible cargar el calendario. Intente más tarde.",
+    retryLabel: "Reintentar calendario",
     eventLabels: {
       attention: "Atención",
       holidayFallback: "Feriado",
@@ -554,9 +574,39 @@ export const site = {
 
   footer: {
     copyright: `Copyright © ${new Date().getFullYear()} Notaría Martínez · Todos los derechos reservados.`,
-    transparency: {
-      label: "Declaración de patrimonio e intereses",
+    transparencyLinkLabel: "Transparencia",
+    navLabel: "Enlaces de pie",
+    siteHeading: "Sitio",
+    attentionHeading: "Atención",
+  },
+
+  transparency: {
+    section: {
+      eyebrow: "Transparencia",
+      heading: "Información pública",
+      lead: "Consulte aranceles, decretos, fiscalizaciones, balances, registros y publicaciones institucionales.",
+    },
+    tariffsHeading: "Aranceles y decretos",
+    overviewHeading: "Visitas notariales, balances y registros",
+    institutionalEyebrow: "Publicaciones institucionales",
+    institutionalHeading: "Declaración y remuneraciones",
+    decree: {
+      title: "Decreto N° 118",
+      description:
+        "Nombramiento del Ministerio de Justicia según decreto N° 118, de fecha 22 de febrero de 2012.",
+      href: "http://transparencia.minjusticia.gob.cl/justicia/2012/efectos_terceros/archivos/Dto.%20118-%202012.pdf",
+      label: "Ver decreto N° 118",
+    },
+    assetDeclaration: {
+      title: "Declaración de patrimonio e intereses",
+      description:
+        "Consulta pública de la declaración de patrimonio e intereses.",
       href: "https://www.infoprobidad.cl/Declaracion/Declaracion?ID=5114744",
+      label: "Ver declaración",
+    },
+    salaryPublication: {
+      eyebrow: "Publicación de remuneraciones",
+      lead: "RUT y sueldo base de funcionarios.",
     },
   },
 } as const;

@@ -18,8 +18,9 @@
 - Functions build only: `npm --prefix functions run build`
 
 ## Verification Order
-- CI order is: install root deps -> install `functions/` deps -> `npm --prefix functions run build` -> `npm run check` -> `npm run build`.
-- There is no test suite configured. Do not claim tests passed; use the build/check commands above.
+- CI order is: install root deps -> install `functions/` deps -> `npm --prefix functions run build` -> `npm --prefix functions run test` -> `npm run test` -> `npm run check` -> `npm run build`.
+- Vitest suites exist in both packages: `npm run test` (frontend, jsdom) and `npm --prefix functions run test` (Cloud Functions handlers). Both run in CI and fail the build on a non-zero exit; both set `allowOnly: false`, so a stray `.only` cannot pass.
+- Run both suites before claiming tests passed, and never claim a suite passed without its actual output.
 
 ## Firebase and Secrets
 - Firebase project is `notaria-melipilla` from `.firebaserc`.

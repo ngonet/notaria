@@ -19,15 +19,8 @@ function el<K extends keyof HTMLElementTagNameMap>(
   text?: string,
 ): HTMLElementTagNameMap[K] {
   const node = document.createElement(tag);
-
-  if (className) {
-    node.className = className;
-  }
-
-  if (text !== undefined) {
-    node.textContent = text;
-  }
-
+  if (className) node.className = className;
+  if (text !== undefined) node.textContent = text;
   return node;
 }
 
@@ -65,15 +58,8 @@ function svg(name: keyof typeof ICON_PATHS): SVGSVGElement {
 }
 
 export function mountDocuments(root: HTMLElement): void {
-  const {
-    eyebrow,
-    heading,
-    lead,
-    downloads,
-    downloadCtaLabel,
-    visitas,
-    fojas,
-  } = site.documents;
+  const { eyebrow, heading, lead, downloads, downloadCtaLabel, fojas } =
+    site.documents;
 
   root.textContent = "";
 
@@ -81,7 +67,6 @@ export function mountDocuments(root: HTMLElement): void {
     "div",
     "mx-auto max-w-(--container-content) px-6 py-20 md:py-28",
   );
-
   const header = el("header", "mx-auto max-w-3xl text-center");
   append(
     header,
@@ -135,61 +120,6 @@ export function mountDocuments(root: HTMLElement): void {
     downloadsList.appendChild(item);
   });
 
-  const visitasSection = el(
-    "section",
-    "mt-16 rounded-card border border-line bg-surface px-8 py-12 shadow-card md:px-12",
-  );
-  visitasSection.setAttribute("aria-labelledby", "visitas-heading");
-
-  const visitasHeader = el("div", "max-w-3xl");
-  const visitasHeading = el(
-    "h3",
-    "mt-3 font-display text-2xl text-navy md:text-3xl",
-    visitas.heading,
-  );
-  visitasHeading.id = "visitas-heading";
-  append(
-    visitasHeader,
-    el(
-      "p",
-      "font-display text-sm uppercase tracking-[0.28em] text-gold",
-      visitas.eyebrow,
-    ),
-    visitasHeading,
-    el(
-      "p",
-      "mt-4 text-sm leading-relaxed text-muted md:text-base",
-      visitas.lead,
-    ),
-  );
-
-  const visitasGrid = el("div", "mt-8 grid gap-4 md:grid-cols-3");
-  visitas.documents.forEach((visit) => {
-    const link = externalLink(
-      visit.href,
-      "group flex h-full flex-col rounded-2xl border border-line bg-cream/60 p-5 transition hover:-translate-y-1 hover:border-gold/70 hover:bg-cream",
-    );
-    const label = el(
-      "span",
-      "mt-5 inline-flex items-center gap-2 text-sm font-semibold text-navy underline-offset-4 group-hover:underline",
-    );
-    append(label, document.createTextNode(visit.label), el("span", "", "↗"));
-    label.lastElementChild?.setAttribute("aria-hidden", "true");
-
-    append(
-      link,
-      el("span", "font-display text-lg font-semibold text-navy", visit.title),
-      el(
-        "span",
-        "mt-3 flex-1 text-sm leading-relaxed text-muted",
-        visit.description,
-      ),
-      label,
-    );
-    visitasGrid.appendChild(link);
-  });
-  append(visitasSection, visitasHeader, visitasGrid);
-
   const fojasArticle = el(
     "article",
     "mt-16 grid gap-10 rounded-card border border-line bg-surface px-8 py-12 shadow-card md:grid-cols-[1.2fr_1fr] md:items-center md:px-12",
@@ -234,6 +164,6 @@ export function mountDocuments(root: HTMLElement): void {
   imageWrap.appendChild(picture);
 
   append(fojasArticle, fojasContent, imageWrap);
-  append(wrapper, header, downloadsList, visitasSection, fojasArticle);
+  append(wrapper, header, downloadsList, fojasArticle);
   root.appendChild(wrapper);
 }
