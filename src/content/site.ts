@@ -107,10 +107,26 @@ export interface ContactFormContent {
   errorMessage: string;
 }
 
+export interface AnnouncementModal {
+  id: string;
+  title: string;
+  body: string;
+  closeLabel: string;
+  activeUntil: string;
+}
+
 export const site = {
   brand: "Notaría Martínez",
   tagline: "Notario y Conservador de Comercio de Melipilla",
   url: "https://notariamelipilla.cl",
+
+  announcement: {
+    id: "aviso-17-septiembre-2026",
+    title: "AVISO IMPORTANTE",
+    body: "Horario de atención el día 17 de septiembre será de forma excepcional desde las 8:30 hasta las 14:00 hrs.",
+    closeLabel: "Cerrar",
+    activeUntil: "2026-09-17",
+  } satisfies AnnouncementModal,
 
   nav: [
     { href: "#servicios", label: "Servicios" },

@@ -3,6 +3,10 @@ import "./styles/tailwind.css";
 type Mount = (el: HTMLElement) => void;
 
 const mounts: Record<string, () => Promise<Mount>> = {
+  announcement: () =>
+    import("@/components/announcement-modal").then(
+      (m) => m.mountAnnouncementModal,
+    ),
   nav: () => import("@/components/nav").then((m) => m.mountNav),
   hero: () => import("@/components/hero").then((m) => m.mountHero),
   services: () => import("@/components/services").then((m) => m.mountServices),
