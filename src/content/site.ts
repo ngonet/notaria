@@ -123,7 +123,7 @@ export const site = {
   announcement: {
     id: "aviso-17-septiembre-2026",
     title: "AVISO IMPORTANTE",
-    body: "Horario de atención el día 17 de septiembre será de forma excepcional desde las 8:00 hasta las 14:00 hrs.",
+    body: "Horario de atención el día 17 de septiembre será de forma excepcional desde las 8:00 hasta las 15:00 hrs.",
     closeLabel: "Cerrar",
     activeUntil: "2026-09-17",
   } satisfies AnnouncementModal,
