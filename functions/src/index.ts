@@ -287,7 +287,6 @@ const CONSULTA_DB_USER = "consulta_ro";
 // Lazy, module-scope singletons: created on first request and reused across
 // warm invocations of the same instance, instead of opening a new Cloud SQL
 // connection per request.
-let consultaConnector: Connector | undefined;
 let consultaPool: pg.Pool | undefined;
 // In-flight init promise, memoized so concurrent requests hitting a cold
 // instance share a single connector/pool instead of each racing to create
@@ -295,21 +294,34 @@ let consultaPool: pg.Pool | undefined;
 let consultaPoolInit: Promise<pg.Pool> | undefined;
 
 async function initConsultaPool(): Promise<pg.Pool> {
-	consultaConnector = new Connector();
-	// PUBLIC assumes notia-db has a public IP with SSL enforced (see notia's
-	// docs/deploy.md). If that instance is ever switched to private-IP-only,
-	// this needs ipType: IpAddressTypes.PRIVATE plus a Serverless VPC Access
-	// connector attached to this function.
-	const clientOpts = await consultaConnector.getOptions({
-		instanceConnectionName: CONSULTA_DB_INSTANCE,
-		ipType: IpAddressTypes.PUBLIC,
-	});
+	const connector = new Connector();
+	let clientOpts: Awaited<ReturnType<Connector["getOptions"]>>;
+	try {
+		// PUBLIC assumes notia-db has a public IP with SSL enforced (see notia's
+		// docs/deploy.md). If that instance is ever switched to private-IP-only,
+		// this needs ipType: IpAddressTypes.PRIVATE plus a Serverless VPC Access
+		// connector attached to this function.
+		clientOpts = await connector.getOptions({
+			instanceConnectionName: CONSULTA_DB_INSTANCE,
+			ipType: IpAddressTypes.PUBLIC,
+		});
+	} catch (err) {
+		// Close the failed connector so a retry does not leak its refresh timers.
+		connector.close();
+		throw err;
+	}
 	const pool = new pg.Pool({
 		...clientOpts,
 		user: CONSULTA_DB_USER,
 		password: CONSULTA_DB_PASSWORD.value(),
 		database: CONSULTA_DB_NAME,
 		max: 5,
+		// Bound every DB wait so a hung connection fails fast with a 500
+		// instead of holding the request until the function timeout.
+		connectionTimeoutMillis: 5000,
+		query_timeout: 5000,
+		statement_timeout: 5000,
+		idleTimeoutMillis: 30000,
 	});
 	// Without this, an idle client error (e.g. the DB dropping a connection)
 	// is an unhandled 'error' event on the pool, which crashes the instance.
