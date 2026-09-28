@@ -76,6 +76,16 @@ describe("normalizeRepertorio", () => {
 		expect(normalizeRepertorio("ABC-2026")).toBe("ABC-2026");
 		expect(normalizeRepertorio("no-dash-here")).toBe("no-dash-here");
 	});
+
+	it("leaves input with extra segments untouched instead of truncating it", () => {
+		expect(normalizeRepertorio("12-2026-X")).toBe("12-2026-X");
+		expect(normalizeRepertorio("1-2-2026")).toBe("1-2-2026");
+	});
+
+	it("leaves a non-4-digit year untouched", () => {
+		expect(normalizeRepertorio("12-26")).toBe("12-26");
+		expect(normalizeRepertorio("12-20266")).toBe("12-20266");
+	});
 });
 
 describe("RateLimiter", () => {
@@ -107,6 +117,39 @@ describe("RateLimiter", () => {
 		const now = 1_000_000;
 		expect(limiter.allow("1.2.3.4", now)).toBe(true);
 		expect(limiter.allow("5.6.7.8", now)).toBe(true);
+	});
+
+	it("evicts expired entries once the tracked-IP cap is reached", () => {
+		const limiter = new RateLimiter(60_000, 5, 2);
+		const now = 1_000_000;
+
+		// Fill the map with entries whose window has already elapsed.
+		expect(limiter.allow("1.1.1.1", now)).toBe(true);
+		expect(limiter.allow("2.2.2.2", now)).toBe(true);
+
+		// This third call hits the cap and triggers a sweep; both prior
+		// entries are expired by `now + 60_000`, so they're evicted and the
+		// map never exceeds maxTrackedIps.
+		expect(limiter.allow("3.3.3.3", now + 60_000)).toBe(true);
+		expect((limiter as unknown as { hits: Map<string, unknown> }).hits.size).toBe(
+			1,
+		);
+	});
+
+	it("falls back to evicting the oldest entries when nothing has expired", () => {
+		const limiter = new RateLimiter(60_000, 5, 2);
+		const now = 1_000_000;
+
+		expect(limiter.allow("1.1.1.1", now)).toBe(true);
+		expect(limiter.allow("2.2.2.2", now + 10)).toBe(true);
+		// Cap reached with no expired entries: the oldest (1.1.1.1) is
+		// evicted to make room instead of the map growing unbounded.
+		expect(limiter.allow("3.3.3.3", now + 20)).toBe(true);
+
+		const hits = (limiter as unknown as { hits: Map<string, unknown> }).hits;
+		expect(hits.size).toBe(2);
+		expect(hits.has("1.1.1.1")).toBe(false);
+		expect(hits.has("3.3.3.3")).toBe(true);
 	});
 });
 

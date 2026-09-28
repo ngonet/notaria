@@ -67,14 +67,21 @@ export function validateConsultaInput(body: unknown): ConsultaValidation {
 	};
 }
 
-// Mirrors notia's normalizeRepertorio (packages/shared/src/schemas.ts):
-// strips leading zeros from the numeric part of a "NNNN-AAAA" repertorio, so
-// "0005-2026" matches the canonical "5-2026" stored by public_consulta.
-// Input that does not have that num-year shape (letters, missing dash) is
-// returned unchanged — it simply cannot match any row.
+// notia's canonical repertorio shape (packages/shared/src/schemas.ts
+// repertorioSchema): the whole string must be digits, a dash, then a
+// 4-digit year — nothing before or after. notia's raw normalizeRepertorio
+// only strips leading zeros via split("-"), which is safe there because
+// repertorioSchema's regex already rejects non-canonical input before the
+// transform runs. This endpoint has no such upstream gate, so the shape
+// check is inlined here: anchoring the match end-to-end (not just splitting
+// on "-") rejects input like "12-2026-X" instead of silently truncating it
+// to "12-2026", which could otherwise match an unrelated deed.
+const CANONICAL_REPERTORIO = /^(\d+)-(\d{4})$/;
+
 export function normalizeRepertorio(repertorio: string): string {
-	const [num, year] = repertorio.split("-");
-	if (!num || !year || !/^\d+$/.test(num)) return repertorio;
+	const match = CANONICAL_REPERTORIO.exec(repertorio);
+	if (!match) return repertorio;
+	const [, num, year] = match;
 	return `${num.replace(/^0+(?=\d)/, "")}-${year}`;
 }
 
@@ -87,17 +94,26 @@ interface RateLimitEntry {
 // Run instance keeps its own state, which is acceptable because App Check is
 // already required for every request (see index.ts) — this only caps abuse
 // from a single client hammering one warm instance.
+//
+// The hit map is swept whenever it grows past MAX_TRACKED_IPS, dropping
+// expired (window-elapsed) entries, so a warm instance fielding requests
+// from many distinct IPs doesn't grow the map without bound.
 export class RateLimiter {
 	private readonly hits = new Map<string, RateLimitEntry>();
 
 	constructor(
 		private readonly windowMs = 60_000,
 		private readonly max = 20,
+		private readonly maxTrackedIps = 5_000,
 	) {}
 
 	// Returns true if the request is allowed, false if it should be
 	// rejected with 429. `now` is injectable for deterministic tests.
 	allow(ip: string, now = Date.now()): boolean {
+		if (this.hits.size >= this.maxTrackedIps) {
+			this.evictExpired(now);
+		}
+
 		const entry = this.hits.get(ip);
 		if (!entry || now - entry.windowStart >= this.windowMs) {
 			this.hits.set(ip, { count: 1, windowStart: now });
@@ -106,6 +122,28 @@ export class RateLimiter {
 		if (entry.count >= this.max) return false;
 		entry.count += 1;
 		return true;
+	}
+
+	// Drops entries whose window has already elapsed. If the map is still
+	// over capacity after that (e.g. a burst of distinct IPs within one
+	// window), falls back to evicting the oldest entries by windowStart so
+	// the map size stays bounded regardless of traffic shape.
+	private evictExpired(now: number): void {
+		for (const [ip, entry] of this.hits) {
+			if (now - entry.windowStart >= this.windowMs) {
+				this.hits.delete(ip);
+			}
+		}
+
+		if (this.hits.size < this.maxTrackedIps) return;
+
+		const oldestFirst = [...this.hits.entries()].sort(
+			(a, b) => a[1].windowStart - b[1].windowStart,
+		);
+		const excess = this.hits.size - this.maxTrackedIps + 1;
+		for (let i = 0; i < excess; i++) {
+			this.hits.delete(oldestFirst[i][0]);
+		}
 	}
 }
 

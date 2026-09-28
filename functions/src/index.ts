@@ -289,9 +289,12 @@ const CONSULTA_DB_USER = "consulta_ro";
 // connection per request.
 let consultaConnector: Connector | undefined;
 let consultaPool: pg.Pool | undefined;
+// In-flight init promise, memoized so concurrent requests hitting a cold
+// instance share a single connector/pool instead of each racing to create
+// their own. Reset on failure so a later request can retry from scratch.
+let consultaPoolInit: Promise<pg.Pool> | undefined;
 
-async function getConsultaPool(): Promise<pg.Pool> {
-	if (consultaPool) return consultaPool;
+async function initConsultaPool(): Promise<pg.Pool> {
 	consultaConnector = new Connector();
 	// PUBLIC assumes notia-db has a public IP with SSL enforced (see notia's
 	// docs/deploy.md). If that instance is ever switched to private-IP-only,
@@ -301,14 +304,31 @@ async function getConsultaPool(): Promise<pg.Pool> {
 		instanceConnectionName: CONSULTA_DB_INSTANCE,
 		ipType: IpAddressTypes.PUBLIC,
 	});
-	consultaPool = new pg.Pool({
+	const pool = new pg.Pool({
 		...clientOpts,
 		user: CONSULTA_DB_USER,
 		password: CONSULTA_DB_PASSWORD.value(),
 		database: CONSULTA_DB_NAME,
 		max: 5,
 	});
-	return consultaPool;
+	// Without this, an idle client error (e.g. the DB dropping a connection)
+	// is an unhandled 'error' event on the pool, which crashes the instance.
+	pool.on("error", (err) => {
+		logger.error("consulta pool idle client error", err);
+	});
+	consultaPool = pool;
+	return pool;
+}
+
+async function getConsultaPool(): Promise<pg.Pool> {
+	if (consultaPool) return consultaPool;
+	if (!consultaPoolInit) {
+		consultaPoolInit = initConsultaPool().catch((err) => {
+			consultaPoolInit = undefined;
+			throw err;
+		});
+	}
+	return consultaPoolInit;
 }
 
 // Per-instance, per-IP limiter — see consulta.ts for why in-memory is
