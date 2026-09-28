@@ -13,6 +13,7 @@ const mounts: Record<string, () => Promise<Mount>> = {
   about: () => import("@/components/about").then((m) => m.mountAbout),
   documents: () =>
     import("@/components/documents").then((m) => m.mountDocuments),
+  consulta: () => import("@/components/consulta").then((m) => m.mountConsulta),
   contact: () => import("@/components/contact").then((m) => m.mountContact),
   calendar: () => import("@/components/calendar").then((m) => m.mountCalendar),
   footer: () => import("@/components/footer").then((m) => m.mountFooter),
