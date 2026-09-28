@@ -86,20 +86,6 @@ function renderResults(
   }
 }
 
-async function readErrorMessage(
-  response: Response,
-  fallback: string,
-): Promise<string> {
-  try {
-    const body = (await response.json()) as { error?: unknown };
-    return typeof body.error === "string" && body.error.trim()
-      ? body.error
-      : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
 export function mountConsulta(el: HTMLElement): void {
   const content = site.consulta;
 
@@ -189,10 +175,7 @@ export function mountConsulta(el: HTMLElement): void {
       });
 
       if (response.status === 400) {
-        showStatus(
-          await readErrorMessage(response, content.invalidRequestMessage),
-          true,
-        );
+        showStatus(content.invalidRequestMessage, true);
         return;
       }
       if (response.status === 401 || response.status === 403) {
