@@ -5,6 +5,9 @@ import { logger } from "firebase-functions/v2";
 import * as nodemailer from "nodemailer";
 import { initializeApp, getApps } from "firebase-admin/app";
 import { getAppCheck } from "firebase-admin/app-check";
+import { Connector, IpAddressTypes } from "@google-cloud/cloud-sql-connector";
+import pg from "pg";
+import { RateLimiter, mapConsultaRow, validateConsultaInput } from "./consulta";
 
 if (getApps().length === 0) {
 	initializeApp();
@@ -15,6 +18,7 @@ setGlobalOptions({ region: "us-central1", maxInstances: 10 });
 const CALENDAR_API_KEY = defineSecret("GOOGLE_CALENDAR_API_KEY");
 const GMAIL_USER = defineSecret("GMAIL_USER");
 const GMAIL_APP_PASSWORD = defineSecret("GMAIL_APP_PASSWORD");
+const CONSULTA_DB_PASSWORD = defineSecret("CONSULTA_DB_PASSWORD");
 
 const CONTACT_TO = "notaria.martinez@gmail.com";
 
@@ -268,6 +272,126 @@ export const contactForm = onRequest(
 		} catch (err) {
 			logger.error("Gmail send failed", err);
 			res.status(502).json({ error: "email_send_failed" });
+		}
+	},
+);
+
+// notIA's Cloud SQL instance, reached read-only through the Cloud SQL
+// connector — never through the VPN-only internal API. See notia's
+// docs/deploy.md ("Public consulta") for the consulta_ro role and the
+// public_consulta view this queries.
+const CONSULTA_DB_INSTANCE = "notia-b8f87:southamerica-west1:notia-db";
+const CONSULTA_DB_NAME = "notia";
+const CONSULTA_DB_USER = "consulta_ro";
+
+// Lazy, module-scope singletons: created on first request and reused across
+// warm invocations of the same instance, instead of opening a new Cloud SQL
+// connection per request.
+let consultaConnector: Connector | undefined;
+let consultaPool: pg.Pool | undefined;
+
+async function getConsultaPool(): Promise<pg.Pool> {
+	if (consultaPool) return consultaPool;
+	consultaConnector = new Connector();
+	// PUBLIC assumes notia-db has a public IP with SSL enforced (see notia's
+	// docs/deploy.md). If that instance is ever switched to private-IP-only,
+	// this needs ipType: IpAddressTypes.PRIVATE plus a Serverless VPC Access
+	// connector attached to this function.
+	const clientOpts = await consultaConnector.getOptions({
+		instanceConnectionName: CONSULTA_DB_INSTANCE,
+		ipType: IpAddressTypes.PUBLIC,
+	});
+	consultaPool = new pg.Pool({
+		...clientOpts,
+		user: CONSULTA_DB_USER,
+		password: CONSULTA_DB_PASSWORD.value(),
+		database: CONSULTA_DB_NAME,
+		max: 5,
+	});
+	return consultaPool;
+}
+
+// Per-instance, per-IP limiter — see consulta.ts for why in-memory is
+// sufficient here (App Check is required on every request below).
+const consultaRateLimiter = new RateLimiter();
+
+interface PublicConsultaRow {
+	repertorio: string;
+	fecha: string;
+	materia: string;
+	foja: string | null;
+	tipo_repertorio: string;
+}
+
+export const deedLookup = onRequest(
+	{
+		secrets: [CONSULTA_DB_PASSWORD],
+		region: "southamerica-west1",
+		maxInstances: 3,
+		memory: "256MiB",
+		cors: false,
+	},
+	async (req, res) => {
+		const origin = req.get("origin") ?? "";
+		if (ALLOWED_ORIGINS.has(origin)) {
+			res.set("Access-Control-Allow-Origin", origin);
+			res.set("Vary", "Origin");
+		}
+		res.set("Access-Control-Allow-Methods", "POST, OPTIONS");
+		res.set("Access-Control-Allow-Headers", "Content-Type, X-Firebase-AppCheck");
+		setSecurityHeaders(res);
+
+		if (req.method === "OPTIONS") {
+			res.status(204).send("");
+			return;
+		}
+		if (req.method !== "POST") {
+			res.status(405).json({ error: "method_not_allowed" });
+			return;
+		}
+
+		const appCheckToken = req.get("X-Firebase-AppCheck");
+		if (!appCheckToken) {
+			res.status(401).json({ error: "app_check_required" });
+			return;
+		}
+		try {
+			const appCheckResult = await getAppCheck().verifyToken(appCheckToken, { consume: true });
+			if (appCheckResult.alreadyConsumed) {
+				logger.warn("App Check token replay detected (deedLookup)");
+				res.status(403).json({ error: "app_check_replay" });
+				return;
+			}
+		} catch {
+			res.status(403).json({ error: "app_check_invalid" });
+			return;
+		}
+
+		const ip = req.ip ?? "unknown";
+		if (!consultaRateLimiter.allow(ip)) {
+			res.status(429).json({ error: "rate_limited" });
+			return;
+		}
+
+		const validation = validateConsultaInput(req.body);
+		if (!validation.ok) {
+			res.status(400).json({ error: "invalid_input" });
+			return;
+		}
+
+		try {
+			const pool = await getConsultaPool();
+			const { rows } = await pool.query<PublicConsultaRow>(
+				`SELECT repertorio, to_char(fecha, 'YYYY-MM-DD') AS fecha, materia, foja, tipo_repertorio
+				 FROM public_consulta
+				 WHERE tipo_repertorio = $1 AND repertorio = $2
+				 LIMIT 10`,
+				[validation.value.tipo, validation.value.repertorio],
+			);
+			res.status(200).json({ results: rows.map(mapConsultaRow) });
+		} catch (err) {
+			logger.error("deedLookup query failed", err);
+			res.status(500).json({ error: "internal_error" });
 		}
 	},
 );

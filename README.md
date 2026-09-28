@@ -85,6 +85,43 @@ Restricciones de la key en Google Cloud Console:
 - API restringida: solo **Google Calendar API**.
 - Restricción de aplicación: **None** (la key vive en backend, no en navegadores). Si en algún momento se reutiliza para otro propósito frontend, agregar referrers.
 
+## Cloud Function: deedLookup
+
+`functions/src/index.ts` expone `POST /api/consulta` (región
+`southamerica-west1`, `maxInstances: 3`): busca una escritura o documento
+comercio por número de repertorio, consultando directamente la base de datos
+de notIA a través de un rol de solo lectura (`consulta_ro`, vista
+`public_consulta` — ver `notia/docs/deploy.md`, sección "Public consulta").
+No expone la API interna de notIA (VPN-only) ni datos personales:
+solo repertorio, fecha, materia y foja.
+
+Requiere App Check (header `X-Firebase-AppCheck`, igual que `contactForm`) y
+aplica un rate limit en memoria por IP (20 solicitudes/minuto por instancia).
+
+Setup manual, una vez (fuera de este repo, en el proyecto `notia-b8f87`):
+
+```bash
+# 1. Rol de solo lectura ya creado por la migración 0019 de notia; falta
+#    habilitar login con contraseña (ver notia/docs/deploy.md):
+gcloud sql connect notia-db --project=notia-b8f87 --user=notia
+# en psql: ALTER ROLE consulta_ro LOGIN PASSWORD '<strong-password>';
+
+# 2. Secret en este proyecto (notaria-melipilla):
+firebase functions:secrets:set CONSULTA_DB_PASSWORD
+
+# 3. La cuenta de servicio de las Functions de notaria-melipilla necesita
+#    permiso para conectarse al Cloud SQL de notia-b8f87:
+gcloud projects add-iam-policy-binding notia-b8f87 \
+  --member="serviceAccount:<notaria-melipilla-functions-sa-email>" \
+  --role="roles/cloudsql.client"
+```
+
+La conexión usa `@google-cloud/cloud-sql-connector` con IP pública (requiere
+que la instancia `notia-db` tenga IP pública habilitada con SSL forzado, que
+es el estado por defecto documentado en `notia/docs/deploy.md`). Si esa
+instancia pasa a IP privada exclusiva, `deedLookup` necesitará
+`ipType: IpAddressTypes.PRIVATE` y un conector de Serverless VPC Access.
+
 ## Deploy
 
 ### Automático (GitHub Actions)
@@ -105,8 +142,8 @@ firebase deploy --only hosting,functions --project notaria-melipilla
 ## Firebase
 
 - Proyecto: `notaria-melipilla` (`.firebaserc`).
-- `firebase.json` publica `dist/` y declara rewrite `/api/calendar/**` → `calendarProxy` (region `us-central1`).
-- Region debe coincidir con `setGlobalOptions({ region: 'us-central1' })` en `functions/src/index.ts`.
+- `firebase.json` publica `dist/` y declara los rewrites `/api/calendar/**` → `calendarProxy`, `/api/contact` → `contactForm` (region `us-central1`, el default de `setGlobalOptions` en `functions/src/index.ts`) y `/api/consulta` → `deedLookup` (region `southamerica-west1`, fijada por función — más cerca de la base de datos de notIA en ese mismo proyecto/región).
+- Cada función con region distinta al default debe fijarla explícitamente en sus propias opciones (`onRequest({ region: ... })`) y mantenerla alineada con su rewrite en `firebase.json`.
 
 ## Notas de migración
 
