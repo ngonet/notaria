@@ -37,7 +37,10 @@ export async function getAppCheckHeader(): Promise<Record<string, string>> {
       ),
     ]);
     return { "X-Firebase-AppCheck": result.token };
-  } catch {
+  } catch (err) {
+    // Surface the reason (e.g. reCAPTCHA domain/key errors, throttling) instead
+    // of silently sending the request without a token.
+    console.warn("App Check token unavailable:", err);
     return {};
   }
 }
