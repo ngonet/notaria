@@ -207,7 +207,7 @@ export const contactForm = onRequest(
 		} catch (err) {
 			// Log only the error code/message, never the token itself.
 			logger.warn("App Check verification failed (contactForm)", {
-				code: (err as { code?: string }).code,
+				code: (err as { code?: string } | null | undefined)?.code,
 				message: err instanceof Error ? err.message : String(err),
 			});
 			res.status(403).json({ error: "app_check_invalid" });
@@ -402,7 +402,7 @@ export const deedLookup = onRequest(
 		} catch (err) {
 			// Log only the error code/message, never the token itself.
 			logger.warn("App Check verification failed (deedLookup)", {
-				code: (err as { code?: string }).code,
+				code: (err as { code?: string } | null | undefined)?.code,
 				message: err instanceof Error ? err.message : String(err),
 			});
 			res.status(403).json({ error: "app_check_invalid" });
