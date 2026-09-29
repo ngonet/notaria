@@ -204,7 +204,12 @@ export const contactForm = onRequest(
 				res.status(403).json({ error: "app_check_replay" });
 				return;
 			}
-		} catch {
+		} catch (err) {
+			// Log only the error code/message, never the token itself.
+			logger.warn("App Check verification failed (contactForm)", {
+				code: (err as { code?: string } | null | undefined)?.code,
+				message: err instanceof Error ? err.message : String(err),
+			});
 			res.status(403).json({ error: "app_check_invalid" });
 			return;
 		}
@@ -394,7 +399,12 @@ export const deedLookup = onRequest(
 				res.status(403).json({ error: "app_check_replay" });
 				return;
 			}
-		} catch {
+		} catch (err) {
+			// Log only the error code/message, never the token itself.
+			logger.warn("App Check verification failed (deedLookup)", {
+				code: (err as { code?: string } | null | undefined)?.code,
+				message: err instanceof Error ? err.message : String(err),
+			});
 			res.status(403).json({ error: "app_check_invalid" });
 			return;
 		}
