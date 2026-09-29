@@ -107,6 +107,28 @@ export interface ContactFormContent {
   errorMessage: string;
 }
 
+export interface ConsultaContent {
+  eyebrow: string;
+  heading: string;
+  lead: string;
+  typeLabel: string;
+  types: { escrituras: string; comercio: string };
+  repertorioLabel: string;
+  privacyNote: string;
+  submitLabel: string;
+  loadingLabel: string;
+  loadingMessage: string;
+  requiredMessage: string;
+  maxLengthMessage: string;
+  emptyMessage: string;
+  invalidRequestMessage: string;
+  unauthorizedMessage: string;
+  rateLimitMessage: string;
+  errorMessage: string;
+  singleResultMessage: string;
+  multipleResultsMessage: string;
+}
+
 export interface AnnouncementModal {
   id: string;
   title: string;
@@ -132,6 +154,7 @@ export const site = {
     { href: "#servicios", label: "Servicios" },
     { href: "#nosotros", label: "Nosotros" },
     { href: "#documentos", label: "Documentos" },
+    { href: "#consulta", label: "Consulta" },
     { href: "#contacto", label: "Contactos" },
     { href: "#calendario", label: "Calendario" },
   ] satisfies NavLink[],
@@ -512,6 +535,35 @@ export const site = {
       logo: "/images/fojas2.png",
     },
   },
+
+  consulta: {
+    eyebrow: "Consulta en línea",
+    heading: "Consulta de escrituras",
+    lead: "Busca una escritura pública o una inscripción de comercio por su número de repertorio.",
+    typeLabel: "Tipo de repertorio",
+    types: {
+      escrituras: "Escrituras públicas",
+      comercio: "Comercio",
+    },
+    repertorioLabel: "N° de repertorio",
+    privacyNote:
+      "Por protección de datos personales (Ley 19.628 y Ley 21.719), la consulta se realiza solo por número de repertorio y no muestra datos de los comparecientes.",
+    submitLabel: "Consultar",
+    loadingLabel: "Consultando…",
+    loadingMessage: "Buscando resultados…",
+    requiredMessage: "Ingresa un número de repertorio.",
+    maxLengthMessage: "El número de repertorio no puede superar 30 caracteres.",
+    emptyMessage: "No se encontraron resultados para ese número de repertorio.",
+    invalidRequestMessage: "Revisa los datos ingresados e intenta nuevamente.",
+    unauthorizedMessage:
+      "No pudimos verificar la solicitud. Recarga la página e intenta nuevamente.",
+    rateLimitMessage:
+      "Demasiadas consultas. Intenta nuevamente en unos minutos.",
+    errorMessage:
+      "No fue posible realizar la consulta. Intenta nuevamente más tarde.",
+    singleResultMessage: "Se encontró 1 resultado.",
+    multipleResultsMessage: "Se encontraron {count} resultados.",
+  } satisfies ConsultaContent,
 
   contactForm: {
     heading: "Ingrese un reclamo",
