@@ -124,6 +124,7 @@ export interface ConsultaContent {
   invalidRequestMessage: string;
   unauthorizedMessage: string;
   rateLimitMessage: string;
+  timeoutMessage: string;
   errorMessage: string;
   singleResultMessage: string;
   multipleResultsMessage: string;
@@ -559,6 +560,7 @@ export const site = {
       "No pudimos verificar la solicitud. Recarga la página e intenta nuevamente.",
     rateLimitMessage:
       "Demasiadas consultas. Intenta nuevamente en unos minutos.",
+    timeoutMessage: "La consulta tardó demasiado. Intenta nuevamente.",
     errorMessage:
       "No fue posible realizar la consulta. Intenta nuevamente más tarde.",
     singleResultMessage: "Se encontró 1 resultado.",

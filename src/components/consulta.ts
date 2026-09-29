@@ -10,11 +10,40 @@ interface ConsultaResult {
   repertorio: string;
   fecha: string;
   materia: string;
-  foja: string;
+  foja: string | null;
 }
 
-interface ConsultaResponse {
-  results: ConsultaResult[];
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function parseConsultaResults(body: unknown): ConsultaResult[] | null {
+  if (!isRecord(body) || !Array.isArray(body.results)) return null;
+
+  return body.results.flatMap((item): ConsultaResult[] => {
+    if (
+      !isRecord(item) ||
+      typeof item.tipoRepertorio !== "string" ||
+      typeof item.repertorio !== "string" ||
+      typeof item.fecha !== "string" ||
+      typeof item.materia !== "string" ||
+      (item.foja !== undefined &&
+        item.foja !== null &&
+        typeof item.foja !== "string")
+    ) {
+      return [];
+    }
+
+    return [
+      {
+        tipoRepertorio: item.tipoRepertorio,
+        repertorio: item.repertorio,
+        fecha: item.fecha,
+        materia: item.materia,
+        foja: item.foja ?? null,
+      },
+    ];
+  });
 }
 
 function formatDate(date: string): string {
@@ -79,7 +108,7 @@ function renderResults(
     appendField(details, "Repertorio", result.repertorio);
     appendField(details, "Fecha", formatDate(result.fecha));
     appendField(details, "Materia", result.materia);
-    appendField(details, "Foja", result.foja);
+    appendField(details, "Foja", result.foja ?? "—");
 
     card.append(type, details);
     container.append(card);
@@ -166,12 +195,17 @@ export function mountConsulta(el: HTMLElement): void {
     resultsContainer.replaceChildren();
     showStatus(content.loadingMessage);
 
+    const controller = new AbortController();
+    let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
     try {
       const appCheckHeaders = await getAppCheckHeader();
+      timeoutId = setTimeout(() => controller.abort(), 10_000);
       const response = await fetch("/api/consulta", {
         method: "POST",
         headers: { "Content-Type": "application/json", ...appCheckHeaders },
         body: JSON.stringify({ tipo, repertorio }),
+        signal: controller.signal,
       });
 
       if (response.status === 400) {
@@ -191,24 +225,34 @@ export function mountConsulta(el: HTMLElement): void {
         return;
       }
 
-      const body = (await response.json()) as ConsultaResponse;
-      if (!Array.isArray(body.results) || body.results.length === 0) {
+      const results = parseConsultaResults(await response.json());
+      if (results === null) {
+        showStatus(content.errorMessage, true);
+        return;
+      }
+      if (results.length === 0) {
         showStatus(content.emptyMessage);
         return;
       }
 
-      renderResults(resultsContainer, body.results);
+      renderResults(resultsContainer, results);
       showStatus(
-        body.results.length === 1
+        results.length === 1
           ? content.singleResultMessage
           : content.multipleResultsMessage.replace(
               "{count}",
-              String(body.results.length),
+              String(results.length),
             ),
       );
     } catch {
-      showStatus(content.errorMessage, true);
+      showStatus(
+        controller.signal.aborted
+          ? content.timeoutMessage
+          : content.errorMessage,
+        true,
+      );
     } finally {
+      if (timeoutId !== undefined) clearTimeout(timeoutId);
       submitButton.disabled = false;
       submitButton.textContent = content.submitLabel;
     }
