@@ -117,6 +117,20 @@ function renderResults(
     appendField(details, "Materia", result.materia);
     appendField(details, "Foja", result.foja ?? "—");
 
+    const numeroProtocolizado = result.numeroProtocolizado?.trim();
+    if (numeroProtocolizado) {
+      appendField(
+        details,
+        site.consulta.numeroProtocolizadoLabel,
+        numeroProtocolizado,
+      );
+    }
+
+    const comparecientes = result.comparecientes?.trim();
+    if (comparecientes) {
+      appendField(details, site.consulta.comparecientesLabel, comparecientes);
+    }
+
     card.append(type, details);
     container.append(card);
   }
