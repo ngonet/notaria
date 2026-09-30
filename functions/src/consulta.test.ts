@@ -162,6 +162,8 @@ describe("mapConsultaRow", () => {
 				fecha: "2026-01-10",
 				materia: "COMPRAVENTA",
 				foja: "12",
+				numero_protocolizado: "321",
+				comparecientes: "Ana Pérez, Empresa Limitada",
 			}),
 		).toEqual({
 			tipoRepertorio: "escrituras",
@@ -169,10 +171,12 @@ describe("mapConsultaRow", () => {
 			fecha: "2026-01-10",
 			materia: "COMPRAVENTA",
 			foja: "12",
+			numeroProtocolizado: "321",
+			comparecientes: "Ana Pérez, Empresa Limitada",
 		});
 	});
 
-	it("passes through a null foja", () => {
+	it("passes through null values", () => {
 		expect(
 			mapConsultaRow({
 				tipo_repertorio: "comercio",
@@ -180,7 +184,13 @@ describe("mapConsultaRow", () => {
 				fecha: "2026-02-01",
 				materia: "CONSTITUCION DE SOCIEDAD",
 				foja: null,
-			}).foja,
-		).toBeNull();
+				numero_protocolizado: null,
+				comparecientes: null,
+			}),
+		).toMatchObject({
+			foja: null,
+			numeroProtocolizado: null,
+			comparecientes: null,
+		});
 	});
 });

@@ -12,6 +12,8 @@ export interface ConsultaResult {
 	fecha: string;
 	materia: string;
 	foja: string | null;
+	numeroProtocolizado: string | null;
+	comparecientes: string | null;
 }
 
 export interface ValidConsultaInput {
@@ -153,6 +155,8 @@ interface ConsultaRow {
 	fecha: string;
 	materia: string;
 	foja: string | null;
+	numero_protocolizado: string | null;
+	comparecientes: string | null;
 }
 
 // Maps a public_consulta row (snake_case, as returned by pg) to the camelCase
@@ -164,5 +168,7 @@ export function mapConsultaRow(row: ConsultaRow): ConsultaResult {
 		fecha: row.fecha,
 		materia: row.materia,
 		foja: row.foja,
+		numeroProtocolizado: row.numero_protocolizado,
+		comparecientes: row.comparecientes,
 	};
 }

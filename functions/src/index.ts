@@ -358,6 +358,8 @@ interface PublicConsultaRow {
 	materia: string;
 	foja: string | null;
 	tipo_repertorio: string;
+	numero_protocolizado: string | null;
+	comparecientes: string | null;
 }
 
 export const deedLookup = onRequest(
@@ -424,7 +426,7 @@ export const deedLookup = onRequest(
 		try {
 			const pool = await getConsultaPool();
 			const { rows } = await pool.query<PublicConsultaRow>(
-				`SELECT repertorio, to_char(fecha, 'YYYY-MM-DD') AS fecha, materia, foja, tipo_repertorio
+				`SELECT repertorio, to_char(fecha, 'YYYY-MM-DD') AS fecha, materia, foja, tipo_repertorio, numero_protocolizado, comparecientes
 				 FROM public_consulta
 				 WHERE tipo_repertorio = $1 AND repertorio = $2
 				 LIMIT 10`,

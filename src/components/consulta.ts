@@ -11,6 +11,8 @@ interface ConsultaResult {
   fecha: string;
   materia: string;
   foja: string | null;
+  numeroProtocolizado: string | null;
+  comparecientes: string | null;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -29,7 +31,10 @@ function parseConsultaResults(body: unknown): ConsultaResult[] | null {
       typeof item.materia !== "string" ||
       (item.foja !== undefined &&
         item.foja !== null &&
-        typeof item.foja !== "string")
+        typeof item.foja !== "string") ||
+      (item.numeroProtocolizado !== null &&
+        typeof item.numeroProtocolizado !== "string") ||
+      (item.comparecientes !== null && typeof item.comparecientes !== "string")
     ) {
       return [];
     }
@@ -41,6 +46,8 @@ function parseConsultaResults(body: unknown): ConsultaResult[] | null {
         fecha: item.fecha,
         materia: item.materia,
         foja: item.foja ?? null,
+        numeroProtocolizado: item.numeroProtocolizado,
+        comparecientes: item.comparecientes,
       },
     ];
   });
