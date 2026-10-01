@@ -8,6 +8,7 @@ import { getAppCheck } from "firebase-admin/app-check";
 import { Connector, IpAddressTypes } from "@google-cloud/cloud-sql-connector";
 import pg from "pg";
 import { RateLimiter, mapConsultaRow, validateConsultaInput } from "./consulta";
+import { compareEvents } from "./calendar-order";
 
 if (getApps().length === 0) {
 	initializeApp();
@@ -148,11 +149,7 @@ export const calendarProxy = onRequest(
 			const items = [
 				...(attention.body.items ?? []),
 				...(holidays.status < 400 ? (holidays.body.items ?? []) : []),
-			].sort((a, b) => {
-				const aStart = a.start?.dateTime ?? a.start?.date ?? "";
-				const bStart = b.start?.dateTime ?? b.start?.date ?? "";
-				return aStart.localeCompare(bStart);
-			});
+			].sort(compareEvents);
 
 			res.status(200).json({ items });
 		} catch (err) {
