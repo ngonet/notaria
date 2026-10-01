@@ -114,6 +114,8 @@ export interface ConsultaContent {
   typeLabel: string;
   types: { escrituras: string; comercio: string };
   repertorioLabel: string;
+  numeroProtocolizadoLabel: string;
+  comparecientesLabel: string;
   privacyNote: string;
   submitLabel: string;
   loadingLabel: string;
@@ -547,8 +549,10 @@ export const site = {
       comercio: "Comercio",
     },
     repertorioLabel: "N° de repertorio",
+    numeroProtocolizadoLabel: "N° protocolizado",
+    comparecientesLabel: "Comparecientes",
     privacyNote:
-      "Por protección de datos personales (Ley 19.628 y Ley 21.719), la consulta se realiza solo por número de repertorio y no muestra datos de los comparecientes.",
+      "Por protección de datos personales (Ley 19.628 y Ley 21.719), la consulta muestra únicamente datos identificatorios limitados de los comparecientes: primer nombre y apellido paterno para personas naturales, o razón social para personas jurídicas.",
     submitLabel: "Consultar",
     loadingLabel: "Consultando…",
     loadingMessage: "Buscando resultados…",
