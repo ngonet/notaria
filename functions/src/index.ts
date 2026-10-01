@@ -9,6 +9,7 @@ import { Connector, IpAddressTypes } from "@google-cloud/cloud-sql-connector";
 import pg from "pg";
 import { RateLimiter, mapConsultaRow, validateConsultaInput } from "./consulta";
 import { compareEvents } from "./calendar-order";
+import { buildAllowedOrigins } from "./origins";
 
 if (getApps().length === 0) {
 	initializeApp();
@@ -48,14 +49,7 @@ interface GoogleCalendarResponse {
 	error?: unknown;
 }
 
-const ALLOWED_ORIGINS = new Set([
-	"https://notariamelipilla.cl",
-	"https://www.notariamelipilla.cl",
-	"https://notaria-melipilla.web.app",
-	"https://notaria-melipilla.firebaseapp.com",
-	"http://localhost:5173",
-	"http://localhost:5000",
-]);
+const ALLOWED_ORIGINS = buildAllowedOrigins(process.env);
 
 function isIsoLike(value: string): boolean {
 	return /^\d{4}-\d{2}-\d{2}T?[\d:.\-+Z]*$/.test(value) && value.length <= 40;
