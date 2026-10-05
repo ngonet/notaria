@@ -16,10 +16,11 @@
 - Verify frontend formatting + types exactly like CI: `npm run check`
 - Production frontend build: `npm run build`
 - Functions build only: `npm --prefix functions run build`
+- Functions tests: `npm --prefix functions test`
 
 ## Verification Order
-- CI order is: install root deps -> install `functions/` deps -> `npm --prefix functions run build` -> `npm run check` -> `npm run build`.
-- There is no test suite configured. Do not claim tests passed; use the build/check commands above.
+- CI order is: install root deps -> install `functions/` deps -> `npm --prefix functions run build` -> `npm --prefix functions test` -> `npm run check` -> `npm run build`.
+- Only `functions/` has tests (Vitest, `functions/src/*.test.ts`); the frontend has none. Do not claim frontend tests passed.
 
 ## Firebase and Secrets
 - Firebase project is `notaria-melipilla` from `.firebaserc`.
