@@ -90,3 +90,6 @@ functions/node_modules/
 .DS_Store
 .vscode/
 .idea/
+
+# Private client quotes
+docs/cotizacion-modulo-consulta.md
