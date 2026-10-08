@@ -322,7 +322,7 @@ export const site = {
         { rut: "XX.XXX.234-0", baseSalary: "$ 553.553" },
         { rut: "XX.XXX.325-K", baseSalary: "$ 553.553" },
         { rut: "XX.XXX.067-0", baseSalary: "$ 553.553" },
-        { rut: "XX.XXX.309-9", baseSalary: "$ 552.280" },
+        { rut: "XX.XXX.309-9", baseSalary: "$ 553.553" },
         { rut: "XX.XXX.648-2", baseSalary: "$ 553.553" },
         { rut: "XX.XXX.540-1", baseSalary: "$ 553.553" },
       ],
