@@ -25,6 +25,7 @@ export function mountContact(el: HTMLElement): void {
             >${contact.street}, ${contact.city} <span class="ml-1" aria-hidden="true">↗</span></a>
             <a class="inline-flex min-h-11 items-center text-accent hover:text-accent-dark hover:underline" href="tel:${contact.phoneE164}">${contact.phoneDisplay}</a>
             <a class="inline-flex min-h-11 items-center text-accent hover:text-accent-dark hover:underline" href="mailto:${contact.email}">${contact.email}</a>
+            <p class="text-ink-2">${contact.locationNote}</p>
             <p class="leading-relaxed text-ink-2">${contact.schedule.weekdays}<br />${contact.schedule.saturdays}</p>
           </article>
 
@@ -61,7 +62,7 @@ export function mountContact(el: HTMLElement): void {
             <div>
               <label for="cf-subject" class="${LABEL_CLASS}">${formContent.claimTypeLabel}</label>
               <select id="cf-subject" name="subject" required class="${INPUT_CLASS}">
-                <option value="">${formContent.claimTypeLabel}</option>
+                <option value="">${formContent.claimTypePlaceholder}</option>
                 ${formContent.claimTypes
                   .map((type) => `<option value="${type}">${type}</option>`)
                   .join("")}

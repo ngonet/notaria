@@ -32,6 +32,8 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Keeps anchor targets clear of the sticky header. */
+    scroll-padding-top: 5rem;
   }
   body {
     font-family: var(--font-body);
@@ -73,6 +75,10 @@
     );
     color: var(--color-ink);
     font-family: var(--font-body);
+  }
+
+  /* The .fc root is the horizontal scroll box; size only its grid. */
+  .fc .fc-view-harness {
     min-width: 38rem;
   }
 

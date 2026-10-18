@@ -86,6 +86,7 @@ export interface ContactInfo {
   street: string;
   city: string;
   mapsUrl: string;
+  locationNote: string;
   phoneDisplay: string;
   phoneE164: string;
   email: string;
@@ -100,6 +101,7 @@ export interface ContactFormContent {
   phoneLabel: string;
   phoneNote: string;
   claimTypeLabel: string;
+  claimTypePlaceholder: string;
   claimTypes: string[];
   messageLabel: string;
   submitLabel: string;
@@ -575,6 +577,7 @@ export const site = {
     phoneLabel: "Teléfono",
     phoneNote: "(opcional)",
     claimTypeLabel: "Tipo de reclamo",
+    claimTypePlaceholder: "— Seleccione —",
     claimTypes: [
       "Demora en trámite",
       "Cobros / honorarios",
@@ -595,6 +598,8 @@ export const site = {
     legalName: "Notaría René A. Martínez Loaiza",
     street: "Avenida Serrano 369, oficina 11",
     city: "Melipilla, Chile",
+    locationNote:
+      "En pleno centro de Melipilla, al costado del mall Melipilla.",
     mapsUrl:
       "https://www.google.com/maps?q=Avenida+Serrano+369,+Melipilla,+Chile",
     phoneDisplay: "(+56 2) 3314 8818",

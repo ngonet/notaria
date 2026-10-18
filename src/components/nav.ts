@@ -4,9 +4,9 @@ export function mountNav(el: HTMLElement): void {
   el.innerHTML = `
     <div class="border-b border-line-soft bg-surface">
       <div class="mx-auto flex max-w-content flex-wrap items-center justify-between gap-x-4 gap-y-2 px-6 py-3">
-        <a href="#page-top" class="flex min-h-11 flex-col justify-center leading-tight text-ink hover:text-ink">
+        <a href="#page-top" class="flex min-h-11 min-w-0 flex-col justify-center leading-tight text-ink hover:text-ink">
           <span class="font-display text-[22px] font-bold">${site.brand}</span>
-          <span class="text-[13px] text-muted">${site.tagline}</span>
+          <span class="hidden text-[13px] text-muted sm:block">${site.tagline}</span>
         </a>
 
         <button
