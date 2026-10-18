@@ -24,7 +24,8 @@ function createTextElement<K extends keyof HTMLElementTagNameMap>(
 
 function createNotariaCard(item: ServiceCard, tag?: string): HTMLLIElement {
   const card = document.createElement("li");
-  card.className = "flex flex-col gap-2 rounded-card border border-line p-6";
+  card.className =
+    "flex flex-col gap-2 rounded-card border border-line bg-surface p-6";
 
   if (tag) {
     card.append(
@@ -46,7 +47,8 @@ function createNotariaCard(item: ServiceCard, tag?: string): HTMLLIElement {
 
 function createConservadorCard(item: FeatureBlock): HTMLLIElement {
   const card = document.createElement("li");
-  card.className = "flex flex-col gap-3 rounded-card border border-line p-7";
+  card.className =
+    "flex flex-col gap-3 rounded-card border border-line bg-surface p-7";
 
   card.append(
     createTextElement("h3", "font-body text-[22px] font-semibold", item.title),
@@ -162,7 +164,7 @@ export function mountServices(el: HTMLElement): void {
   intro.append(heading, createTextElement("p", "text-[17px] text-ink-2", lead));
 
   const tablist = document.createElement("div");
-  tablist.className = "flex gap-1 rounded-full bg-soft p-1";
+  tablist.className = "flex gap-1 rounded-full bg-line-soft p-1";
   tablist.setAttribute("role", "tablist");
   tablist.setAttribute("aria-label", areaTabs.ariaLabel);
 
@@ -189,7 +191,10 @@ export function mountServices(el: HTMLElement): void {
   ];
 
   container.append(header, ...panels, createArancelesSection());
-  el.append(container);
+  const background = document.createElement("div");
+  background.className = "bg-soft";
+  background.append(container);
+  el.append(background);
 
   setupTabs(tabs, panels);
 }
