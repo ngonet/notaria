@@ -3,10 +3,21 @@ export interface NavLink {
   label: string;
 }
 
+export type IconName =
+  | "form"
+  | "screen"
+  | "building"
+  | "fees"
+  | "contract"
+  | "seal"
+  | "signature"
+  | "house";
+
 export interface QuickTask {
   title: string;
   detail: string;
   href: string;
+  icon: IconName;
   external?: boolean;
 }
 
@@ -18,6 +29,7 @@ export interface DocumentStep {
 export interface ServiceCard {
   title: string;
   description: string;
+  icon?: IconName;
 }
 
 export interface FeatureBlock {
@@ -177,22 +189,26 @@ export const site = {
         title: "Formularios para completar",
         detail: "Autorizaciones, carta de poder y declaraciones",
         href: "#documentos",
+        icon: "form",
       },
       {
         title: "Copia digital en Fojas.cl",
         detail: "Con su número de certificado",
         href: "https://www.fojas.cl",
+        icon: "screen",
         external: true,
       },
       {
         title: "Inscribir una sociedad",
         detail: "Extracto y escritura pública por correo",
         href: "#servicios",
+        icon: "building",
       },
       {
         title: "Aranceles oficiales",
         detail: "Arancel 2023 y Decretos Exentos N° 587 y 588",
         href: "#aranceles",
+        icon: "fees",
       },
     ] satisfies QuickTask[],
   },
@@ -210,21 +226,25 @@ export const site = {
         title: "Contratos",
         description:
           "Testamentos, herencias, actas, constitución de sociedades mercantiles, protestos, reclamación de deudas y capitulaciones matrimoniales.",
+        icon: "contract",
       },
       {
         title: "Certificados",
         description:
           "Certificación de documentos, estado civil, inscripción y subinscripción en el Conservador, certificados de gravámenes.",
+        icon: "seal",
       },
       {
         title: "Cartas de poder",
         description:
           "Autorización notarial simple para retirar o depositar dinero en cuentas bancarias, cobrar pensiones y solicitar saldos.",
+        icon: "signature",
       },
       {
         title: "Compraventas",
         description:
           "Promesas y contratos de compraventa de vehículos motorizados, bienes raíces y bienes muebles.",
+        icon: "house",
       },
     ] satisfies ServiceCard[],
 

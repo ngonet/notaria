@@ -1,4 +1,5 @@
 import { site } from "@/content/site";
+import { rosette } from "./icons";
 
 function el<K extends keyof HTMLElementTagNameMap>(
   tag: K,
@@ -31,7 +32,7 @@ export function mountDocuments(root: HTMLElement): void {
 
   root.replaceChildren();
 
-  const section = el("div", "bg-soft");
+  const section = el("div", "bg-tint");
   const wrapper = el("div", "mx-auto max-w-content px-6 py-20");
   const header = el("header", "max-w-3xl");
   const title = el(
@@ -48,16 +49,23 @@ export function mountDocuments(root: HTMLElement): void {
 
   const stepsList = el("ol", "mt-8 grid list-none gap-3 p-0 sm:grid-cols-3");
   steps.forEach((step, index) => {
-    const item = el("li", "rounded-xl bg-surface p-4 text-sm text-ink-2");
+    const item = el(
+      "li",
+      "flex gap-3 rounded-xl bg-surface p-4 text-sm text-ink-2",
+    );
+    const number = el(
+      "span",
+      "grid h-9 w-9 shrink-0 place-items-center rounded-full bg-accent text-[15px] font-bold text-white",
+      `${index + 1}`,
+    );
+    number.setAttribute("aria-hidden", "true");
+    const copy = el("div");
     append(
-      item,
-      el(
-        "strong",
-        "mb-1 block text-[15px] font-semibold text-ink",
-        `${index + 1}. ${step.title}`,
-      ),
+      copy,
+      el("strong", "mb-1 block text-[15px] font-semibold text-ink", step.title),
       document.createTextNode(step.body),
     );
+    append(item, number, copy);
     stepsList.append(item);
   });
 
@@ -98,7 +106,7 @@ export function mountDocuments(root: HTMLElement): void {
 
   const fojasPanel = el(
     "article",
-    "mt-7 flex flex-wrap items-center justify-between gap-5 rounded-card bg-dark p-7 text-white",
+    "relative mt-7 flex flex-wrap items-center justify-between gap-5 overflow-hidden rounded-card bg-accent-dark p-7 text-white",
   );
   const fojasCopy = el("div", "min-w-0 flex-[1_1_30rem]");
   append(
@@ -123,6 +131,14 @@ export function mountDocuments(root: HTMLElement): void {
   );
   fojasLink.lastElementChild?.setAttribute("aria-hidden", "true");
 
+  fojasPanel.insertAdjacentHTML(
+    "afterbegin",
+    rosette(
+      "pointer-events-none absolute -right-24 -bottom-28 h-80 w-80 text-gold opacity-45 [stroke-width:2]",
+    ),
+  );
+  fojasCopy.classList.add("relative");
+  fojasLink.classList.add("relative");
   append(fojasPanel, fojasCopy, fojasLink);
   append(wrapper, header, stepsList, downloadsList, fojasPanel);
   section.append(wrapper);

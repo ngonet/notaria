@@ -1,5 +1,6 @@
 import { site, type FeatureBlock, type ServiceCard } from "@/content/site";
 import { createArancelesSection } from "./aranceles";
+import { iconChip } from "./icons";
 
 type ServiceArea = "notaria" | "conservador";
 
@@ -29,6 +30,10 @@ function createNotariaCard(item: ServiceCard, tag?: string): HTMLLIElement {
     card.append(
       createTextElement("span", "text-[13px] font-semibold text-accent", tag),
     );
+  }
+
+  if (item.icon) {
+    card.insertAdjacentHTML("beforeend", iconChip(item.icon, "md"));
   }
 
   card.append(

@@ -13,8 +13,20 @@
   --color-notice-line: #e9d49a;
   --color-notice-ink: #6b4a00;
 
-  --color-bg: #ffffff;
-  --color-surface: #ffffff;
+  /* Off-white everywhere: no pure white on the site. */
+  --color-white: #fafafa;
+  --color-tint: #eaf0fc;
+  --color-gold: #e0a93b;
+  --color-tone-blue: #e8eefc;
+  --color-tone-gold: #fbefd5;
+  --color-tone-gold-ink: #8a5a12;
+  --color-tone-green: #e3f2ec;
+  --color-tone-green-ink: #1e6b4e;
+  --color-tone-wine: #f6e6ea;
+  --color-tone-wine-ink: #8e2f48;
+
+  --color-bg: #fafafa;
+  --color-surface: #fafafa;
   --color-ink: #16181d;
   --color-muted: #555b66;
   --color-line: #dce0e7;
@@ -128,7 +140,7 @@
     align-items: center;
     background: var(--color-accent);
     border-radius: 999px;
-    color: white;
+    color: var(--color-white);
     display: inline-flex;
     font-weight: 600;
     height: 2rem;
@@ -208,9 +220,9 @@
   }
 
   .notaria-calendar-event--holiday {
-    --fc-event-text-color: white;
+    --fc-event-text-color: var(--color-white);
     background: var(--color-dark) !important;
-    color: white !important;
+    color: var(--color-white) !important;
   }
 
   .notaria-calendar-event--holiday .fc-daygrid-event-dot {

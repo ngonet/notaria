@@ -137,9 +137,128 @@
     <header data-mount="nav" class="sticky top-0 z-40 w-full"></header>
 
     <main id="main">
-      <div id="inicio" class="bg-soft">
+      <div id="inicio" class="relative overflow-hidden bg-tint">
+        <!-- Guilloché background, like the security pattern on notarial paper. -->
+        <svg
+          class="pointer-events-none absolute inset-0 h-full w-full text-accent"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <defs>
+            <pattern
+              id="inicio-waves"
+              width="140"
+              height="26"
+              patternUnits="userSpaceOnUse"
+            >
+              <path
+                d="M0 13 Q35 1 70 13 T140 13"
+                fill="none"
+                stroke="currentColor"
+                stroke-opacity="0.06"
+              ></path>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#inicio-waves)"></rect>
+        </svg>
+        <svg
+          class="pointer-events-none absolute -right-56 -bottom-72 h-[820px] w-[820px] text-accent"
+          viewBox="0 0 600 600"
+          fill="none"
+          stroke="currentColor"
+          stroke-opacity="0.16"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <ellipse
+            cx="300"
+            cy="300"
+            rx="280"
+            ry="96"
+            transform="rotate(0 300 300)"
+          ></ellipse>
+          <ellipse
+            cx="300"
+            cy="300"
+            rx="280"
+            ry="96"
+            transform="rotate(15 300 300)"
+          ></ellipse>
+          <ellipse
+            cx="300"
+            cy="300"
+            rx="280"
+            ry="96"
+            transform="rotate(30 300 300)"
+          ></ellipse>
+          <ellipse
+            cx="300"
+            cy="300"
+            rx="280"
+            ry="96"
+            transform="rotate(45 300 300)"
+          ></ellipse>
+          <ellipse
+            cx="300"
+            cy="300"
+            rx="280"
+            ry="96"
+            transform="rotate(60 300 300)"
+          ></ellipse>
+          <ellipse
+            cx="300"
+            cy="300"
+            rx="280"
+            ry="96"
+            transform="rotate(75 300 300)"
+          ></ellipse>
+          <ellipse
+            cx="300"
+            cy="300"
+            rx="280"
+            ry="96"
+            transform="rotate(90 300 300)"
+          ></ellipse>
+          <ellipse
+            cx="300"
+            cy="300"
+            rx="280"
+            ry="96"
+            transform="rotate(105 300 300)"
+          ></ellipse>
+          <ellipse
+            cx="300"
+            cy="300"
+            rx="280"
+            ry="96"
+            transform="rotate(120 300 300)"
+          ></ellipse>
+          <ellipse
+            cx="300"
+            cy="300"
+            rx="280"
+            ry="96"
+            transform="rotate(135 300 300)"
+          ></ellipse>
+          <ellipse
+            cx="300"
+            cy="300"
+            rx="280"
+            ry="96"
+            transform="rotate(150 300 300)"
+          ></ellipse>
+          <ellipse
+            cx="300"
+            cy="300"
+            rx="280"
+            ry="96"
+            transform="rotate(165 300 300)"
+          ></ellipse>
+          <circle cx="300" cy="300" r="120"></circle>
+          <circle cx="300" cy="300" r="110" stroke-dasharray="3 5"></circle>
+        </svg>
         <div
-          class="mx-auto grid max-w-content gap-10 px-6 py-14 lg:grid-cols-2 lg:items-start lg:py-16"
+          class="relative mx-auto grid max-w-content gap-10 px-6 py-14 lg:grid-cols-2 lg:items-start lg:py-16"
         >
           <section data-mount="hero" aria-labelledby="hero-heading"></section>
           <section
