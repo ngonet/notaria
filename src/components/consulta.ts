@@ -143,7 +143,7 @@ export function mountConsulta(el: HTMLElement): void {
   const content = site.consulta;
 
   el.innerHTML = `
-    <div class="flex flex-col gap-4 rounded-2xl border border-line bg-surface p-7">
+    <div class="flex flex-col gap-4 rounded-2xl border border-line border-t-4 border-t-accent bg-surface p-7">
       <header class="flex flex-col gap-1">
         <p class="text-[13px] font-semibold text-accent">${content.eyebrow}</p>
         <h2 id="consulta-heading" class="font-display text-[28px] leading-tight font-bold text-ink">${content.heading}</h2>
