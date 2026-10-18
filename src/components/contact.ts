@@ -10,7 +10,7 @@ export function mountContact(el: HTMLElement): void {
   const formContent = site.contactForm;
 
   el.innerHTML = `
-    <div class="bg-bg">
+    <div class="bg-soft">
       <div class="mx-auto grid max-w-content items-start gap-8 px-6 py-20 lg:grid-cols-2">
         <div class="space-y-5">
           <h2 id="contacto-heading" class="text-4xl leading-[1.05] text-ink md:text-[42px]">${contact.heading}</h2>
