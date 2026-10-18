@@ -81,6 +81,7 @@ export interface VisitDocument {
 }
 
 export interface ContactInfo {
+  heading: string;
   legalName: string;
   street: string;
   city: string;
@@ -195,7 +196,6 @@ export const site = {
   },
 
   services: {
-    eyebrow: "Servicios",
     heading: "Trámites notariales con respaldo y experiencia",
     lead: "Atención personalizada en escrituras públicas, instrumentos privados y trámites del Conservador de Comercio.",
     areaTabs: {
@@ -289,9 +289,7 @@ export const site = {
   },
 
   funcionarios: {
-    eyebrow: "Equipo",
     heading: "Nuestros funcionarios",
-    lead: "Profesionales comprometidos con cada trámite.",
     groups: [
       {
         title: "Instrumentos privados y escrituras públicas",
@@ -337,10 +335,8 @@ export const site = {
   },
 
   aranceles: {
-    eyebrow: "Tarifas",
     fileTypeLabel: "PDF",
     heading: "Aranceles",
-    lead: "Consulte y descargue los documentos oficiales de aranceles disponibles.",
     disclaimer:
       "Los aranceles publicados corresponden a los documentos oficiales disponibles en PDF.",
     documents: [
@@ -370,20 +366,13 @@ export const site = {
 
   about: {
     section: {
-      eyebrow: "Nosotros",
       heading: "Quiénes somos",
-      lead: "Conozca nuestra trayectoria, nuestro equipo y el compromiso que nos define.",
     },
     commitment: {
-      heading: "Nuestro compromiso",
-      lead: "En Notaría Melipilla sabemos que lo más importante son nuestros clientes.",
-      title: "Atención personalizada",
       body: "La satisfacción de nuestros clientes es lo más importante para nosotros. Nuestro compromiso es ofrecer a cada persona un servicio que cumpla y supere sus expectativas, con atención personalizada y la mejor disposición a su servicio.",
     },
 
     trajectory: {
-      heading: "Trayectoria",
-      title: "Más de 15 años de experiencia notarial",
       ariaLabel: "Historia y trayectoria",
     },
 
@@ -420,7 +409,6 @@ export const site = {
   },
 
   documents: {
-    eyebrow: "Documentos",
     downloadCtaLabel: "Hacer una copia",
     heading: "Documentos online e información",
     lead: "Haga clic en el documento que necesita, cree su copia, complétela con sus datos e imprímala. Todo documento debe ser firmado por el interesado ante el notario.",
@@ -603,6 +591,7 @@ export const site = {
   } satisfies ContactFormContent,
 
   contact: {
+    heading: "Contactos",
     legalName: "Notaría René A. Martínez Loaiza",
     street: "Avenida Serrano 369, oficina 11",
     city: "Melipilla, Chile",

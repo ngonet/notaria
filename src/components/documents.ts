@@ -39,7 +39,7 @@ export function mountDocuments(root: HTMLElement): void {
     "text-4xl leading-[1.05] text-ink md:text-[42px]",
     heading,
   );
-  title.id = "documents-heading";
+  title.id = "documentos-heading";
   append(
     header,
     title,

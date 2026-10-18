@@ -8,14 +8,12 @@ const LABEL_CLASS = "block text-sm font-semibold text-ink";
 export function mountContact(el: HTMLElement): void {
   const contact = site.contact;
   const formContent = site.contactForm;
-  const heading =
-    site.nav.find((link) => link.href === "#contacto")?.label ?? "";
 
   el.innerHTML = `
     <div class="bg-soft">
       <div class="mx-auto grid max-w-content items-start gap-8 px-6 py-20 lg:grid-cols-2">
         <div class="space-y-5">
-          <h2 id="contacto-heading" class="text-4xl leading-[1.05] text-ink md:text-[42px]">${heading}</h2>
+          <h2 id="contacto-heading" class="text-4xl leading-[1.05] text-ink md:text-[42px]">${contact.heading}</h2>
 
           <article class="flex flex-col gap-3.5 rounded-card bg-surface p-6">
             <h3 class="text-xl text-ink">${contact.legalName}</h3>

@@ -58,18 +58,10 @@ export function mountAnnouncementModal(root: HTMLElement): void {
     "[data-announcement-close]",
   );
 
-  // Escape closes the banner only while it is visible; the listener is
-  // removed on close so it never interferes with other dialogs.
-  const handleKeydown = (event: KeyboardEvent): void => {
-    if (event.key === "Escape") closeBanner();
-  };
-
   const closeBanner = (): void => {
-    document.removeEventListener("keydown", handleKeydown);
     root.replaceChildren();
     markDismissed(id);
   };
 
   closeButton?.addEventListener("click", closeBanner);
-  document.addEventListener("keydown", handleKeydown);
 }
