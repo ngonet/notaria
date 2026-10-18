@@ -171,8 +171,8 @@ export const site = {
 
   nav: [
     { href: "#servicios", label: "Servicios" },
-    { href: "#nosotros", label: "Nosotros" },
     { href: "#documentos", label: "Documentos" },
+    { href: "#nosotros", label: "Nosotros" },
     { href: "#consulta", label: "Consulta" },
     { href: "#contacto", label: "Contactos" },
     { href: "#calendario", label: "Calendario" },
