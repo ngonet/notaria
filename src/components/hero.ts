@@ -1,114 +1,55 @@
-import { site } from "@/content/site";
+import { site, type QuickTask } from "@/content/site";
 
-const AUTOPLAY_MS = 7000;
+const EXTERNAL_ICON = `
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="shrink-0 text-muted">
+    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+    <polyline points="15 3 21 3 21 9"></polyline>
+    <line x1="10" y1="14" x2="21" y2="3"></line>
+  </svg>
+`;
+
+function renderTask(task: QuickTask): string {
+  const externalAttrs = task.external ? ' target="_blank" rel="noopener"' : "";
+
+  return `
+    <li>
+      <a
+        href="${task.href}"${externalAttrs}
+        class="flex h-full min-h-24 flex-col gap-1 rounded-xl border border-line bg-surface p-[18px] text-ink transition hover:border-accent hover:text-ink"
+      >
+        <span class="flex items-center gap-1.5 font-semibold">${task.title}${task.external ? EXTERNAL_ICON : ""}</span>
+        <span class="text-sm text-muted">${task.detail}</span>
+      </a>
+    </li>
+  `;
+}
 
 export function mountHero(el: HTMLElement): void {
   const {
-    slides,
+    heading,
+    lead,
     ctaPrimaryLabel,
     ctaSecondaryLabel,
-    carouselAriaLabel,
-    slideAriaLabelPrefix,
+    tasksAriaLabel,
+    tasks,
   } = site.hero;
+  const { street, schedule } = site.contact;
 
   el.innerHTML = `
-    <section class="relative isolate overflow-hidden bg-navy text-white">
-      <div class="relative" data-hero-track>
-        ${slides
-          .map(
-            (slide, index) => `
-              <article
-                class="grid gap-10 px-6 py-20 md:grid-cols-[1.05fr_1fr] md:items-center md:gap-16 md:py-28 ${index === 0 ? "" : "hidden"}"
-                data-hero-slide
-                data-index="${index}"
-              >
-                <div class="mx-auto max-w-2xl md:mx-0">
-                  <p class="font-display text-sm uppercase tracking-[0.32em] text-gold">${site.tagline}</p>
-                  <h1 class="mt-4 font-display text-4xl font-semibold leading-tight md:text-5xl lg:text-6xl">${slide.title}</h1>
-                  <p class="mt-6 text-lg text-white/85 md:text-xl">${slide.subtitle}</p>
-                  <p class="mt-3 text-base text-white/65">${slide.caption}</p>
-                  <div class="mt-8 flex flex-wrap gap-3">
-                    <a href="#servicios" class="inline-flex items-center gap-2 rounded-md bg-gold px-5 py-3 font-semibold text-navy transition hover:bg-gold-soft">${ctaPrimaryLabel}</a>
-                    <a href="#contacto" class="inline-flex items-center gap-2 rounded-md border border-white/30 px-5 py-3 font-semibold text-white transition hover:border-white hover:bg-white/10">${ctaSecondaryLabel}</a>
-                  </div>
-                </div>
-                <div class="relative mx-auto aspect-[4/3] w-full max-w-xl overflow-hidden rounded-card shadow-2xl ring-1 ring-white/10">
-                  <picture>
-                    <source srcset="${slide.image.replace(/\.(jpg|png)$/, ".webp")}" type="image/webp" />
-                    <img
-                      src="${slide.image}"
-                      alt="${slide.alt}"
-                      loading="${index === 0 ? "eager" : "lazy"}"
-                      decoding="async"
-                      width="800"
-                      height="600"
-                      class="h-full w-full object-cover"
-                    />
-                  </picture>
-                  <div class="absolute inset-0 bg-gradient-to-tr from-navy/40 via-transparent to-transparent"></div>
-                </div>
-              </article>
-            `,
-          )
-          .join("")}
+    <div class="flex flex-col gap-5">
+      <h1 id="hero-heading" class="font-display text-[clamp(38px,4.6vw,60px)] leading-[1.02] font-bold tracking-[-0.02em] text-ink">${heading}</h1>
+      <p class="max-w-[50ch] text-[19px] text-ink-2">${lead}</p>
+
+      <ul aria-label="${tasksAriaLabel}" class="mt-2 grid gap-3 sm:grid-cols-2">
+        ${tasks.map(renderTask).join("")}
+      </ul>
+
+      <div class="flex flex-wrap gap-3">
+        <a href="#servicios" class="inline-flex min-h-11 items-center rounded-[10px] bg-accent px-5 font-semibold text-white transition hover:bg-accent-dark hover:text-white">${ctaPrimaryLabel}</a>
+        <a href="#contacto" class="inline-flex min-h-11 items-center rounded-[10px] border border-line bg-surface px-5 font-semibold text-ink transition hover:border-accent hover:text-ink">${ctaSecondaryLabel}</a>
       </div>
 
-      <div class="absolute inset-x-0 bottom-6 flex items-center justify-center gap-3 md:bottom-10" role="tablist" aria-label="${carouselAriaLabel}">
-        ${slides
-          .map(
-            (_, index) => `
-              <button
-                type="button"
-                role="tab"
-                aria-selected="${index === 0}"
-                aria-label="${slideAriaLabelPrefix} ${index + 1}"
-                class="h-2.5 w-8 rounded-full transition ${index === 0 ? "bg-gold" : "bg-white/30 hover:bg-white/60"}"
-                data-hero-dot
-                data-index="${index}"
-              ></button>
-            `,
-          )
-          .join("")}
-      </div>
-    </section>
+      <p class="text-[15px] text-ink-2">${street} · ${schedule.weekdays} · ${schedule.saturdays}</p>
+    </div>
   `;
-
-  if (slides.length <= 1) return;
-
-  let active = 0;
-  const slideEls = el.querySelectorAll<HTMLElement>("[data-hero-slide]");
-  const dots = el.querySelectorAll<HTMLButtonElement>("[data-hero-dot]");
-
-  const show = (next: number) => {
-    if (next === active) return;
-    slideEls[active]?.classList.add("hidden");
-    slideEls[next]?.classList.remove("hidden");
-    dots[active]?.classList.replace("bg-gold", "bg-white/30");
-    dots[active]?.setAttribute("aria-selected", "false");
-    dots[next]?.classList.replace("bg-white/30", "bg-gold");
-    dots[next]?.setAttribute("aria-selected", "true");
-    active = next;
-  };
-
-  dots.forEach((dot) => {
-    dot.addEventListener("click", () => {
-      const target = Number(dot.dataset.index);
-      show(target);
-      restart();
-    });
-  });
-
-  let timer: number | undefined;
-  const restart = () => {
-    if (timer) window.clearInterval(timer);
-    timer = window.setInterval(
-      () => show((active + 1) % slides.length),
-      AUTOPLAY_MS,
-    );
-  };
-
-  const reduceMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  ).matches;
-  if (!reduceMotion) restart();
 }

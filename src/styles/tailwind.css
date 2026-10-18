@@ -1,25 +1,32 @@
 @import "tailwindcss";
 
 @theme {
-  --color-navy: #0f2c49;
-  --color-navy-light: #1a4a7a;
-  --color-gold: #c9a65a;
-  --color-gold-soft: #d9bd80;
-  --color-gold-light: #d9bd8040;
-  --color-bg: #f8f7f4;
+  --color-accent: #1d46b8;
+  --color-accent-dark: #122f80;
+  --color-accent-soft: #a9bcf5;
+  --color-soft: #f3f5f8;
+  --color-ink-2: #3a3f48;
+  --color-line-soft: #e3e6ec;
+  --color-dark: #16181d;
+  --color-dark-line: #33363d;
+  --color-notice: #fff4d6;
+  --color-notice-line: #e9d49a;
+  --color-notice-ink: #6b4a00;
+
+  --color-bg: #ffffff;
   --color-surface: #ffffff;
-  --color-ink: #1a1a1a;
-  --color-muted: #5a5a5a;
-  --color-line: #e5e3dd;
+  --color-ink: #16181d;
+  --color-muted: #555b66;
+  --color-line: #dce0e7;
 
-  --font-display: "Fraunces", ui-serif, Georgia, serif;
-  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
 
-  --radius-card: 0.75rem;
+  --radius-card: 0.875rem;
   --shadow-card:
     0 1px 2px rgba(15, 44, 73, 0.04), 0 4px 16px rgba(15, 44, 73, 0.06);
 
-  --container-content: 72rem;
+  --container-content: 77.5rem;
 }
 
 @layer base {
@@ -37,11 +44,11 @@
   h2,
   h3 {
     font-family: var(--font-display);
-    font-weight: 600;
-    letter-spacing: -0.01em;
+    font-weight: 700;
+    letter-spacing: -0.02em;
   }
   :focus-visible {
-    outline: 2px solid var(--color-gold);
+    outline: 3px solid var(--color-accent);
     outline-offset: 2px;
   }
 }
@@ -49,28 +56,80 @@
 @layer components {
   .fc {
     --fc-border-color: var(--color-line);
-    --fc-button-bg-color: var(--color-navy);
-    --fc-button-border-color: var(--color-navy);
-    --fc-button-hover-bg-color: var(--color-navy-light);
-    --fc-button-hover-border-color: var(--color-navy-light);
-    --fc-button-active-bg-color: var(--color-navy-light);
-    --fc-button-active-border-color: var(--color-navy-light);
+    --fc-button-bg-color: var(--color-accent);
+    --fc-button-border-color: var(--color-accent);
+    --fc-button-hover-bg-color: var(--color-accent-dark);
+    --fc-button-hover-border-color: var(--color-accent-dark);
+    --fc-button-active-bg-color: var(--color-accent-dark);
+    --fc-button-active-border-color: var(--color-accent-dark);
     --fc-event-border-color: transparent;
     --fc-event-text-color: var(--color-ink);
+    --fc-neutral-bg-color: var(--color-soft);
+    --fc-page-bg-color: var(--color-surface);
+    --fc-today-bg-color: color-mix(
+      in srgb,
+      var(--color-accent) 8%,
+      var(--color-surface)
+    );
     color: var(--color-ink);
     font-family: var(--font-body);
+    min-width: 38rem;
+  }
+
+  .fc .fc-toolbar {
+    align-items: center;
+    gap: 1rem;
   }
 
   .fc .fc-toolbar-title {
-    color: var(--color-navy);
+    color: var(--color-ink);
     font-family: var(--font-display);
     font-size: clamp(1.25rem, 2vw, 1.75rem);
   }
 
-  .fc .fc-daygrid-day-number,
+  .fc .fc-button-primary {
+    border-radius: 0.625rem;
+    box-shadow: none;
+    font-weight: 600;
+    min-height: 2.75rem;
+    padding-inline: 1rem;
+  }
+
+  .fc .fc-button-primary:disabled {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+    opacity: 0.55;
+  }
+
+  .fc .fc-col-header-cell {
+    background: var(--color-soft);
+  }
+
   .fc .fc-col-header-cell-cushion {
+    color: var(--color-muted);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding-block: 0.65rem;
+  }
+
+  .fc .fc-daygrid-day-number {
     color: var(--color-ink);
+    padding: 0.5rem;
     text-decoration: none;
+  }
+
+  .fc .fc-day-today .fc-daygrid-day-number {
+    align-items: center;
+    background: var(--color-accent);
+    border-radius: 999px;
+    color: white;
+    display: inline-flex;
+    font-weight: 600;
+    height: 2rem;
+    justify-content: center;
+    margin: 0.25rem;
+    padding: 0;
+    width: 2rem;
   }
 
   .fc .fc-daygrid-day-frame {
@@ -81,7 +140,7 @@
     align-items: flex-start;
     border-radius: 0.45rem;
     margin-top: 0.2rem;
-    padding: 0.25rem 0.35rem;
+    padding: 0.3rem 0.4rem;
     white-space: normal;
   }
 
@@ -128,23 +187,28 @@
   }
 
   .notaria-calendar-event--attention {
-    --fc-event-text-color: var(--color-navy);
-    background: var(--color-gold-light) !important;
-    color: var(--color-navy) !important;
+    --fc-event-text-color: var(--color-accent-dark);
+    background: color-mix(
+      in srgb,
+      var(--color-accent) 14%,
+      var(--color-surface)
+    ) !important;
+    border-left: 3px solid var(--color-accent) !important;
+    color: var(--color-accent-dark) !important;
   }
 
   .notaria-calendar-event--attention .fc-daygrid-event-dot {
-    border-color: var(--color-gold);
+    border-color: var(--color-accent);
   }
 
   .notaria-calendar-event--holiday {
     --fc-event-text-color: white;
-    background: var(--color-navy-light) !important;
+    background: var(--color-dark) !important;
     color: white !important;
   }
 
   .notaria-calendar-event--holiday .fc-daygrid-event-dot {
-    border-color: var(--color-navy);
+    border-color: var(--color-dark);
   }
 
   .notaria-calendar-event--holiday .notaria-calendar-event__title {

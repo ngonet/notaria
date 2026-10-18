@@ -8,7 +8,7 @@
       content="Notaría Martínez · Notario y Conservador de Comercio de Melipilla. Escrituras públicas, contratos, certificados, cartas de poder y compraventas."
     />
     <meta name="author" content="Notaría Martínez" />
-    <meta name="theme-color" content="#0f2c49" />
+    <meta name="theme-color" content="#1d46b8" />
     <meta
       name="robots"
       content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
@@ -60,7 +60,7 @@
         "url": "https://notariamelipilla.cl",
         "telephone": "+56233148818",
         "email": "notaria.martinez@gmail.com",
-        "image": "https://notariamelipilla.cl/images/header_one.jpg",
+        "image": "https://notariamelipilla.cl/images/og-image.jpg",
         "priceRange": "$$",
         "address": {
           "@type": "PostalAddress",
@@ -117,7 +117,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
     />
 
     <title>
@@ -127,7 +127,7 @@
   <body id="page-top" class="min-h-screen bg-bg text-ink">
     <a
       href="#main"
-      class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded focus:bg-navy focus:px-4 focus:py-2 focus:text-white"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded focus:bg-accent focus:px-4 focus:py-2 focus:text-white"
     >
       Saltar al contenido
     </a>
@@ -137,20 +137,23 @@
     <header data-mount="nav" class="sticky top-0 z-40 w-full"></header>
 
     <main id="main">
-      <section data-mount="hero" aria-label="Presentación">
-        <h1 class="sr-only">
-          Notaría Martínez · Notario y Conservador de Comercio de Melipilla
-        </h1>
-      </section>
+      <div id="inicio" class="bg-soft">
+        <div
+          class="mx-auto grid max-w-content gap-10 px-6 py-14 lg:grid-cols-2 lg:items-start lg:py-16"
+        >
+          <section data-mount="hero" aria-labelledby="hero-heading"></section>
+          <section
+            data-mount="consulta"
+            id="consulta"
+            aria-labelledby="consulta-heading"
+            class="scroll-mt-24"
+          ></section>
+        </div>
+      </div>
       <section
         data-mount="services"
         id="servicios"
         aria-labelledby="servicios-heading"
-      ></section>
-      <section
-        data-mount="about"
-        id="nosotros"
-        aria-labelledby="nosotros-heading"
       ></section>
       <section
         data-mount="documents"
@@ -158,9 +161,14 @@
         aria-labelledby="documentos-heading"
       ></section>
       <section
-        data-mount="consulta"
-        id="consulta"
-        aria-labelledby="consulta-heading"
+        data-mount="about"
+        id="nosotros"
+        aria-labelledby="nosotros-heading"
+      ></section>
+      <section
+        data-mount="transparencia"
+        id="transparencia"
+        aria-labelledby="transparencia-heading"
       ></section>
       <section
         data-mount="contact"

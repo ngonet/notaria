@@ -3,12 +3,16 @@ export interface NavLink {
   label: string;
 }
 
-export interface HeroSlide {
+export interface QuickTask {
   title: string;
-  subtitle: string;
-  caption: string;
-  image: string;
-  alt: string;
+  detail: string;
+  href: string;
+  external?: boolean;
+}
+
+export interface DocumentStep {
+  title: string;
+  body: string;
 }
 
 export interface ServiceCard {
@@ -17,7 +21,6 @@ export interface ServiceCard {
 }
 
 export interface FeatureBlock {
-  icon: "newspaper" | "file" | "users" | "eraser" | "stamp";
   title: string;
   description: string;
   requiredDocuments?: string[];
@@ -58,10 +61,8 @@ export interface ArancelDocument {
 }
 
 export interface TimelineEntry {
-  icon: "gavel" | "university" | "cogs";
   title: string;
   description: string;
-  period: string;
   date: string;
   link?: { href: string; label: string };
 }
@@ -70,7 +71,6 @@ export interface DocumentDownload {
   title: string;
   description: string;
   href: string;
-  icon: "check" | "plane" | "bolt" | "bookmark" | "scroll";
 }
 
 export interface VisitDocument {
@@ -115,6 +115,7 @@ export interface ConsultaContent {
   types: { escrituras: string; comercio: string };
   repertorioLabel: string;
   numeroProtocolizadoLabel: string;
+  privacySummary: string;
   comparecientesLabel: string;
   privacyNote: string;
   submitLabel: string;
@@ -147,7 +148,7 @@ export const site = {
 
   announcement: {
     id: "aviso-17-septiembre-2026",
-    title: "AVISO IMPORTANTE",
+    title: "Aviso importante",
     body: "Horario de atención el día 17 de septiembre será de forma excepcional desde las 8:00 hasta las 15:00 hrs.",
     closeLabel: "Cerrar",
     activeUntil: "2026-09-17",
@@ -163,35 +164,45 @@ export const site = {
   ] satisfies NavLink[],
 
   hero: {
+    heading: "Notaría y Conservador de Comercio en Melipilla",
+    lead: "Contratos, certificados, autorizaciones, cartas de poder y compraventas. Sociedades, mandatos, modificaciones y ampliaciones.",
     ctaPrimaryLabel: "Ver servicios",
     ctaSecondaryLabel: "Contactar",
-    carouselAriaLabel: "Carrusel de presentación",
-    slideAriaLabelPrefix: "Ir al slide",
-    slides: [
+    tasksAriaLabel: "Trámites frecuentes",
+    tasks: [
       {
-        title: "Notaría de Melipilla",
-        subtitle:
-          "Contratos, certificados, autorizaciones, cartas de poder y compraventas.",
-        caption:
-          "Celebramos documentos públicos y privados con rigor y atención personalizada.",
-        image: "/images/header_one.jpg",
-        alt: "Fachada de la Notaría Martínez",
+        title: "Formularios para completar",
+        detail: "Autorizaciones, carta de poder y declaraciones",
+        href: "#documentos",
       },
       {
-        title: "Conservador de Comercio",
-        subtitle: "Sociedades, mandatos, modificaciones y ampliaciones.",
-        caption:
-          "Inscriba, registre y proteja su negocio con el respaldo del Conservador de Comercio.",
-        image: "/images/header_two.jpg",
-        alt: "Sala de atención de la notaría",
+        title: "Copia digital en Fojas.cl",
+        detail: "Con su número de certificado",
+        href: "https://www.fojas.cl",
+        external: true,
       },
-    ] satisfies HeroSlide[],
+      {
+        title: "Inscribir una sociedad",
+        detail: "Extracto y escritura pública por correo",
+        href: "#servicios",
+      },
+      {
+        title: "Aranceles oficiales",
+        detail: "Arancel 2023 y Decretos Exentos N° 587 y 588",
+        href: "#aranceles",
+      },
+    ] satisfies QuickTask[],
   },
 
   services: {
     eyebrow: "Servicios",
     heading: "Trámites notariales con respaldo y experiencia",
     lead: "Atención personalizada en escrituras públicas, instrumentos privados y trámites del Conservador de Comercio.",
+    areaTabs: {
+      ariaLabel: "Área de servicio",
+      notaria: "Notaría",
+      conservador: "Conservador de Comercio",
+    },
     primary: [
       {
         title: "Contratos",
@@ -242,13 +253,11 @@ export const site = {
         eyebrow: "Instrumentos notariales",
         items: [
           {
-            icon: "newspaper",
             title: "Escrituras públicas",
             description:
               "Instrumento público otorgado con las solemnidades que fija la ley, por el competente notario, e incorporado en su protocolo o registro público.",
           },
           {
-            icon: "file",
             title: "Documentos privados",
             description:
               "Instrumentos privados que las partes otorgantes suscriben en el oficio y retiran para los fines que han sido otorgados.",
@@ -259,7 +268,6 @@ export const site = {
         eyebrow: "Conservador de Comercio",
         items: [
           {
-            icon: "users",
             title: "Constitución de sociedad",
             description:
               "Inscribimos su sociedad en el Registro de Comercio de Melipilla una vez emitido el extracto de la escritura de constitución. Envíe los documentos requeridos al correo conservadordecomercio@notariamelipilla.cl",
@@ -271,7 +279,6 @@ export const site = {
             },
           },
           {
-            icon: "eraser",
             title: "Modificaciones",
             description:
               "Cambios en el objeto social, capital, socios o representante legal, y rectificación de información societaria.",
@@ -331,6 +338,7 @@ export const site = {
 
   aranceles: {
     eyebrow: "Tarifas",
+    fileTypeLabel: "PDF",
     heading: "Aranceles",
     lead: "Consulte y descargue los documentos oficiales de aranceles disponibles.",
     disclaimer:
@@ -371,8 +379,6 @@ export const site = {
       lead: "En Notaría Melipilla sabemos que lo más importante son nuestros clientes.",
       title: "Atención personalizada",
       body: "La satisfacción de nuestros clientes es lo más importante para nosotros. Nuestro compromiso es ofrecer a cada persona un servicio que cumpla y supere sus expectativas, con atención personalizada y la mejor disposición a su servicio.",
-      image: "/images/compromiso.png",
-      imageAlt: "Nuestro compromiso con cada cliente",
     },
 
     trajectory: {
@@ -383,19 +389,15 @@ export const site = {
 
     timeline: [
       {
-        icon: "gavel",
         title: "Inicios profesionales",
         description:
           "Comienzo de la trayectoria profesional de René Martínez Loaiza en el ámbito notarial.",
-        period: "Inicios",
         date: "Abril 2003",
       },
       {
-        icon: "gavel",
         title: "Nombramiento del Ministerio de Justicia",
         description:
           "El Ministerio de Justicia nombra a Don René Martínez Loaiza en el cargo de Notario de Melipilla.",
-        period: "Nombramiento",
         date: "Febrero 2012",
         link: {
           href: "http://transparencia.minjusticia.gob.cl/justicia/2012/efectos_terceros/archivos/Dto.%20118-%202012.pdf",
@@ -403,19 +405,15 @@ export const site = {
         },
       },
       {
-        icon: "university",
         title: "Instalaciones y servicios",
         description:
           "Apertura en pleno centro de Melipilla, Avenida Serrano 369, oficina 11, a media cuadra de la Plaza de Armas.",
-        period: "Inicio de actividades",
         date: "Marzo 2012",
       },
       {
-        icon: "cogs",
         title: "Experiencia y profesionalismo",
         description:
           "La experiencia adquirida desde el inicio de nuestras actividades nos permite mejorar continuamente nuestros servicios e instalaciones, incorporando nuevas tecnologías para mejorar la atención.",
-        period: "Crecimiento y desarrollo",
         date: "Hoy",
       },
     ] satisfies TimelineEntry[],
@@ -426,117 +424,126 @@ export const site = {
     downloadCtaLabel: "Hacer una copia",
     heading: "Documentos online e información",
     lead: "Haga clic en el documento que necesita, cree su copia, complétela con sus datos e imprímala. Todo documento debe ser firmado por el interesado ante el notario.",
+    steps: [
+      {
+        title: "Haga una copia",
+        body: "Abra el formulario y seleccione “Hacer una copia”.",
+      },
+      {
+        title: "Complete e imprima",
+        body: "Ingrese sus datos en su copia e imprímala.",
+      },
+      {
+        title: "Firme ante notario",
+        body: "Concurra personalmente con cédula de identidad o pasaporte vigente.",
+      },
+    ] satisfies DocumentStep[],
     downloads: [
       {
         title: "Autorización trabajo menor de edad",
         description:
           "La concurrencia personal del interesado, con cédula de identidad o pasaporte vigente, es requisito esencial para autorizar instrumentos en este oficio.",
         href: "https://docs.google.com/document/d/11oc45ydx-j5emTHNzaKVxnGQmHXjjqd6XcBbJ5walAU/copy",
-        icon: "check",
       },
       {
         title: "Autorización viaje menor de edad",
         description:
           "Solicitud notarial necesaria para que un menor de edad pueda viajar dentro o fuera del país sin la compañía de sus padres.",
         href: "https://docs.google.com/document/d/1q3KVDIg7ZuCue7a930jeLbJvyFOH4kwskrG017TMKZg/copy",
-        icon: "plane",
       },
       {
         title: "Carta de poder",
         description:
           "Instrumento que faculta a una persona para actuar en nombre de otra en trámites y gestiones específicas.",
         href: "https://docs.google.com/document/d/1o1IS8FolssJEalAruYsqcxWQO4ux4dd-8a5CnXuW0qA/copy",
-        icon: "bolt",
       },
       {
         title: "Declaración jurada",
         description:
           "Documento en el que el otorgante declara, bajo juramento, hechos que pueden ser usados como prueba legal.",
         href: "https://docs.google.com/document/d/1anHy5zPvectHTBeR5zkSHO2dZW245La5VusLeuvKygc/copy",
-        icon: "bookmark",
       },
       {
         title: "Declaración Ley de Alcoholes",
         description:
           "Declaración requerida para actos relacionados con establecimientos de expendio de bebidas alcohólicas. Complete el documento antes de acudir al oficio.",
         href: "https://docs.google.com/document/d/154XCd61Sj3VuHRkhLtmemJj7FmgVAZUD5IoolbAHaBQ/copy",
-        icon: "scroll",
       },
     ] satisfies DocumentDownload[],
-
-    visitas: {
-      eyebrow: "Fiscalización",
-      heading: "Visitas notariales",
-      lead: "Auditorías de rutina o extraordinarias destinadas a fiscalizar el correcto funcionamiento de la notaría, revisar protocolos y libros de registros, y resguardar los estándares de fe pública.",
-      documents: [
-        {
-          title: "Visita 2025 · 4° bimestre",
-          description:
-            "Acta de visita correspondiente al cuarto bimestre de 2025 para Notaría Martínez y Conservador de Comercio.",
-          href: "/docs/visitas/visita-notaria-martinez-2025-4to-bimestre.pdf",
-          label: "Ver PDF 4° bimestre",
-        },
-        {
-          title: "Visita 2025 · 5° bimestre",
-          description:
-            "Acta de visita correspondiente al quinto bimestre de 2025 para Notaría Martínez y Conservador de Comercio.",
-          href: "/docs/visitas/visita-notaria-martinez-2025-5to-bimestre.pdf",
-          label: "Ver PDF 5° bimestre",
-        },
-        {
-          title: "Visita 2025 · 6° bimestre",
-          description:
-            "Acta de visita correspondiente al sexto bimestre de 2025 para Notaría Martínez y Conservador de Comercio.",
-          href: "/docs/visitas/visita-notaria-martinez-2025-6to-bimestre.pdf",
-          label: "Ver PDF 6° bimestre",
-        },
-        {
-          title: "Balance general 2025",
-          description:
-            "Balance general anual de Notaría Martínez, disponible para consulta pública.",
-          href: "/docs/balance-general-notaria-at-2025.pdf",
-          label: "Ver balance general",
-        },
-        {
-          title: "Índice Registro de Comercio 2024",
-          description:
-            "Índice anual del Registro de Comercio de Melipilla correspondiente a 2024, con las inscripciones de constituciones, modificaciones y actas.",
-          href: "/docs/comercio/ind-com-2024.pdf",
-          label: "Ver índice 2024",
-        },
-        {
-          title: "Índice Registro de Comercio 2025",
-          description:
-            "Índice anual del Registro de Comercio de Melipilla correspondiente a 2025, con las inscripciones de constituciones, modificaciones y actas.",
-          href: "/docs/comercio/ind-com-2025.pdf",
-          label: "Ver índice 2025",
-        },
-        {
-          title: "Índice Registro de Comercio 2026",
-          description:
-            "Índice anual del Registro de Comercio de Melipilla correspondiente a 2026, con las inscripciones de constituciones, modificaciones y actas.",
-          href: "/docs/comercio/ind-com-2026.pdf",
-          label: "Ver índice 2026",
-        },
-        {
-          title: "Repertorio de Instrumentos Protocolizados 2026",
-          description:
-            "Repertorio de Instrumentos Protocolizados de Notaría Martínez correspondiente a 2026, disponible para consulta pública.",
-          href: "/docs/instrumentos-protocolizados-2026.pdf",
-          label: "Ver repertorio de protocolizaciones",
-        },
-      ] satisfies VisitDocument[],
-    },
 
     fojas: {
       eyebrow: "Portal Fojas",
       heading: "Copias digitales online",
       body: "Obtenga una copia digital de sus documentos tramitados en nuestra notaría a través del Portal Fojas.cl. Seleccione “Notaría René Alejandro Martínez Loaiza” e ingrese su número de certificado.",
       ctaLabel: "Ir a Fojas.cl",
-      logoAlt: "Logo Fojas.cl",
       href: "https://www.fojas.cl",
-      logo: "/images/fojas2.png",
     },
+  },
+
+  transparencia: {
+    eyebrow: "Fiscalización",
+    heading: "Transparencia y visitas notariales",
+    salaryCardLabel: "RUT y sueldo base de funcionarios",
+    salaryCardAction: "Ver",
+    lead: "Auditorías de rutina o extraordinarias destinadas a fiscalizar el correcto funcionamiento de la notaría, revisar protocolos y libros de registros, y resguardar los estándares de fe pública.",
+    documents: [
+      {
+        title: "Visita 2025 · 4° bimestre",
+        description:
+          "Acta de visita correspondiente al cuarto bimestre de 2025 para Notaría Martínez y Conservador de Comercio.",
+        href: "/docs/visitas/visita-notaria-martinez-2025-4to-bimestre.pdf",
+        label: "Ver PDF 4° bimestre",
+      },
+      {
+        title: "Visita 2025 · 5° bimestre",
+        description:
+          "Acta de visita correspondiente al quinto bimestre de 2025 para Notaría Martínez y Conservador de Comercio.",
+        href: "/docs/visitas/visita-notaria-martinez-2025-5to-bimestre.pdf",
+        label: "Ver PDF 5° bimestre",
+      },
+      {
+        title: "Visita 2025 · 6° bimestre",
+        description:
+          "Acta de visita correspondiente al sexto bimestre de 2025 para Notaría Martínez y Conservador de Comercio.",
+        href: "/docs/visitas/visita-notaria-martinez-2025-6to-bimestre.pdf",
+        label: "Ver PDF 6° bimestre",
+      },
+      {
+        title: "Balance general 2025",
+        description:
+          "Balance general anual de Notaría Martínez, disponible para consulta pública.",
+        href: "/docs/balance-general-notaria-at-2025.pdf",
+        label: "Ver balance general",
+      },
+      {
+        title: "Índice Registro de Comercio 2024",
+        description:
+          "Índice anual del Registro de Comercio de Melipilla correspondiente a 2024, con las inscripciones de constituciones, modificaciones y actas.",
+        href: "/docs/comercio/ind-com-2024.pdf",
+        label: "Ver índice 2024",
+      },
+      {
+        title: "Índice Registro de Comercio 2025",
+        description:
+          "Índice anual del Registro de Comercio de Melipilla correspondiente a 2025, con las inscripciones de constituciones, modificaciones y actas.",
+        href: "/docs/comercio/ind-com-2025.pdf",
+        label: "Ver índice 2025",
+      },
+      {
+        title: "Índice Registro de Comercio 2026",
+        description:
+          "Índice anual del Registro de Comercio de Melipilla correspondiente a 2026, con las inscripciones de constituciones, modificaciones y actas.",
+        href: "/docs/comercio/ind-com-2026.pdf",
+        label: "Ver índice 2026",
+      },
+      {
+        title: "Repertorio de Instrumentos Protocolizados 2026",
+        description:
+          "Repertorio de Instrumentos Protocolizados de Notaría Martínez correspondiente a 2026, disponible para consulta pública.",
+        href: "/docs/instrumentos-protocolizados-2026.pdf",
+        label: "Ver repertorio de protocolizaciones",
+      },
+    ] satisfies VisitDocument[],
   },
 
   consulta: {
@@ -550,6 +557,7 @@ export const site = {
     },
     repertorioLabel: "N° de repertorio",
     numeroProtocolizadoLabel: "N° protocolizado",
+    privacySummary: "Protección de datos personales",
     comparecientesLabel: "Comparecientes",
     privacyNote:
       "Por protección de datos personales (Ley 19.628 y Ley 21.719), la consulta muestra únicamente datos identificatorios limitados de los comparecientes: primer nombre y apellido paterno para personas naturales, o razón social para personas jurídicas.",

@@ -1,5 +1,7 @@
 import { site } from "@/content/site";
 
+const EXTERNAL_ICON = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>`;
+
 function createTextElement<K extends keyof HTMLElementTagNameMap>(
   tag: K,
   className: string,
@@ -12,81 +14,61 @@ function createTextElement<K extends keyof HTMLElementTagNameMap>(
 }
 
 export function createArancelesSection(): HTMLElement {
-  const { eyebrow, heading, lead, documents, disclaimer } = site.aranceles;
+  const { heading, documents, disclaimer, fileTypeLabel } = site.aranceles;
 
   const section = document.createElement("section");
   section.id = "aranceles";
-  section.className = "scroll-mt-24";
+  section.className =
+    "grid scroll-mt-24 gap-6 border-t border-line-soft pt-8 md:grid-cols-3 md:items-start";
   section.setAttribute("aria-labelledby", "aranceles-heading");
 
-  const header = document.createElement("header");
-  header.className = "mx-auto max-w-3xl text-center";
-  header.append(
-    createTextElement(
-      "p",
-      "font-display text-sm uppercase tracking-[0.28em] text-gold",
-      eyebrow,
-    ),
-  );
-
-  const title = createTextElement(
-    "h3",
-    "mt-3 font-display text-2xl text-navy md:text-3xl",
-    heading,
-  );
+  const header = document.createElement("div");
+  header.className = "flex flex-col gap-1.5";
+  const title = createTextElement("h3", "text-[28px] leading-tight", heading);
   title.id = "aranceles-heading";
   header.append(
     title,
-    createTextElement("p", "mt-4 text-base text-muted md:text-lg", lead),
+    createTextElement("p", "text-[15px] text-ink-2", disclaimer),
   );
-  section.append(header);
 
   const list = document.createElement("ul");
-  list.className = "mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3";
+  list.className = "flex flex-col md:col-span-2";
 
   documents.forEach((documentItem) => {
     const item = document.createElement("li");
-    item.className =
-      "flex h-full flex-col rounded-card border border-line bg-surface p-6 shadow-card";
+    item.className = "border-b border-line-soft";
 
     const link = document.createElement("a");
     link.className =
-      "mt-6 inline-flex items-center gap-2 text-sm font-semibold text-navy underline-offset-4 hover:underline";
+      "group flex min-h-11 justify-between gap-4 py-3.5 text-ink";
     link.href = documentItem.href;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
-    link.append(document.createTextNode(documentItem.label));
+    link.setAttribute("aria-label", documentItem.label);
 
-    const arrow = document.createElement("span");
-    arrow.setAttribute("aria-hidden", "true");
-    arrow.textContent = "↗";
-    link.append(arrow);
-
-    item.append(
+    const text = document.createElement("span");
+    text.className = "flex flex-col";
+    text.append(
       createTextElement(
-        "h4",
-        "font-display text-lg font-semibold text-navy",
+        "span",
+        "font-semibold group-hover:underline",
         documentItem.title,
       ),
-      createTextElement(
-        "p",
-        "mt-3 flex-1 text-sm leading-relaxed text-muted",
-        documentItem.description,
-      ),
-      link,
+      createTextElement("span", "text-sm text-muted", documentItem.description),
     );
 
+    const fileType = createTextElement(
+      "span",
+      "inline-flex items-center gap-1 whitespace-nowrap text-sm font-semibold text-accent",
+      fileTypeLabel,
+    );
+    fileType.insertAdjacentHTML("beforeend", EXTERNAL_ICON);
+
+    link.append(text, fileType);
+    item.append(link);
     list.append(item);
   });
 
-  section.append(list);
-
-  const footer = document.createElement("div");
-  footer.className = "mx-auto mt-10 max-w-3xl text-center";
-  footer.append(
-    createTextElement("p", "text-xs leading-relaxed text-muted", disclaimer),
-  );
-  section.append(footer);
-
+  section.append(header, list);
   return section;
 }

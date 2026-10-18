@@ -2,129 +2,104 @@ import { site } from "@/content/site";
 import { getAppCheckHeader } from "@/lib/firebase";
 
 const INPUT_CLASS =
-  "mt-1 w-full rounded border border-line bg-bg px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-gold/60";
+  "mt-1.5 min-h-12 w-full rounded-[10px] border border-line bg-surface px-3.5 py-2.5 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-accent/40";
 const LABEL_CLASS = "block text-sm font-semibold text-ink";
 
 export function mountContact(el: HTMLElement): void {
-  const c = site.contact;
-  const cf = site.contactForm;
+  const contact = site.contact;
+  const formContent = site.contactForm;
+  const heading =
+    site.nav.find((link) => link.href === "#contacto")?.label ?? "";
 
   el.innerHTML = `
-    <div class="border-t border-line bg-bg">
-      <div class="mx-auto max-w-(--container-content) px-6 py-20 md:py-28">
-        <header class="mx-auto max-w-3xl text-center">
-          <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">Contactos</p>
-          <h2 id="contacto-heading" class="mt-3 font-display text-3xl text-navy md:text-4xl">Atendemos sus sugerencias o reclamos</h2>
-          <p class="mt-4 text-base text-muted md:text-lg">${c.legalName}, en pleno centro de ${c.city}, al costado del mall Melipilla.</p>
-        </header>
+    <div class="bg-soft">
+      <div class="mx-auto grid max-w-content items-start gap-8 px-6 py-20 lg:grid-cols-2">
+        <div class="space-y-5">
+          <h2 id="contacto-heading" class="text-4xl leading-[1.05] text-ink md:text-[42px]">${heading}</h2>
 
-        <div class="mt-12 grid gap-6 lg:grid-cols-3">
-          <article class="rounded-card border border-line bg-surface p-6 shadow-card">
-            <h3 class="font-display text-base font-semibold text-navy">Dirección</h3>
-            <p class="mt-3 text-sm leading-relaxed text-muted">
-              ${c.street}<br/>${c.city}
-            </p>
+          <article class="flex flex-col gap-3.5 rounded-card bg-surface p-6">
+            <h3 class="text-xl text-ink">${contact.legalName}</h3>
             <a
-              href="${c.mapsUrl}"
+              href="${contact.mapsUrl}"
               target="_blank"
               rel="noopener noreferrer"
-              class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-navy underline-offset-4 hover:underline"
-            >
-              Ver en Google Maps
-              <span aria-hidden="true">↗</span>
-            </a>
+              class="inline-flex min-h-11 items-center text-accent underline-offset-4 hover:text-accent-dark hover:underline"
+            >${contact.street}, ${contact.city} <span class="ml-1" aria-hidden="true">↗</span></a>
+            <a class="inline-flex min-h-11 items-center text-accent hover:text-accent-dark hover:underline" href="tel:${contact.phoneE164}">${contact.phoneDisplay}</a>
+            <a class="inline-flex min-h-11 items-center text-accent hover:text-accent-dark hover:underline" href="mailto:${contact.email}">${contact.email}</a>
+            <p class="leading-relaxed text-ink-2">${contact.schedule.weekdays}<br />${contact.schedule.saturdays}</p>
           </article>
 
-          <article class="rounded-card border border-line bg-surface p-6 shadow-card">
-            <h3 class="font-display text-base font-semibold text-navy">Teléfono y correo</h3>
-            <ul class="mt-3 space-y-2 text-sm text-muted">
-              <li>
-                <a href="tel:${c.phoneE164}" class="font-semibold text-ink hover:text-navy">${c.phoneDisplay}</a>
-              </li>
-              <li>
-                <a href="mailto:${c.email}" class="font-semibold text-ink hover:text-navy">${c.email}</a>
-              </li>
-            </ul>
-          </article>
-
-          <article class="rounded-card border border-line bg-surface p-6 shadow-card">
-            <h3 class="font-display text-base font-semibold text-navy">Horario de atención</h3>
-            <ul class="mt-3 space-y-2 text-sm text-muted">
-              <li>${c.schedule.weekdays}</li>
-              <li>${c.schedule.saturdays}</li>
-            </ul>
-          </article>
+          <div class="overflow-hidden rounded-card border border-line bg-surface">
+            <iframe
+              title="${contact.legalName}"
+              src="https://www.google.com/maps?q=${encodeURIComponent(`${contact.street}, ${contact.city}`)}&output=embed"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              class="h-[260px] w-full border-0"
+            ></iframe>
+          </div>
         </div>
 
-        <div class="mt-10 overflow-hidden rounded-card border border-line bg-surface p-8 shadow-card">
-          <h3 class="font-display text-xl text-navy">${cf.heading}</h3>
-          <p class="mt-2 text-sm text-muted">${cf.lead}</p>
+        <article class="rounded-card bg-surface p-7">
+          <h3 class="text-2xl leading-tight text-ink md:text-[26px]">${formContent.heading}</h3>
+          <p class="mt-2 text-sm leading-relaxed text-muted">${formContent.lead}</p>
 
-          <form id="cf-form" novalidate class="mt-6">
-            <div class="grid gap-4 sm:grid-cols-2">
-              <div>
-                <label for="cf-name" class="${LABEL_CLASS}">${cf.nameLabel}</label>
-                <input id="cf-name" name="name" type="text" required autocomplete="name" class="${INPUT_CLASS}" />
-              </div>
-              <div>
-                <label for="cf-email" class="${LABEL_CLASS}">${cf.emailLabel}</label>
-                <input id="cf-email" name="email" type="email" required autocomplete="email" class="${INPUT_CLASS}" />
-              </div>
-              <div>
-                <label for="cf-phone" class="${LABEL_CLASS}">
-                  ${cf.phoneLabel} <span class="font-normal text-muted">${cf.phoneNote}</span>
-                </label>
-                <input id="cf-phone" name="phone" type="tel" autocomplete="tel" class="${INPUT_CLASS}" />
-              </div>
-              <div>
-                <label for="cf-subject" class="${LABEL_CLASS}">${cf.claimTypeLabel}</label>
-                <select id="cf-subject" name="subject" required class="${INPUT_CLASS}">
-                  <option value="">— Seleccione —</option>
-                  ${cf.claimTypes.map((t) => `<option value="${t}">${t}</option>`).join("")}
-                </select>
-              </div>
+          <form id="cf-form" novalidate class="mt-6 space-y-4">
+            <div>
+              <label for="cf-name" class="${LABEL_CLASS}">${formContent.nameLabel}</label>
+              <input id="cf-name" name="name" type="text" required autocomplete="name" class="${INPUT_CLASS}" />
             </div>
-            <div class="mt-4">
-              <label for="cf-message" class="${LABEL_CLASS}">${cf.messageLabel}</label>
-              <textarea id="cf-message" name="message" required rows="5" class="${INPUT_CLASS} resize-none"></textarea>
+            <div>
+              <label for="cf-email" class="${LABEL_CLASS}">${formContent.emailLabel}</label>
+              <input id="cf-email" name="email" type="email" required autocomplete="email" class="${INPUT_CLASS}" />
             </div>
-            <div class="mt-6 flex flex-wrap items-center gap-4">
+            <div>
+              <label for="cf-phone" class="${LABEL_CLASS}">
+                ${formContent.phoneLabel} <span class="font-normal text-muted">${formContent.phoneNote}</span>
+              </label>
+              <input id="cf-phone" name="phone" type="tel" autocomplete="tel" class="${INPUT_CLASS}" />
+            </div>
+            <div>
+              <label for="cf-subject" class="${LABEL_CLASS}">${formContent.claimTypeLabel}</label>
+              <select id="cf-subject" name="subject" required class="${INPUT_CLASS}">
+                <option value="">${formContent.claimTypeLabel}</option>
+                ${formContent.claimTypes
+                  .map((type) => `<option value="${type}">${type}</option>`)
+                  .join("")}
+              </select>
+            </div>
+            <div>
+              <label for="cf-message" class="${LABEL_CLASS}">${formContent.messageLabel}</label>
+              <textarea id="cf-message" name="message" required rows="4" class="${INPUT_CLASS} resize-y"></textarea>
+            </div>
+            <div class="flex flex-wrap items-center gap-4 pt-1">
               <button
                 id="cf-submit"
                 type="submit"
-                class="inline-flex items-center gap-2 rounded bg-navy px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:bg-navy/90 disabled:opacity-60"
+                class="inline-flex min-h-12 items-center justify-center rounded-[10px] bg-accent px-6 py-3 font-semibold text-white transition hover:bg-accent-dark disabled:opacity-60"
               >
-                ${cf.submitLabel}
+                ${formContent.submitLabel}
               </button>
-              <p id="cf-error" class="hidden text-sm text-red-600" role="alert">${cf.errorMessage}</p>
+              <p id="cf-error" class="hidden text-sm text-red-700" role="alert">${formContent.errorMessage}</p>
             </div>
           </form>
 
-          <p id="cf-success" class="hidden mt-4 text-sm font-semibold text-green-700" role="status">
-            ${cf.successMessage}
+          <p id="cf-success" class="mt-4 hidden text-sm font-semibold text-green-700" role="status">
+            ${formContent.successMessage}
           </p>
-        </div>
-
-        <div class="mt-10 overflow-hidden rounded-card border border-line bg-surface shadow-card">
-          <iframe
-            title="Ubicación de ${c.legalName}"
-            src="https://www.google.com/maps?q=${encodeURIComponent(`${c.street}, ${c.city}`)}&output=embed"
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            class="h-72 w-full border-0 md:h-96"
-          ></iframe>
-        </div>
+        </article>
       </div>
     </div>
   `;
 
   const form = el.querySelector<HTMLFormElement>("#cf-form")!;
-  const submitBtn = el.querySelector<HTMLButtonElement>("#cf-submit")!;
-  const errorEl = el.querySelector<HTMLElement>("#cf-error")!;
-  const successEl = el.querySelector<HTMLElement>("#cf-success")!;
+  const submitButton = el.querySelector<HTMLButtonElement>("#cf-submit")!;
+  const error = el.querySelector<HTMLElement>("#cf-error")!;
+  const success = el.querySelector<HTMLElement>("#cf-success")!;
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
 
     const data = new FormData(form);
     const payload = {
@@ -135,24 +110,24 @@ export function mountContact(el: HTMLElement): void {
       message: (data.get("message") as string).trim(),
     };
 
-    submitBtn.disabled = true;
-    submitBtn.textContent = cf.sendingLabel;
-    errorEl.classList.add("hidden");
+    submitButton.disabled = true;
+    submitButton.textContent = formContent.sendingLabel;
+    error.classList.add("hidden");
 
     try {
       const appCheckHeaders = await getAppCheckHeader();
-      const res = await fetch("/api/contact", {
+      const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json", ...appCheckHeaders },
         body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error(`${res.status}`);
+      if (!response.ok) throw new Error(`${response.status}`);
       form.classList.add("hidden");
-      successEl.classList.remove("hidden");
+      success.classList.remove("hidden");
     } catch {
-      errorEl.classList.remove("hidden");
-      submitBtn.disabled = false;
-      submitBtn.textContent = cf.submitLabel;
+      error.classList.remove("hidden");
+      submitButton.disabled = false;
+      submitButton.textContent = formContent.submitLabel;
     }
   });
 }
