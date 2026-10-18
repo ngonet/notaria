@@ -1,4 +1,5 @@
 import { site } from "@/content/site";
+import { rosette } from "./icons";
 
 const SALARY_MODAL_ID = "transparencia-salary-modal";
 
@@ -137,8 +138,9 @@ export function mountTransparencia(el: HTMLElement): void {
   const declaration = site.footer.transparency;
 
   el.innerHTML = `
-    <div class="border-t border-line-soft bg-surface">
-      <div class="mx-auto max-w-content px-6 py-20">
+    <div class="relative overflow-hidden border-t border-line-soft bg-tint">
+      ${rosette("pointer-events-none absolute -top-60 -left-64 h-[620px] w-[620px] text-accent opacity-15")}
+      <div class="relative mx-auto max-w-content px-6 py-20">
         <header class="max-w-3xl">
           <p class="text-[13px] font-semibold text-accent">${content.eyebrow}</p>
           <h2 id="transparencia-heading" class="mt-2 text-4xl leading-[1.05] text-ink md:text-[42px]">${content.heading}</h2>

@@ -1,11 +1,13 @@
 import { site } from "@/content/site";
+import { rosette } from "./icons";
 
 export function mountFooter(el: HTMLElement): void {
   const contact = site.contact;
 
   el.innerHTML = `
-    <footer class="bg-dark text-white/80">
-      <div class="mx-auto flex max-w-content flex-wrap justify-between gap-8 px-6 py-10 text-sm">
+    <footer class="relative overflow-hidden bg-dark text-white/80">
+      ${rosette("pointer-events-none absolute -top-40 -right-36 h-[420px] w-[420px] text-gold opacity-25 [stroke-width:1.5]")}
+      <div class="relative mx-auto flex max-w-content flex-wrap justify-between gap-8 px-6 py-10 text-sm">
         <div class="flex min-w-0 flex-[1_1_30rem] flex-col gap-1">
           <p id="footer-brand" class="font-display text-xl font-bold text-white">${site.brand}</p>
           <p>${site.tagline}</p>

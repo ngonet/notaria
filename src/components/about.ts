@@ -46,7 +46,7 @@ export function mountAbout(el: HTMLElement): void {
           ${timeline
             .map(
               (entry) => `
-                <li class="flex flex-col gap-1 rounded-card bg-soft p-[18px]">
+                <li class="flex flex-col gap-1 rounded-card bg-tint p-[18px]">
                   <span class="font-display text-2xl font-bold">${entry.date}</span>
                   <span class="text-[15px] font-semibold">${entry.title}</span>
                   <span class="text-sm text-muted">${entry.description}</span>

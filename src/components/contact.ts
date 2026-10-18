@@ -10,12 +10,12 @@ export function mountContact(el: HTMLElement): void {
   const formContent = site.contactForm;
 
   el.innerHTML = `
-    <div class="bg-soft">
+    <div class="bg-bg">
       <div class="mx-auto grid max-w-content items-start gap-8 px-6 py-20 lg:grid-cols-2">
         <div class="space-y-5">
           <h2 id="contacto-heading" class="text-4xl leading-[1.05] text-ink md:text-[42px]">${contact.heading}</h2>
 
-          <article class="flex flex-col gap-3.5 rounded-card bg-surface p-6">
+          <article class="flex flex-col gap-3.5 rounded-card border border-line bg-surface p-6">
             <h3 class="text-xl text-ink">${contact.legalName}</h3>
             <a
               href="${contact.mapsUrl}"
@@ -40,7 +40,7 @@ export function mountContact(el: HTMLElement): void {
           </div>
         </div>
 
-        <article class="rounded-card bg-surface p-7">
+        <article class="rounded-card border border-line bg-surface p-7">
           <h3 class="text-2xl leading-tight text-ink md:text-[26px]">${formContent.heading}</h3>
           <p class="mt-2 text-sm leading-relaxed text-muted">${formContent.lead}</p>
 
