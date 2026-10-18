@@ -5,7 +5,7 @@ export function mountCalendar(el: HTMLElement): void {
     site.calendar;
 
   el.innerHTML = `
-    <div class="border-t border-line-soft bg-surface">
+    <div class="border-t border-line-soft bg-tint">
       <div class="mx-auto max-w-content px-6 py-20">
         <header class="max-w-3xl">
           <p class="text-[13px] font-semibold text-accent">${eyebrow}</p>
