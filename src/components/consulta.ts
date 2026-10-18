@@ -2,8 +2,10 @@ import { site, type ConsultaContent } from "@/content/site";
 import { getAppCheckHeader } from "@/lib/firebase";
 
 const INPUT_CLASS =
-  "mt-1 w-full rounded border border-line bg-bg px-3 py-2 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-gold/60";
+  "min-h-12 w-full min-w-0 flex-1 rounded-[10px] border-[1.5px] border-muted bg-surface px-3.5 py-3 text-[17px] text-ink focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30";
 const LABEL_CLASS = "block text-sm font-semibold text-ink";
+const TYPE_OPTION_CLASS =
+  "flex min-h-11 cursor-pointer items-center justify-center rounded-lg px-3 text-center text-[15px] font-semibold text-ink-2 transition peer-checked:bg-surface peer-checked:text-accent peer-checked:shadow-sm peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent";
 
 interface ConsultaResult {
   tipoRepertorio: string;
@@ -78,14 +80,16 @@ function appendField(
   container: HTMLElement,
   label: string,
   value: string,
+  fullWidth = false,
 ): void {
   const wrapper = document.createElement("div");
   const term = document.createElement("dt");
   const description = document.createElement("dd");
 
-  term.className = "text-xs font-semibold uppercase tracking-wide text-muted";
+  if (fullWidth) wrapper.className = "col-span-2";
+  term.className = "text-xs text-muted";
   term.textContent = label;
-  description.className = "mt-1 text-sm text-ink";
+  description.className = "text-ink [overflow-wrap:anywhere]";
   description.textContent = value;
 
   wrapper.append(term, description);
@@ -103,18 +107,17 @@ function renderResults(
     const type = document.createElement("p");
     const details = document.createElement("dl");
 
-    card.className =
-      "rounded-card border border-line bg-surface p-6 shadow-card";
-    type.className = "font-display text-lg font-semibold text-navy";
+    card.className = "rounded-xl border border-line bg-surface p-4";
+    type.className = "font-semibold text-ink";
     type.textContent =
       site.consulta.types[
         result.tipoRepertorio as keyof ConsultaContent["types"]
       ] ?? result.tipoRepertorio;
-    details.className = "mt-4 grid gap-4 sm:grid-cols-2";
+    details.className = "mt-3 grid grid-cols-2 gap-x-4 gap-y-2.5 text-[15px]";
 
     appendField(details, "Repertorio", result.repertorio);
     appendField(details, "Fecha", formatDate(result.fecha));
-    appendField(details, "Materia", result.materia);
+    appendField(details, "Materia", result.materia, true);
     appendField(details, "Foja", result.foja ?? "—");
 
     const numeroProtocolizado = result.numeroProtocolizado?.trim();
@@ -140,47 +143,51 @@ export function mountConsulta(el: HTMLElement): void {
   const content = site.consulta;
 
   el.innerHTML = `
-    <div class="border-t border-line bg-bg">
-      <div class="mx-auto max-w-(--container-content) px-6 py-20 md:py-28">
-        <header class="mx-auto max-w-3xl text-center">
-          <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">${content.eyebrow}</p>
-          <h2 id="consulta-heading" class="mt-3 font-display text-3xl text-navy md:text-4xl">${content.heading}</h2>
-          <p class="mt-4 text-base text-muted md:text-lg">${content.lead}</p>
-        </header>
+    <div class="flex flex-col gap-4 rounded-2xl border border-line bg-surface p-7">
+      <header class="flex flex-col gap-1">
+        <p class="text-[13px] font-semibold text-accent">${content.eyebrow}</p>
+        <h2 id="consulta-heading" class="font-display text-[28px] leading-tight font-bold text-ink">${content.heading}</h2>
+        <p class="text-[15px] text-muted">${content.lead}</p>
+      </header>
 
-        <div class="mx-auto mt-12 max-w-3xl rounded-card border border-line bg-surface p-6 shadow-card md:p-8">
-          <form id="consulta-form" novalidate>
-            <div class="grid gap-4 sm:grid-cols-2">
-              <div>
-                <label for="consulta-tipo" class="${LABEL_CLASS}">${content.typeLabel}</label>
-                <select id="consulta-tipo" name="tipo" required class="${INPUT_CLASS}">
-                  <option value="escrituras">${content.types.escrituras}</option>
-                  <option value="comercio">${content.types.comercio}</option>
-                </select>
-              </div>
-              <div>
-                <label for="consulta-repertorio" class="${LABEL_CLASS}">${content.repertorioLabel}</label>
-                <input id="consulta-repertorio" name="repertorio" type="text" required maxlength="30" class="${INPUT_CLASS}" />
-              </div>
-            </div>
+      <form id="consulta-form" novalidate class="flex flex-col gap-3.5">
+        <fieldset>
+          <legend class="mb-2 ${LABEL_CLASS}">${content.typeLabel}</legend>
+          <div class="grid grid-cols-2 gap-1 rounded-[10px] bg-soft p-1">
+            <label>
+              <input type="radio" name="tipo" value="escrituras" checked class="peer sr-only" />
+              <span class="${TYPE_OPTION_CLASS}">${content.types.escrituras}</span>
+            </label>
+            <label>
+              <input type="radio" name="tipo" value="comercio" class="peer sr-only" />
+              <span class="${TYPE_OPTION_CLASS}">${content.types.comercio}</span>
+            </label>
+          </div>
+        </fieldset>
 
-            <p class="mt-4 text-sm leading-relaxed text-muted">${content.privacyNote}</p>
-
-            <div class="mt-6 flex flex-wrap items-center gap-4">
-              <button
-                id="consulta-submit"
-                type="submit"
-                class="inline-flex items-center gap-2 rounded bg-navy px-6 py-2.5 text-sm font-semibold text-white transition-opacity hover:bg-navy/90 disabled:opacity-60"
-              >
-                ${content.submitLabel}
-              </button>
-              <p id="consulta-status" class="hidden text-sm" role="status" aria-live="polite"></p>
-            </div>
-          </form>
+        <div class="flex flex-col gap-1.5">
+          <label for="consulta-repertorio" class="${LABEL_CLASS}">${content.repertorioLabel}</label>
+          <div class="flex gap-2">
+            <input id="consulta-repertorio" name="repertorio" type="text" required maxlength="30" class="${INPUT_CLASS}" />
+            <button
+              id="consulta-submit"
+              type="submit"
+              class="inline-flex min-h-12 shrink-0 items-center rounded-[10px] bg-accent px-[22px] font-semibold text-white transition hover:bg-accent-dark disabled:opacity-60"
+            >
+              ${content.submitLabel}
+            </button>
+          </div>
         </div>
 
-        <div id="consulta-results" class="mx-auto mt-8 grid max-w-3xl gap-4"></div>
-      </div>
+        <p id="consulta-status" class="hidden text-sm" role="status" aria-live="polite"></p>
+      </form>
+
+      <div id="consulta-results" class="grid gap-3"></div>
+
+      <details class="text-[13px] text-muted">
+        <summary class="min-h-8 cursor-pointer">${content.privacySummary}</summary>
+        <p class="mt-2">${content.privacyNote}</p>
+      </details>
     </div>
   `;
 

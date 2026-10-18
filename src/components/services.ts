@@ -1,64 +1,14 @@
-import {
-  site,
-  type FeatureBlock,
-  type FeatureGroup,
-  type ServiceCard,
-} from "@/content/site";
+import { site, type FeatureBlock, type ServiceCard } from "@/content/site";
 import { createArancelesSection } from "./aranceles";
 
-type SvgShape = {
-  tag: "path" | "circle";
-  attrs: Record<string, string>;
-};
+type ServiceArea = "notaria" | "conservador";
 
-const ICONS: Record<FeatureBlock["icon"], SvgShape[]> = {
-  newspaper: [
-    {
-      tag: "path",
-      attrs: {
-        d: "M4 5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5Z",
-      },
-    },
-    { tag: "path", attrs: { d: "M9 7h6M9 11h6M9 15h4" } },
-    { tag: "path", attrs: { d: "M19 7h2v10a2 2 0 0 1-2 2" } },
-  ],
-  file: [
-    {
-      tag: "path",
-      attrs: {
-        d: "M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z",
-      },
-    },
-    { tag: "path", attrs: { d: "M14 3v5h5" } },
-    { tag: "path", attrs: { d: "M9 13h6M9 17h4" } },
-  ],
-  users: [
-    { tag: "path", attrs: { d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" } },
-    { tag: "circle", attrs: { cx: "9", cy: "7", r: "4" } },
-    { tag: "path", attrs: { d: "M22 21v-2a4 4 0 0 0-3-3.87" } },
-    { tag: "path", attrs: { d: "M16 3.13a4 4 0 0 1 0 7.75" } },
-  ],
-  eraser: [
-    { tag: "path", attrs: { d: "m17 14 3-3-7-7-9 9 4 4h6" } },
-    { tag: "path", attrs: { d: "M14 21h7" } },
-    { tag: "path", attrs: { d: "m9 11 4 4" } },
-  ],
-  stamp: [
-    { tag: "path", attrs: { d: "M5 22h14" } },
-    {
-      tag: "path",
-      attrs: {
-        d: "M19.27 13.73A2.5 2.5 0 0 0 17.5 13h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-1.5c0-.66-.26-1.3-.73-1.77Z",
-      },
-    },
-    {
-      tag: "path",
-      attrs: {
-        d: "M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-3-3c-1.66 0-3 1-3 3s1 1 1 3.5V13",
-      },
-    },
-  ],
-};
+const AREAS: ServiceArea[] = ["notaria", "conservador"];
+
+const TAB_BASE_CLASSES =
+  "inline-flex min-h-11 items-center rounded-full px-4 text-[15px] font-semibold transition";
+const TAB_SELECTED_CLASSES = "bg-surface text-ink shadow-sm";
+const TAB_IDLE_CLASSES = "text-ink-2 hover:text-ink";
 
 function createTextElement<K extends keyof HTMLElementTagNameMap>(
   tag: K,
@@ -71,92 +21,36 @@ function createTextElement<K extends keyof HTMLElementTagNameMap>(
   return element;
 }
 
-function createIcon(name: FeatureBlock["icon"]): SVGSVGElement {
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute("width", "28");
-  svg.setAttribute("height", "28");
-  svg.setAttribute("viewBox", "0 0 24 24");
-  svg.setAttribute("fill", "none");
-  svg.setAttribute("stroke", "currentColor");
-  svg.setAttribute("stroke-width", "1.6");
-  svg.setAttribute("stroke-linecap", "round");
-  svg.setAttribute("stroke-linejoin", "round");
-  svg.setAttribute("aria-hidden", "true");
-
-  ICONS[name].forEach((shape) => {
-    const element = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      shape.tag,
-    );
-    Object.entries(shape.attrs).forEach(([key, value]) =>
-      element.setAttribute(key, value),
-    );
-    svg.append(element);
-  });
-
-  return svg;
-}
-
-function createPrimaryCard(item: ServiceCard, index: number): HTMLLIElement {
+function createNotariaCard(item: ServiceCard, tag?: string): HTMLLIElement {
   const card = document.createElement("li");
-  card.className =
-    "group rounded-card border border-line bg-surface p-6 shadow-card transition hover:-translate-y-1 hover:border-gold/60";
+  card.className = "flex flex-col gap-2 rounded-card border border-line p-6";
 
-  const badge = document.createElement("div");
-  badge.className =
-    "flex h-10 w-10 items-center justify-center rounded-full bg-navy/5 text-navy transition group-hover:bg-gold/15 group-hover:text-navy";
-  badge.append(
-    createTextElement(
-      "span",
-      "font-display text-base font-semibold",
-      `0${index + 1}`,
-    ),
-  );
+  if (tag) {
+    card.append(
+      createTextElement("span", "text-[13px] font-semibold text-accent", tag),
+    );
+  }
 
   card.append(
-    badge,
-    createTextElement(
-      "h3",
-      "mt-5 font-display text-lg font-semibold text-navy",
-      item.title,
-    ),
-    createTextElement(
-      "p",
-      "mt-3 text-sm leading-relaxed text-muted",
-      item.description,
-    ),
+    createTextElement("h3", "font-body text-xl font-semibold", item.title),
+    createTextElement("p", "text-[15px] text-ink-2", item.description),
   );
 
   return card;
 }
 
-function createFeatureCard(item: FeatureBlock): HTMLLIElement {
+function createConservadorCard(item: FeatureBlock): HTMLLIElement {
   const card = document.createElement("li");
-  card.className =
-    "flex h-full flex-col rounded-card border border-line bg-surface p-6 shadow-card";
-
-  const iconWrap = document.createElement("div");
-  iconWrap.className =
-    "flex h-12 w-12 items-center justify-center rounded-full bg-gold/15 text-navy";
-  iconWrap.append(createIcon(item.icon));
+  card.className = "flex flex-col gap-3 rounded-card border border-line p-7";
 
   card.append(
-    iconWrap,
-    createTextElement(
-      "h3",
-      "mt-5 font-display text-lg font-semibold text-navy",
-      item.title,
-    ),
-    createTextElement(
-      "p",
-      "mt-3 text-sm leading-relaxed text-muted",
-      item.description,
-    ),
+    createTextElement("h3", "font-body text-[22px] font-semibold", item.title),
+    createTextElement("p", "text-ink-2", item.description),
   );
 
   if (item.requiredDocuments?.length) {
     const list = document.createElement("ul");
-    list.className = "mt-4 space-y-1.5 text-sm text-muted";
+    list.className = "flex flex-col gap-1 text-[15px] text-ink";
 
     item.requiredDocuments.forEach((documentName) => {
       const listItem = document.createElement("li");
@@ -164,7 +58,7 @@ function createFeatureCard(item: FeatureBlock): HTMLLIElement {
 
       const bullet = document.createElement("span");
       bullet.className =
-        "mt-2 inline-block h-1 w-1 flex-none rounded-full bg-gold";
+        "mt-2 inline-block h-1.5 w-1.5 flex-none rounded-full bg-accent";
       bullet.setAttribute("aria-hidden", "true");
 
       listItem.append(bullet, createTextElement("span", "", documentName));
@@ -174,138 +68,72 @@ function createFeatureCard(item: FeatureBlock): HTMLLIElement {
     card.append(list);
   }
 
-  const footer = document.createElement("div");
-  footer.className = "mt-auto";
-
   if (item.email) {
     const link = document.createElement("a");
     link.className =
-      "mt-5 inline-flex items-center gap-2 text-sm font-semibold text-navy underline-offset-4 hover:underline";
+      "inline-flex min-h-11 items-center self-start rounded-[10px] bg-accent px-[18px] font-semibold text-white transition hover:bg-accent-dark";
     link.href = `mailto:${item.email.address}?subject=${encodeURIComponent(item.email.subject)}`;
-    link.textContent = `${item.email.label} ↗`;
-    footer.append(link);
+    link.textContent = item.email.label;
+    card.append(link);
   }
 
-  card.append(footer);
   return card;
 }
 
-function createFeatureGroup(
-  group: FeatureGroup,
-  gridClasses: string,
-): HTMLDivElement {
-  const wrapper = document.createElement("div");
-  wrapper.append(
-    createTextElement(
-      "p",
-      "font-display text-sm uppercase tracking-[0.28em] text-gold",
-      group.eyebrow,
-    ),
-  );
-
-  const list = document.createElement("ul");
-  list.className = `mt-6 grid gap-6 ${gridClasses}`;
-  group.items.forEach((item) => list.append(createFeatureCard(item)));
-
-  wrapper.append(list);
-  return wrapper;
+function createTab(area: ServiceArea, label: string): HTMLButtonElement {
+  const tab = createTextElement("button", TAB_BASE_CLASSES, label);
+  tab.type = "button";
+  tab.id = `servicios-tab-${area}`;
+  tab.setAttribute("role", "tab");
+  tab.setAttribute("aria-controls", `servicios-panel-${area}`);
+  return tab;
 }
 
-function createNotaryArticle(): HTMLElement {
-  const { notary } = site.services;
-  const article = document.createElement("article");
-  article.className =
-    "mt-16 grid gap-10 rounded-card border border-line bg-navy px-8 py-12 text-white md:grid-cols-[1fr_1.2fr] md:items-center md:px-12";
+function createPanel(area: ServiceArea, list: HTMLElement): HTMLDivElement {
+  const panel = document.createElement("div");
+  panel.id = `servicios-panel-${area}`;
+  panel.setAttribute("role", "tabpanel");
+  panel.setAttribute("aria-labelledby", `servicios-tab-${area}`);
+  panel.tabIndex = 0;
+  panel.append(list);
+  return panel;
+}
 
-  const left = document.createElement("div");
-  left.append(
-    createTextElement(
-      "p",
-      "font-display text-sm uppercase tracking-[0.28em] text-gold",
-      notary.label,
-    ),
-    createTextElement(
-      "h3",
-      "mt-3 font-display text-2xl md:text-3xl",
-      notary.name,
-    ),
-    createTextElement("p", "mt-2 text-base text-white/75", notary.role),
-  );
+function setupTabs(tabs: HTMLButtonElement[], panels: HTMLElement[]): void {
+  const select = (index: number, focus: boolean): void => {
+    tabs.forEach((tab, tabIndex) => {
+      const selected = tabIndex === index;
+      tab.setAttribute("aria-selected", String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+      tab.className = `${TAB_BASE_CLASSES} ${selected ? TAB_SELECTED_CLASSES : TAB_IDLE_CLASSES}`;
+      panels[tabIndex].hidden = !selected;
+    });
+    if (focus) tabs[index].focus();
+  };
 
-  if (notary.substituteNotaries?.length) {
-    const substitutes = document.createElement("div");
-    substitutes.className = "mt-6";
-    substitutes.append(
-      createTextElement(
-        "p",
-        "font-display text-xs uppercase tracking-[0.22em] text-gold/85",
-        notary.substituteLabel,
-      ),
-    );
+  tabs.forEach((tab, index) => {
+    tab.addEventListener("click", () => select(index, false));
+    tab.addEventListener("keydown", (event) => {
+      const last = tabs.length - 1;
+      let next: number | null = null;
+      if (event.key === "ArrowRight") next = index === last ? 0 : index + 1;
+      else if (event.key === "ArrowLeft") next = index === 0 ? last : index - 1;
+      else if (event.key === "Home") next = 0;
+      else if (event.key === "End") next = last;
+      if (next === null) return;
+      event.preventDefault();
+      select(next, true);
+    });
+  });
 
-    const list = document.createElement("ul");
-    list.className = "mt-3 space-y-1 text-sm text-white/85";
-    notary.substituteNotaries.forEach((name) =>
-      list.append(createTextElement("li", "", name)),
-    );
-    substitutes.append(list);
-    left.append(substitutes);
-  }
-
-  const right = document.createElement("div");
-  const decree = createTextElement(
-    "p",
-    "text-sm leading-relaxed text-white/85 md:text-base",
-    `${notary.decree.text}. `,
-  );
-
-  const decreeLink = document.createElement("a");
-  decreeLink.className =
-    "ml-1 inline-flex items-center gap-1 font-semibold text-gold underline-offset-4 hover:underline";
-  decreeLink.href = notary.decree.href;
-  decreeLink.target = "_blank";
-  decreeLink.rel = "noopener noreferrer";
-  decreeLink.append(document.createTextNode(notary.decree.label));
-
-  const arrow = document.createElement("span");
-  arrow.setAttribute("aria-hidden", "true");
-  arrow.textContent = "↗";
-  decreeLink.append(arrow);
-  decree.append(decreeLink);
-  right.append(decree);
-
-  if (notary.prosecutor) {
-    const prosecutor = document.createElement("div");
-    prosecutor.className = "mt-6";
-    prosecutor.append(
-      createTextElement(
-        "p",
-        "font-display text-xs uppercase tracking-[0.22em] text-gold/85",
-        notary.prosecutor.label,
-      ),
-      createTextElement(
-        "p",
-        "mt-2 text-sm text-white/85",
-        notary.prosecutor.name,
-      ),
-      createTextElement(
-        "p",
-        "mt-1 text-sm text-white/75",
-        notary.prosecutor.office,
-      ),
-    );
-    right.append(prosecutor);
-  }
-
-  article.append(left, right);
-  return article;
+  select(0, false);
 }
 
 export function mountServices(el: HTMLElement): void {
   const {
-    eyebrow,
     heading: sectionHeading,
     lead,
+    areaTabs,
     primary,
     secondary,
   } = site.services;
@@ -313,51 +141,50 @@ export function mountServices(el: HTMLElement): void {
   el.replaceChildren();
 
   const container = document.createElement("div");
-  container.className =
-    "mx-auto max-w-(--container-content) px-6 py-20 md:py-28";
+  container.className = "mx-auto flex max-w-content flex-col gap-8 px-6 py-20";
 
-  const header = document.createElement("header");
-  header.className = "mx-auto max-w-3xl text-center";
-  header.append(
-    createTextElement(
-      "p",
-      "font-display text-sm uppercase tracking-[0.28em] text-gold",
-      eyebrow,
-    ),
-  );
+  const header = document.createElement("div");
+  header.className = "flex flex-wrap items-end justify-between gap-5";
 
+  const intro = document.createElement("div");
+  intro.className = "flex max-w-[680px] flex-col gap-2";
   const heading = createTextElement(
     "h2",
-    "mt-3 font-display text-3xl text-navy md:text-4xl",
+    "text-4xl leading-[1.05] md:text-[42px]",
     sectionHeading,
   );
   heading.id = "servicios-heading";
-  header.append(
-    heading,
-    createTextElement("p", "mt-4 text-base text-muted md:text-lg", lead),
+  intro.append(heading, createTextElement("p", "text-[17px] text-ink-2", lead));
+
+  const tablist = document.createElement("div");
+  tablist.className = "flex gap-1 rounded-full bg-soft p-1";
+  tablist.setAttribute("role", "tablist");
+  tablist.setAttribute("aria-label", areaTabs.ariaLabel);
+
+  const tabs = AREAS.map((area) => createTab(area, areaTabs[area]));
+  tablist.append(...tabs);
+  header.append(intro, tablist);
+
+  const notariaList = document.createElement("ul");
+  notariaList.className = "grid gap-4 sm:grid-cols-2 lg:grid-cols-3";
+  primary.forEach((item) => notariaList.append(createNotariaCard(item)));
+  secondary.instrumentos.items.forEach((item) =>
+    notariaList.append(createNotariaCard(item, secondary.instrumentos.eyebrow)),
   );
-  container.append(header);
 
-  const primaryList = document.createElement("ul");
-  primaryList.className = "mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4";
-  primary.forEach((item, index) =>
-    primaryList.append(createPrimaryCard(item, index)),
+  const conservadorList = document.createElement("ul");
+  conservadorList.className = "grid gap-4 md:grid-cols-2";
+  secondary.conservador.items.forEach((item) =>
+    conservadorList.append(createConservadorCard(item)),
   );
-  container.append(primaryList, createNotaryArticle());
 
-  const secondaryWrapper = document.createElement("div");
-  secondaryWrapper.className = "mt-16 space-y-12";
-  secondaryWrapper.append(
-    createFeatureGroup(secondary.instrumentos, "md:grid-cols-2"),
-    createFeatureGroup(secondary.conservador, "md:grid-cols-2"),
-  );
-  container.append(secondaryWrapper);
+  const panels = [
+    createPanel("notaria", notariaList),
+    createPanel("conservador", conservadorList),
+  ];
 
-  const arancelesWrapper = document.createElement("div");
-  arancelesWrapper.className =
-    "mt-20 md:mt-24 border-t border-line/60 pt-16 md:pt-20";
-  arancelesWrapper.append(createArancelesSection());
-  container.append(arancelesWrapper);
-
+  container.append(header, ...panels, createArancelesSection());
   el.append(container);
+
+  setupTabs(tabs, panels);
 }

@@ -5,16 +5,16 @@ export function mountCalendar(el: HTMLElement): void {
     site.calendar;
 
   el.innerHTML = `
-    <div class="border-t border-line bg-surface">
-      <div class="mx-auto max-w-(--container-content) px-6 py-20 md:py-28">
-        <header class="mx-auto max-w-3xl text-center">
-          <p class="font-display text-sm uppercase tracking-[0.28em] text-gold">${eyebrow}</p>
-          <h2 id="calendario-heading" class="mt-3 font-display text-3xl text-navy md:text-4xl">${heading}</h2>
-          <p class="mt-4 text-base text-muted md:text-lg">${lead}</p>
+    <div class="border-t border-line-soft bg-surface">
+      <div class="mx-auto max-w-content px-6 py-20">
+        <header class="max-w-3xl">
+          <p class="text-[13px] font-semibold text-accent">${eyebrow}</p>
+          <h2 id="calendario-heading" class="mt-2 text-4xl leading-[1.05] text-ink md:text-[42px]">${heading}</h2>
+          <p class="mt-3 text-base leading-relaxed text-ink-2">${lead}</p>
         </header>
 
         <div
-          class="mt-12 min-h-[420px] rounded-card border border-line bg-bg p-4 shadow-card md:p-6"
+          class="mt-8 min-h-[420px] overflow-x-auto rounded-card border border-line bg-surface p-4 md:p-6"
           data-calendar-root
           aria-busy="true"
         >
@@ -23,9 +23,9 @@ export function mountCalendar(el: HTMLElement): void {
           </p>
         </div>
 
-        <p class="mt-6 text-center text-xs text-muted">
+        <p class="mt-5 text-sm text-ink-2">
           ${reservationNote.beforePhone}
-          <a class="font-semibold text-navy hover:underline" href="tel:${site.contact.phoneE164}">${site.contact.phoneDisplay}</a>
+          <a class="font-semibold text-accent hover:text-accent-dark hover:underline" href="tel:${site.contact.phoneE164}">${site.contact.phoneDisplay}</a>
           ${reservationNote.afterPhone}
         </p>
       </div>
@@ -37,7 +37,7 @@ export function mountCalendar(el: HTMLElement): void {
 
   const observer = new IntersectionObserver(
     async (entries) => {
-      const visible = entries.some((e) => e.isIntersecting);
+      const visible = entries.some((entry) => entry.isIntersecting);
       if (!visible) return;
       observer.disconnect();
       await renderCalendar(root);
@@ -73,18 +73,18 @@ async function renderCalendar(root: HTMLDivElement): Promise<void> {
         try {
           const events = await fetchCalendarEvents(info.startStr, info.endStr);
           success(
-            events.map((ev) => ({
-              id: ev.id,
-              title: ev.title,
-              start: ev.start,
-              ...(ev.end ? { end: ev.end } : {}),
-              allDay: ev.allDay,
-              classNames: [`notaria-calendar-event--${ev.kind}`],
-              extendedProps: { kind: ev.kind },
+            events.map((event) => ({
+              id: event.id,
+              title: event.title,
+              start: event.start,
+              ...(event.end ? { end: event.end } : {}),
+              allDay: event.allDay,
+              classNames: [`notaria-calendar-event--${event.kind}`],
+              extendedProps: { kind: event.kind },
             })),
           );
-        } catch (err) {
-          failure(err as Error);
+        } catch (error) {
+          failure(error as Error);
         }
       },
       eventDisplay: "block",
@@ -94,20 +94,20 @@ async function renderCalendar(root: HTMLDivElement): Promise<void> {
         minute: "2-digit",
         hour12: false,
       },
-      eventContent: (arg) => {
-        const kind = arg.event.extendedProps.kind as string | undefined;
+      eventContent: (argument) => {
+        const kind = argument.event.extendedProps.kind as string | undefined;
         const content = document.createElement("span");
         content.className = "notaria-calendar-event__content";
 
         const title = document.createElement("span");
         title.className = "notaria-calendar-event__title";
-        title.textContent = arg.event.title;
+        title.textContent = argument.event.title;
         content.append(title);
 
-        if (kind === "attention" && arg.timeText) {
+        if (kind === "attention" && argument.timeText) {
           const time = document.createElement("span");
           time.className = "notaria-calendar-event__time";
-          time.textContent = arg.timeText.replace(" - ", "–");
+          time.textContent = argument.timeText.replace(" - ", "–");
           content.append(time);
         }
 
@@ -116,11 +116,9 @@ async function renderCalendar(root: HTMLDivElement): Promise<void> {
     });
 
     calendar.render();
-  } catch (err) {
-    console.error("[notaria] calendar failed to load", err);
-    if (loading) {
-      loading.textContent = site.calendar.errorMessage;
-    }
+  } catch (error) {
+    console.error("[notaria] calendar failed to load", error);
+    if (loading) loading.textContent = site.calendar.errorMessage;
     root.removeAttribute("aria-busy");
   }
 }

@@ -1,45 +1,42 @@
 import { site } from "@/content/site";
 
 export function mountFooter(el: HTMLElement): void {
-  const c = site.contact;
+  const contact = site.contact;
 
   el.innerHTML = `
-    <footer class="bg-navy text-white">
-      <div class="mx-auto grid max-w-(--container-content) gap-10 px-6 py-14 md:grid-cols-[1.2fr_1fr_1fr]">
-        <div>
-          <p class="font-display text-xl font-semibold">${site.brand}</p>
-          <p class="mt-2 text-sm text-white/70">${site.tagline}</p>
-          <p class="mt-6 text-sm text-white/70">${c.street} · ${c.city}</p>
-          <a class="mt-2 inline-block text-sm font-semibold text-gold hover:text-gold-soft" href="tel:${c.phoneE164}">${c.phoneDisplay}</a>
+    <footer class="bg-dark text-white/80">
+      <div class="mx-auto flex max-w-content flex-wrap justify-between gap-8 px-6 py-10 text-sm">
+        <div class="flex min-w-0 flex-[1_1_30rem] flex-col gap-1">
+          <p id="footer-brand" class="font-display text-xl font-bold text-white">${site.brand}</p>
+          <p>${site.tagline}</p>
+          <p class="mt-2">${contact.street} · ${contact.city}</p>
+          <div class="flex flex-wrap gap-x-4">
+            <a class="inline-flex min-h-11 items-center font-medium text-white hover:text-accent-soft" href="tel:${contact.phoneE164}">${contact.phoneDisplay}</a>
+            <a class="inline-flex min-h-11 items-center font-medium text-white hover:text-accent-soft" href="mailto:${contact.email}">${contact.email}</a>
+          </div>
+          <p>${contact.schedule.weekdays}<br />${contact.schedule.saturdays}</p>
         </div>
 
-        <nav aria-label="Enlaces de pie">
-          <p class="font-display text-sm uppercase tracking-[0.22em] text-gold">Sitio</p>
-          <ul class="mt-4 space-y-2 text-sm text-white/80">
+        <nav aria-labelledby="footer-brand">
+          <ul class="flex max-w-xl flex-wrap gap-x-4">
             ${site.nav
               .map(
                 (link) => `
-                  <li><a class="hover:text-white" href="${link.href}">${link.label}</a></li>
+                  <li><a class="inline-flex min-h-11 items-center font-medium text-white hover:text-accent-soft" href="${link.href}">${link.label}</a></li>
                 `,
               )
               .join("")}
           </ul>
         </nav>
 
-        <div>
-          <p class="font-display text-sm uppercase tracking-[0.22em] text-gold">Atención</p>
-          <ul class="mt-4 space-y-2 text-sm text-white/80">
-            <li>${c.schedule.weekdays}</li>
-            <li>${c.schedule.saturdays}</li>
-            <li><a class="hover:text-white" href="mailto:${c.email}">${c.email}</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="border-t border-white/10">
-        <div class="mx-auto flex max-w-(--container-content) flex-col items-center gap-2 px-6 py-6 text-center text-xs text-white/60 sm:flex-row sm:justify-between">
+        <div class="flex basis-full flex-col gap-2 border-t border-dark-line pt-4 text-xs sm:flex-row sm:items-center sm:justify-between">
           <p>${site.footer.copyright}</p>
-          <a class="hover:text-white/80 underline underline-offset-2" href="${site.footer.transparency.href}" target="_blank" rel="noopener noreferrer">${site.footer.transparency.label} ↗</a>
+          <a
+            class="inline-flex min-h-11 items-center font-medium text-accent-soft hover:text-white hover:underline"
+            href="${site.footer.transparency.href}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >${site.footer.transparency.label} <span class="ml-1" aria-hidden="true">↗</span></a>
         </div>
       </div>
     </footer>
