@@ -364,7 +364,7 @@ export const site = {
     section: {
       eyebrow: "Nosotros",
       heading: "Quiénes somos",
-      lead: "Conocé nuestra trayectoria, nuestro equipo y el compromiso que nos define.",
+      lead: "Conozca nuestra trayectoria, nuestro equipo y el compromiso que nos define.",
     },
     commitment: {
       heading: "Nuestro compromiso",
@@ -425,7 +425,7 @@ export const site = {
     eyebrow: "Documentos",
     downloadCtaLabel: "Hacer una copia",
     heading: "Documentos online e información",
-    lead: "Haz clic en el documento que necesitas, crea tu copia y complétalo con tus datos e imprímelo. Todo documento debe ser firmado por el interesado ante el notario.",
+    lead: "Haga clic en el documento que necesita, cree su copia, complétela con sus datos e imprímala. Todo documento debe ser firmado por el interesado ante el notario.",
     downloads: [
       {
         title: "Autorización trabajo menor de edad",
@@ -542,7 +542,7 @@ export const site = {
   consulta: {
     eyebrow: "Consulta en línea",
     heading: "Consulta de escrituras",
-    lead: "Busca una escritura pública o una inscripción de comercio por su número de repertorio.",
+    lead: "Busque una escritura pública o una inscripción de comercio por su número de repertorio.",
     typeLabel: "Tipo de repertorio",
     types: {
       escrituras: "Escrituras públicas",
@@ -556,17 +556,17 @@ export const site = {
     submitLabel: "Consultar",
     loadingLabel: "Consultando…",
     loadingMessage: "Buscando resultados…",
-    requiredMessage: "Ingresa un número de repertorio.",
+    requiredMessage: "Ingrese un número de repertorio.",
     maxLengthMessage: "El número de repertorio no puede superar 30 caracteres.",
     emptyMessage: "No se encontraron resultados para ese número de repertorio.",
-    invalidRequestMessage: "Revisa los datos ingresados e intenta nuevamente.",
+    invalidRequestMessage: "Revise los datos ingresados e intente nuevamente.",
     unauthorizedMessage:
-      "No pudimos verificar la solicitud. Recarga la página e intenta nuevamente.",
+      "No pudimos verificar la solicitud. Recargue la página e intente nuevamente.",
     rateLimitMessage:
-      "Demasiadas consultas. Intenta nuevamente en unos minutos.",
-    timeoutMessage: "La consulta tardó demasiado. Intenta nuevamente.",
+      "Demasiadas consultas. Intente nuevamente en unos minutos.",
+    timeoutMessage: "La consulta tardó demasiado. Intente nuevamente.",
     errorMessage:
-      "No fue posible realizar la consulta. Intenta nuevamente más tarde.",
+      "No fue posible realizar la consulta. Intente nuevamente más tarde.",
     singleResultMessage: "Se encontró 1 resultado.",
     multipleResultsMessage: "Se encontraron {count} resultados.",
   } satisfies ConsultaContent,
