@@ -547,6 +547,13 @@ export const site = {
         label: "Ver índice 2026",
       },
       {
+        title: "Índice de Instrumentos Públicos 2026",
+        description:
+          "Índice de instrumentos públicos de Notaría Martínez correspondiente a 2026, disponible para consulta pública.",
+        href: "/docs/instrumentos-publicos-2026.pdf",
+        label: "Ver índice de instrumentos públicos",
+      },
+      {
         title: "Repertorio de Instrumentos Protocolizados 2026",
         description:
           "Repertorio de Instrumentos Protocolizados de Notaría Martínez correspondiente a 2026, disponible para consulta pública.",
