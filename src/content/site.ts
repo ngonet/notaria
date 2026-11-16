@@ -103,6 +103,7 @@ export interface ContactInfo {
   phoneE164: string;
   email: string;
   schedule: { weekdays: string; saturdays: string };
+  deeds: { heading: string; text: string; email: string };
 }
 
 export interface ContactFormContent {
@@ -635,6 +636,11 @@ export const site = {
     schedule: {
       weekdays: "Lunes a viernes · 09:00 a 17:00",
       saturdays: "Sábados · 09:30 a 12:45",
+    },
+    deeds: {
+      heading: "¿Quiere redactar o suscribir su escritura?",
+      text: "Si necesita redactar una escritura pública o no cuenta con asesoría para hacerlo, escríbanos y lo orientaremos.",
+      email: "escrituraspublicas@notariamelipilla.cl",
     },
   } satisfies ContactInfo,
 

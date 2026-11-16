@@ -29,6 +29,12 @@ export function mountContact(el: HTMLElement): void {
             <p class="leading-relaxed text-ink-2">${contact.schedule.weekdays}<br />${contact.schedule.saturdays}</p>
           </article>
 
+          <article class="flex flex-col gap-3.5 rounded-card border border-line bg-surface p-6">
+            <h3 class="text-xl text-ink">${contact.deeds.heading}</h3>
+            <p class="leading-relaxed text-ink-2">${contact.deeds.text}</p>
+            <a class="inline-flex min-h-11 items-center text-accent hover:text-accent-dark hover:underline" href="mailto:${contact.deeds.email}">${contact.deeds.email}</a>
+          </article>
+
           <div class="overflow-hidden rounded-card border border-line bg-surface">
             <iframe
               title="${contact.legalName}"
