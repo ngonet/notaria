@@ -6,6 +6,10 @@ on:
   # Sent by notaria-documentos after it deploys, to refresh /documentos/.
   repository_dispatch:
     types: [documentos-updated]
+# A push to main and a documentos-updated dispatch must not deploy at the same time.
+concurrency:
+  group: deploy-hosting
+  cancel-in-progress: false
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
@@ -45,6 +49,8 @@ jobs:
           ref: main
           path: notaria-documentos
           token: ${{ secrets.NOTARIA_DOCUMENTOS_READ_TOKEN }}
+          # The token is only needed to clone; keep it off disk while pnpm runs install scripts.
+          persist-credentials: false
 
       - uses: pnpm/action-setup@v4
         with:
