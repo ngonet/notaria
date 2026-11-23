@@ -48,8 +48,8 @@ jobs:
           repository: ngonet/notaria-documentos
           ref: main
           path: notaria-documentos
-          token: ${{ secrets.NOTARIA_DOCUMENTOS_READ_TOKEN }}
-          # The token is only needed to clone; keep it off disk while pnpm runs install scripts.
+          ssh-key: ${{ secrets.NOTARIA_DOCUMENTOS_DEPLOY_KEY }}
+          # The deploy key is only needed to clone; keep it off disk while pnpm runs install scripts.
           persist-credentials: false
 
       - uses: pnpm/action-setup@v4

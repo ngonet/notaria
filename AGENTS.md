@@ -27,7 +27,7 @@
 - Firebase project is `notaria-melipilla` from `.firebaserc`.
 - `functions/src/index.ts` and `firebase.json` must stay aligned on region `us-central1` and function id `calendarProxy`.
 - Google Calendar API key is a Firebase Functions secret named `GOOGLE_CALENDAR_API_KEY`, accessed with `defineSecret(...)`; do not move it to frontend env vars or inline config.
-- CI needs the secret `NOTARIA_DOCUMENTOS_READ_TOKEN` (read access to the private `ngonet/notaria-documentos`). The merge workflow also runs on `repository_dispatch` `documentos-updated`, sent by notaria-documentos after it deploys.
+- CI needs the secret `NOTARIA_DOCUMENTOS_DEPLOY_KEY` (private half of a read-only deploy key on the private `ngonet/notaria-documentos`). The merge workflow also runs on `repository_dispatch` `documentos-updated`, sent by notaria-documentos after it deploys.
 - Manual deploy target is `firebase deploy --only hosting,functions --project notaria-melipilla` after building both packages.
 
 ## Repo-Specific Gotchas
