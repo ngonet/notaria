@@ -89,14 +89,16 @@ export function mountDocuments(root: HTMLElement): void {
       ),
     );
 
-    const link = externalLink(
-      documentItem.href,
+    // Same-site link to the online form (/documentos/#<id>), opened in this tab.
+    const link = el(
+      "a",
       "inline-flex min-h-11 shrink-0 items-center gap-2 rounded-[10px] border-2 border-accent px-4 py-2 text-sm font-semibold text-accent transition hover:border-accent-dark hover:bg-accent-dark hover:text-white",
     );
+    link.href = documentItem.href;
     append(
       link,
       document.createTextNode(downloadCtaLabel),
-      el("span", "", "↗"),
+      el("span", "", "→"),
     );
     link.lastElementChild?.setAttribute("aria-hidden", "true");
 

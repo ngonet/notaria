@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - main
+  # Sent by notaria-documentos after it deploys, to refresh /documentos/.
+  repository_dispatch:
+    types: [documentos-updated]
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
@@ -34,6 +37,28 @@ jobs:
 
       - name: Build site
         run: npm run build
+
+      - name: Build public forms (notaria-documentos)
+        uses: actions/checkout@v4
+        with:
+          repository: ngonet/notaria-documentos
+          ref: main
+          path: notaria-documentos
+          token: ${{ secrets.NOTARIA_DOCUMENTOS_READ_TOKEN }}
+
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: notaria-documentos/package.json
+
+      - name: Copy public forms to dist/documentos
+        working-directory: notaria-documentos
+        run: |
+          # Login-free forms served at /documentos/; wording comes from
+          # /api/documentos/plantillas (publishedTemplates).
+          pnpm install --frozen-lockfile
+          pnpm build:public
+          rm -rf ../dist/documentos
+          cp -r dist-public ../dist/documentos
 
       - name: Verify no API keys in dist
         run: |

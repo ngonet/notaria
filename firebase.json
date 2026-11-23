@@ -25,6 +25,17 @@
         }
       },
       {
+        "source": "/api/documentos/plantillas",
+        "function": {
+          "functionId": "publishedTemplates",
+          "region": "southamerica-west1"
+        }
+      },
+      {
+        "source": "/documentos/**",
+        "destination": "/documentos/index.html"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
@@ -52,6 +63,10 @@
       },
       {
         "source": "/index.html",
+        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      },
+      {
+        "source": "/documentos/index.html",
         "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
       },
       {

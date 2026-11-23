@@ -432,17 +432,17 @@ export const site = {
   },
 
   documents: {
-    downloadCtaLabel: "Hacer una copia",
+    downloadCtaLabel: "Completar en línea",
     heading: "Documentos online e información",
-    lead: "Haga clic en el documento que necesita, cree su copia, complétela con sus datos e imprímala. Todo documento debe ser firmado por el interesado ante el notario.",
+    lead: "Haga clic en el documento que necesita, complételo en línea con sus datos, descárguelo e imprímalo. Todo documento debe ser firmado por el interesado ante el notario.",
     steps: [
       {
-        title: "Haga una copia",
-        body: "Abra el formulario y seleccione “Hacer una copia”.",
+        title: "Complete el formulario",
+        body: "Abra el documento y seleccione “Completar en línea”.",
       },
       {
-        title: "Complete e imprima",
-        body: "Ingrese sus datos en su copia e imprímala.",
+        title: "Descargue e imprima",
+        body: "Genere el PDF con sus datos, descárguelo e imprímalo. Sus datos no se guardan.",
       },
       {
         title: "Firme ante notario",
@@ -454,31 +454,31 @@ export const site = {
         title: "Autorización trabajo menor de edad",
         description:
           "La concurrencia personal del interesado, con cédula de identidad o pasaporte vigente, es requisito esencial para autorizar instrumentos en este oficio.",
-        href: "https://docs.google.com/document/d/11oc45ydx-j5emTHNzaKVxnGQmHXjjqd6XcBbJ5walAU/copy",
+        href: "/documentos/#autorizacion-trabajo-menor",
       },
       {
         title: "Autorización viaje menor de edad",
         description:
           "Solicitud notarial necesaria para que un menor de edad pueda viajar dentro o fuera del país sin la compañía de sus padres.",
-        href: "https://docs.google.com/document/d/1q3KVDIg7ZuCue7a930jeLbJvyFOH4kwskrG017TMKZg/copy",
+        href: "/documentos/#autorizacion-viaje-menor",
       },
       {
         title: "Carta de poder",
         description:
           "Instrumento que faculta a una persona para actuar en nombre de otra en trámites y gestiones específicas.",
-        href: "https://docs.google.com/document/d/1o1IS8FolssJEalAruYsqcxWQO4ux4dd-8a5CnXuW0qA/copy",
+        href: "/documentos/#carta-poder",
       },
       {
         title: "Declaración jurada",
         description:
           "Documento en el que el otorgante declara, bajo juramento, hechos que pueden ser usados como prueba legal.",
-        href: "https://docs.google.com/document/d/1anHy5zPvectHTBeR5zkSHO2dZW245La5VusLeuvKygc/copy",
+        href: "/documentos/#declaracion-jurada",
       },
       {
         title: "Declaración Ley de Alcoholes",
         description:
           "Declaración requerida para actos relacionados con establecimientos de expendio de bebidas alcohólicas. Complete el documento antes de acudir al oficio.",
-        href: "https://docs.google.com/document/d/154XCd61Sj3VuHRkhLtmemJj7FmgVAZUD5IoolbAHaBQ/copy",
+        href: "/documentos/#declaracion-ley-alcoholes",
       },
     ] satisfies DocumentDownload[],
 
