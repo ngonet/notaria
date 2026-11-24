@@ -9,6 +9,10 @@ import { Connector, IpAddressTypes } from "@google-cloud/cloud-sql-connector";
 import pg from "pg";
 import { RateLimiter, mapConsultaRow, validateConsultaInput } from "./consulta";
 import { compareEvents } from "./calendar-order";
+import {
+	mapPublishedTemplateRow,
+	type PublishedTemplateRow,
+} from "./document-templates";
 import { buildAllowedOrigins } from "./origins";
 
 if (getApps().length === 0) {
@@ -426,6 +430,51 @@ export const deedLookup = onRequest(
 			res.status(200).json({ results: rows.map(mapConsultaRow) });
 		} catch (err) {
 			logger.error("deedLookup query failed", err);
+			res.status(500).json({ error: "internal_error" });
+		}
+	},
+);
+
+// Published wording for the public forms (GET /api/documentos/plantillas via
+// the Hosting rewrite, same origin as /documentos/). Public, read-only content:
+// no App Check, since every visitor of the forms needs it and Hosting's CDN
+// caches the response; the per-IP limiter only shields the DB from one client.
+const templatesRateLimiter = new RateLimiter(60_000, 60);
+const TEMPLATES_CACHE_SECONDS = 300;
+
+export const publishedTemplates = onRequest(
+	{
+		secrets: [CONSULTA_DB_PASSWORD],
+		region: "southamerica-west1",
+		maxInstances: 3,
+		memory: "256MiB",
+		cors: false,
+	},
+	async (req, res) => {
+		setSecurityHeaders(res);
+		if (req.method !== "GET") {
+			res.status(405).json({ error: "method_not_allowed" });
+			return;
+		}
+		if (!templatesRateLimiter.allow(req.ip ?? "unknown")) {
+			res.status(429).json({ error: "rate_limited" });
+			return;
+		}
+
+		try {
+			const pool = await getConsultaPool();
+			const { rows } = await pool.query<PublishedTemplateRow>(
+				`SELECT document_id, version, title, body, published_at
+				 FROM public_document_templates
+				 ORDER BY document_id`,
+			);
+			res.set(
+				"Cache-Control",
+				`public, max-age=${TEMPLATES_CACHE_SECONDS}, s-maxage=${TEMPLATES_CACHE_SECONDS}`,
+			);
+			res.status(200).json({ templates: rows.map(mapPublishedTemplateRow) });
+		} catch (err) {
+			logger.error("publishedTemplates query failed", err);
 			res.status(500).json({ error: "internal_error" });
 		}
 	},

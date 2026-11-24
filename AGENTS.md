@@ -9,6 +9,7 @@
 - Frontend composition root is `src/main.ts`; it lazy-loads section mounts from `src/components/*` via `[data-mount]` in `index.html`.
 - Site copy and business content live centrally in `src/content/site.ts`. Update that file before editing component text inline.
 - Calendar data is fetched client-side from same-origin `/api/calendar/events`; Hosting rewrites that path to the `calendarProxy` function.
+- `/documentos/` is not built here: CI checks out `ngonet/notaria-documentos` (`main`), runs `pnpm build:public` and copies its `dist-public/` to `dist/documentos/`. The forms load the wording an admin published in Notia from same-origin `/api/documentos/plantillas`, rewritten to the `publishedTemplates` function (`southamerica-west1`), which reads notIA's view `public_document_templates` as `consulta_ro`. The documents section cards link to `/documentos/#<document-id>`.
 
 ## Commands
 - Dev frontend only: `npm run dev`
@@ -26,6 +27,7 @@
 - Firebase project is `notaria-melipilla` from `.firebaserc`.
 - `functions/src/index.ts` and `firebase.json` must stay aligned on region `us-central1` and function id `calendarProxy`.
 - Google Calendar API key is a Firebase Functions secret named `GOOGLE_CALENDAR_API_KEY`, accessed with `defineSecret(...)`; do not move it to frontend env vars or inline config.
+- CI needs the secret `NOTARIA_DOCUMENTOS_DEPLOY_KEY` (private half of a read-only deploy key on the private `ngonet/notaria-documentos`). The merge workflow also runs on `repository_dispatch` `documentos-updated`, sent by notaria-documentos after it deploys.
 - Manual deploy target is `firebase deploy --only hosting,functions --project notaria-melipilla` after building both packages.
 
 ## Repo-Specific Gotchas
