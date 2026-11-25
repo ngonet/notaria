@@ -133,6 +133,16 @@ function setupSalaryModal(root: ParentNode): void {
   );
 }
 
+// "2026-10-23" -> "23 de octubre de 2026". UTC so the day never shifts with the viewer's timezone.
+function formatUpdatedAt(isoDate: string): string {
+  return new Date(`${isoDate}T00:00:00Z`).toLocaleDateString("es-CL", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+}
+
 export function mountTransparencia(el: HTMLElement): void {
   const content = site.transparencia;
   const declaration = site.footer.transparency;
@@ -160,6 +170,7 @@ export function mountTransparencia(el: HTMLElement): void {
                   <span>
                     <span class="block font-semibold leading-snug">${documentItem.title}</span>
                     <span class="mt-1 block text-sm leading-relaxed text-muted">${documentItem.description}</span>
+                    ${documentItem.updatedAt ? `<span class="mt-2 block text-xs font-medium text-ink-2">${content.updatedAtLabel} ${formatUpdatedAt(documentItem.updatedAt)}</span>` : ""}
                   </span>
                   <span class="text-sm font-semibold text-accent group-hover:text-accent-dark">${documentItem.label} <span aria-hidden="true">↗</span></span>
                 </a>
