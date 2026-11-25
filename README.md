@@ -68,6 +68,20 @@ rg -o 'AIzaSy[0-9A-Za-z_-]+' dist/ | sort -u \
   | grep -vF 'AIzaSyAn2A233ZY1y6C85uJvntgZFbENmWGg9C0'
 ```
 
+## Actualización mensual de índices
+
+Los índices publicados en la sección Transparencia (Instrumentos Públicos,
+Instrumentos Protocolizados y Registro de Comercio) se actualizan una vez al mes:
+
+1. Reemplace el PDF en `public/docs/` manteniendo el mismo nombre de archivo
+   (por ejemplo `public/docs/instrumentos-publicos-2026.pdf` o
+   `public/docs/comercio/ind-com-2026.pdf`).
+2. En `src/content/site.ts`, dentro de `transparencia.documents`, cambie el
+   campo `updatedAt` de esa entrada a la fecha de actualización (`AAAA-MM-DD`).
+   El sitio lo muestra como "Actualizado al 23 de octubre de 2026".
+3. Para un año nuevo, agregue una entrada con su `href`, `label` y `updatedAt`.
+4. Verifique con `npm run check` y `npm run build`, y publique por PR a `main`.
+
 ## Cloud Function: calendarProxy
 
 `functions/src/index.ts` expone `GET /api/calendar/events?timeMin=ISO&timeMax=ISO`. Lee la key como **secret** (no `process.env`):
