@@ -70,17 +70,36 @@ rg -o 'AIzaSy[0-9A-Za-z_-]+' dist/ | sort -u \
 
 ## Actualización mensual de índices
 
-Los índices publicados en la sección Transparencia (Instrumentos Públicos,
-Instrumentos Protocolizados y Registro de Comercio) se actualizan una vez al mes:
+**2026 es manual.** Los índices 2026 (Instrumentos Públicos, Instrumentos
+Protocolizados y Registro de Comercio) son PDF en `public/docs/`. Cada mes
+reemplace el PDF manteniendo el mismo nombre, ajuste el `updatedAt`
+(`AAAA-MM-DD`) de esa entrada en `transparencia.documents`
+(`src/content/site.ts`) y publique por PR a `main` tras `npm run check` y
+`npm run build`. El sitio lo muestra como "Actualizado al <fecha>".
 
-1. Reemplace el PDF en `public/docs/` manteniendo el mismo nombre de archivo
-   (por ejemplo `public/docs/instrumentos-publicos-2026.pdf` o
-   `public/docs/comercio/ind-com-2026.pdf`).
-2. En `src/content/site.ts`, dentro de `transparencia.documents`, cambie el
-   campo `updatedAt` de esa entrada a la fecha de actualización (`AAAA-MM-DD`).
-   El sitio lo muestra como "Actualizado al 23 de octubre de 2026".
-3. Para un año nuevo, agregue una entrada con su `href`, `label` y `updatedAt`.
-4. Verifique con `npm run check` y `npm run build`, y publique por PR a `main`.
+**Desde 2027, automático** para Instrumentos Públicos y Registro de Comercio:
+un job mensual de notIA sube los PDF acumulados del año al bucket público
+`INDICES_BUCKET_URL` (`https://storage.googleapis.com/notia-indices-publicos`)
+junto con `manifest.json`. Una tarjeta cuyo `href` apunta al bucket toma su
+fecha de `manifest.json` al cargar la sección Transparencia; si el manifiesto
+no carga, queda el `updatedAt` estático. Mientras ninguna tarjeta apunte al
+bucket, el sitio no lo consulta.
+
+**Paso de año nuevo (principios de febrero de 2027, después de la ejecución
+del 1 de febrero):**
+
+1. Agregue en `transparencia.documents` las tarjetas 2027 de Instrumentos
+   Públicos y Registro de Comercio con `href`
+   `` `${INDICES_BUCKET_URL}/instrumentos-publicos-2027.pdf` `` y
+   `` `${INDICES_BUCKET_URL}/ind-com-2027.pdf` `` y un `updatedAt` inicial.
+   Apuntar al bucket es lo que activa la fecha desde `manifest.json`.
+2. Deje las tarjetas 2026 como PDF manuales finales en `public/docs/`.
+3. Instrumentos Protocolizados sigue manual (su repertorio se lleva a mano y
+   notIA no tiene esos datos): agregue `instrumentos-protocolizados-2027.pdf`
+   en `public/docs/` como en 2026.
+
+**Respaldo manual** (si el job falla): suba el PDF a `public/docs/`, apunte el
+`href` de esa entrada al archivo local, ajuste `updatedAt` y publique por PR.
 
 ## Cloud Function: calendarProxy
 

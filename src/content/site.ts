@@ -159,6 +159,10 @@ export interface AnnouncementModal {
   activeUntil: string;
 }
 
+// Public bucket where notIA's monthly job publishes the current-year Índice PDFs and manifest.json.
+export const INDICES_BUCKET_URL =
+  "https://storage.googleapis.com/notia-indices-publicos";
+
 export const site = {
   brand: "Notaría Martínez",
   tagline: "Notario y Conservador de Comercio de Melipilla",
@@ -499,6 +503,7 @@ export const site = {
     salaryCardLabel: "RUT y sueldo base de funcionarios",
     salaryCardAction: "Ver",
     updatedAtLabel: "Actualizado al",
+    indicesManifestUrl: `${INDICES_BUCKET_URL}/manifest.json`,
     lead: "Auditorías de rutina o extraordinarias destinadas a fiscalizar el correcto funcionamiento de la notaría, revisar protocolos y libros de registros, y resguardar los estándares de fe pública.",
     documents: [
       {

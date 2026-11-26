@@ -1,4 +1,5 @@
-import { site } from "@/content/site";
+import { INDICES_BUCKET_URL, site } from "@/content/site";
+import { fetchIndexUpdates } from "@/lib/indices-manifest";
 import { rosette } from "./icons";
 
 const SALARY_MODAL_ID = "transparencia-salary-modal";
@@ -133,13 +134,33 @@ function setupSalaryModal(root: ParentNode): void {
   );
 }
 
-// "2026-10-23" -> "23 de octubre de 2026". UTC so the day never shifts with the viewer's timezone.
+// "2026-10-23" or "2026-10-23T14:05:00Z" -> "23 de octubre de 2026", as a
+// Chilean calendar date. A date-only value is read as noon UTC so it never
+// shifts a day.
 function formatUpdatedAt(isoDate: string): string {
-  return new Date(`${isoDate}T00:00:00Z`).toLocaleDateString("es-CL", {
+  const instant = isoDate.length === 10 ? `${isoDate}T12:00:00Z` : isoDate;
+  return new Date(instant).toLocaleDateString("es-CL", {
     day: "numeric",
     month: "long",
     year: "numeric",
-    timeZone: "UTC",
+    timeZone: "America/Santiago",
+  });
+}
+
+// Replaces the static "Actualizado al" dates with the ones notIA's monthly
+// job wrote to manifest.json; on any failure the static dates stay.
+// No-op (no request) while no card links a bucket PDF.
+async function applyManifestDates(root: HTMLElement): Promise<void> {
+  const labels = root.querySelectorAll<HTMLElement>("[data-index-file]");
+  if (labels.length === 0) return;
+  const updates = await fetchIndexUpdates(
+    site.transparencia.indicesManifestUrl,
+  );
+  labels.forEach((label) => {
+    const updatedAt = updates.get(label.dataset.indexFile ?? "");
+    if (updatedAt) {
+      label.textContent = `${site.transparencia.updatedAtLabel} ${formatUpdatedAt(updatedAt)}`;
+    }
   });
 }
 
@@ -170,7 +191,7 @@ export function mountTransparencia(el: HTMLElement): void {
                   <span>
                     <span class="block font-semibold leading-snug">${documentItem.title}</span>
                     <span class="mt-1 block text-sm leading-relaxed text-muted">${documentItem.description}</span>
-                    ${documentItem.updatedAt ? `<span class="mt-2 block text-xs font-medium text-ink-2">${content.updatedAtLabel} ${formatUpdatedAt(documentItem.updatedAt)}</span>` : ""}
+                    ${documentItem.updatedAt ? `<span class="mt-2 block text-xs font-medium text-ink-2" ${documentItem.href.startsWith(`${INDICES_BUCKET_URL}/`) ? `data-index-file="${documentItem.href.split("/").pop()}"` : ""}>${content.updatedAtLabel} ${formatUpdatedAt(documentItem.updatedAt)}</span>` : ""}
                   </span>
                   <span class="text-sm font-semibold text-accent group-hover:text-accent-dark">${documentItem.label} <span aria-hidden="true">↗</span></span>
                 </a>
@@ -206,4 +227,5 @@ export function mountTransparencia(el: HTMLElement): void {
   `;
 
   setupSalaryModal(el);
+  void applyManifestDates(el);
 }
