@@ -570,7 +570,7 @@ export const site = {
         title: "Repertorio de Instrumentos Protocolizados 2026",
         description:
           "Repertorio de Instrumentos Protocolizados de Notaría Martínez correspondiente a 2026, disponible para consulta pública.",
-        href: `${INDICES_BUCKET_URL}/instrumentos-protocolizados-2026.pdf`,
+        href: "/docs/instrumentos-protocolizados-2026.pdf",
         label: "Ver repertorio de protocolizaciones",
         updatedAt: "2026-07-10",
       },

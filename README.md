@@ -70,8 +70,8 @@ rg -o 'AIzaSy[0-9A-Za-z_-]+' dist/ | sort -u \
 
 ## Actualización mensual de índices
 
-Los índices del año en curso (Instrumentos Públicos, Instrumentos
-Protocolizados y Registro de Comercio) se publican de forma automática: un job
+Los índices del año en curso de Instrumentos Públicos y Registro de Comercio
+se publican de forma automática: un job
 mensual de notIA sube los PDF acumulados del año al bucket público
 `notia-indices-publicos` (nombres estables, por ejemplo
 `instrumentos-publicos-2026.pdf`) junto con `manifest.json`. El sitio enlaza
@@ -82,6 +82,12 @@ carga, se muestra el `updatedAt` estático de `src/content/site.ts`.
 La URL del bucket está en `INDICES_BUCKET_URL` (`src/content/site.ts`). Los
 años anteriores (Comercio 2024 y 2025) siguen como PDF estáticos en
 `public/docs/comercio/`.
+
+**Instrumentos Protocolizados** se mantiene manual (su repertorio se lleva a
+mano y notIA no tiene esos datos): cada mes reemplace
+`public/docs/instrumentos-protocolizados-AAAA.pdf` con el mismo nombre, ajuste
+el `updatedAt` (`AAAA-MM-DD`) de esa entrada en `transparencia.documents` y
+publique por PR a `main` tras `npm run check` y `npm run build`.
 
 **Año nuevo:** agregue en `transparencia.documents` las entradas del año con
 `href` en `${INDICES_BUCKET_URL}/…-AAAA.pdf` y un `updatedAt` inicial; el año
