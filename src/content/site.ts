@@ -554,7 +554,7 @@ export const site = {
         title: "Índice Registro de Comercio 2026",
         description:
           "Índice anual del Registro de Comercio de Melipilla correspondiente a 2026, con las inscripciones de constituciones, modificaciones y actas.",
-        href: `${INDICES_BUCKET_URL}/ind-com-2026.pdf`,
+        href: "/docs/comercio/ind-com-2026.pdf",
         label: "Ver índice 2026",
         updatedAt: "2026-10-23",
       },
@@ -562,7 +562,7 @@ export const site = {
         title: "Índice de Instrumentos Públicos 2026",
         description:
           "Índice de instrumentos públicos de Notaría Martínez correspondiente a 2026, disponible para consulta pública.",
-        href: `${INDICES_BUCKET_URL}/instrumentos-publicos-2026.pdf`,
+        href: "/docs/instrumentos-publicos-2026.pdf",
         label: "Ver índice de instrumentos públicos",
         updatedAt: "2026-10-28",
       },

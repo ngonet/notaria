@@ -149,11 +149,14 @@ function formatUpdatedAt(isoDate: string): string {
 
 // Replaces the static "Actualizado al" dates with the ones notIA's monthly
 // job wrote to manifest.json; on any failure the static dates stay.
+// No-op (no request) while no card links a bucket PDF.
 async function applyManifestDates(root: HTMLElement): Promise<void> {
+  const labels = root.querySelectorAll<HTMLElement>("[data-index-file]");
+  if (labels.length === 0) return;
   const updates = await fetchIndexUpdates(
     site.transparencia.indicesManifestUrl,
   );
-  root.querySelectorAll<HTMLElement>("[data-index-file]").forEach((label) => {
+  labels.forEach((label) => {
     const updatedAt = updates.get(label.dataset.indexFile ?? "");
     if (updatedAt) {
       label.textContent = `${site.transparencia.updatedAtLabel} ${formatUpdatedAt(updatedAt)}`;
