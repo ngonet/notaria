@@ -70,17 +70,26 @@ rg -o 'AIzaSy[0-9A-Za-z_-]+' dist/ | sort -u \
 
 ## Actualización mensual de índices
 
-Los índices publicados en la sección Transparencia (Instrumentos Públicos,
-Instrumentos Protocolizados y Registro de Comercio) se actualizan una vez al mes:
+Los índices del año en curso (Instrumentos Públicos, Instrumentos
+Protocolizados y Registro de Comercio) se publican de forma automática: un job
+mensual de notIA sube los PDF acumulados del año al bucket público
+`notia-indices-publicos` (nombres estables, por ejemplo
+`instrumentos-publicos-2026.pdf`) junto con `manifest.json`. El sitio enlaza
+esos PDF y, al cargar la sección Transparencia, lee `manifest.json` para
+mostrar "Actualizado al <fecha>" con su `updatedAt`. Si el manifiesto no
+carga, se muestra el `updatedAt` estático de `src/content/site.ts`.
 
-1. Reemplace el PDF en `public/docs/` manteniendo el mismo nombre de archivo
-   (por ejemplo `public/docs/instrumentos-publicos-2026.pdf` o
-   `public/docs/comercio/ind-com-2026.pdf`).
-2. En `src/content/site.ts`, dentro de `transparencia.documents`, cambie el
-   campo `updatedAt` de esa entrada a la fecha de actualización (`AAAA-MM-DD`).
-   El sitio lo muestra como "Actualizado al 23 de octubre de 2026".
-3. Para un año nuevo, agregue una entrada con su `href`, `label` y `updatedAt`.
-4. Verifique con `npm run check` y `npm run build`, y publique por PR a `main`.
+La URL del bucket está en `INDICES_BUCKET_URL` (`src/content/site.ts`). Los
+años anteriores (Comercio 2024 y 2025) siguen como PDF estáticos en
+`public/docs/comercio/`.
+
+**Año nuevo:** agregue en `transparencia.documents` las entradas del año con
+`href` en `${INDICES_BUCKET_URL}/…-AAAA.pdf` y un `updatedAt` inicial; el año
+que termina puede quedar en el bucket o pasar a `public/docs/`.
+
+**Respaldo manual** (si el job falla): suba el PDF a `public/docs/`, apunte el
+`href` de esa entrada al archivo local, ajuste `updatedAt` (`AAAA-MM-DD`) y
+publique por PR a `main` tras `npm run check` y `npm run build`.
 
 ## Cloud Function: calendarProxy
 
