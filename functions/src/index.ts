@@ -14,6 +14,7 @@ import {
 	type PublishedTemplateRow,
 } from "./document-templates";
 import { buildAllowedOrigins } from "./origins";
+import { FUNCTION_REGIONS } from "./regions";
 
 if (getApps().length === 0) {
 	initializeApp();
@@ -166,8 +167,14 @@ interface ContactBody {
 	message?: unknown;
 }
 
+// Personal data (name, email, phone, message): moving to Santiago (see regions.ts).
 export const contactForm = onRequest(
-	{ secrets: [GMAIL_USER, GMAIL_APP_PASSWORD], memory: "256MiB", cors: false },
+	{
+		secrets: [GMAIL_USER, GMAIL_APP_PASSWORD],
+		region: [...FUNCTION_REGIONS.contactForm],
+		memory: "256MiB",
+		cors: false,
+	},
 	async (req, res) => {
 		const origin = req.get("origin") ?? "";
 		if (ALLOWED_ORIGINS.has(origin)) {
@@ -360,7 +367,7 @@ interface PublicConsultaRow {
 export const deedLookup = onRequest(
 	{
 		secrets: [CONSULTA_DB_PASSWORD],
-		region: "southamerica-west1",
+		region: [...FUNCTION_REGIONS.deedLookup],
 		maxInstances: 3,
 		memory: "256MiB",
 		cors: false,
@@ -445,7 +452,7 @@ const TEMPLATES_CACHE_SECONDS = 300;
 export const publishedTemplates = onRequest(
 	{
 		secrets: [CONSULTA_DB_PASSWORD],
-		region: "southamerica-west1",
+		region: [...FUNCTION_REGIONS.publishedTemplates],
 		maxInstances: 3,
 		memory: "256MiB",
 		cors: false,
