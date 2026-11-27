@@ -350,8 +350,8 @@ async function getConsultaPool(): Promise<pg.Pool> {
 	return consultaPoolInit;
 }
 
-// Per-instance, per-IP limiter — see consulta.ts for why in-memory is
-// sufficient here (App Check is required on every request below).
+// Per-IP limiter for deedLookup. In-memory, but shared by all its traffic
+// because deedLookup runs on a single instance (maxInstances: 1).
 const consultaRateLimiter = new RateLimiter();
 
 interface PublicConsultaRow {
@@ -368,7 +368,10 @@ export const deedLookup = onRequest(
 	{
 		secrets: [CONSULTA_DB_PASSWORD],
 		region: [...FUNCTION_REGIONS.deedLookup],
-		maxInstances: 3,
+		// One instance so the in-memory per-IP limiter is shared by every
+		// request (see consulta.ts). Requests are light, and Cloud Run's default
+		// concurrency (80) is far above this site's traffic.
+		maxInstances: 1,
 		memory: "256MiB",
 		cors: false,
 	},
