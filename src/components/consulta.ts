@@ -186,7 +186,7 @@ export function mountConsulta(el: HTMLElement): void {
 
       <details class="text-[13px] text-muted">
         <summary class="min-h-8 cursor-pointer">${content.privacySummary}</summary>
-        <p class="mt-2">${content.privacyNote}</p>
+        <p class="mt-2">${content.privacyNote} <a href="${site.footer.privacy.href}" class="font-medium text-accent underline underline-offset-4 hover:text-accent-dark">${content.privacyLinkLabel}</a></p>
       </details>
     </div>
   `;

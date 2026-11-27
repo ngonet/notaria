@@ -78,6 +78,23 @@ export function mountContact(el: HTMLElement): void {
               <label for="cf-message" class="${LABEL_CLASS}">${formContent.messageLabel}</label>
               <textarea id="cf-message" name="message" required rows="4" class="${INPUT_CLASS} resize-y"></textarea>
             </div>
+            <div>
+              <div class="flex items-start gap-3">
+                <input
+                  id="cf-consent"
+                  name="consent"
+                  type="checkbox"
+                  required
+                  aria-describedby="cf-consent-error"
+                  class="mt-0.5 h-5 w-5 shrink-0 accent-accent"
+                />
+                <label for="cf-consent" class="text-sm text-ink">
+                  ${formContent.consentBefore}
+                  <a href="${site.footer.privacy.href}" target="_blank" rel="noopener noreferrer" class="font-medium text-accent underline underline-offset-4 hover:text-accent-dark">${formContent.consentLinkLabel}</a>
+                </label>
+              </div>
+              <p id="cf-consent-error" class="mt-1.5 hidden text-sm text-red-700" role="alert">${formContent.consentRequiredMessage}</p>
+            </div>
             <div class="flex flex-wrap items-center gap-4 pt-1">
               <button
                 id="cf-submit"
@@ -102,9 +119,27 @@ export function mountContact(el: HTMLElement): void {
   const submitButton = el.querySelector<HTMLButtonElement>("#cf-submit")!;
   const error = el.querySelector<HTMLElement>("#cf-error")!;
   const success = el.querySelector<HTMLElement>("#cf-success")!;
+  const consent = el.querySelector<HTMLInputElement>("#cf-consent")!;
+  const consentError = el.querySelector<HTMLElement>("#cf-consent-error")!;
+
+  consent.addEventListener("change", () => {
+    if (consent.checked) {
+      consentError.classList.add("hidden");
+      consent.removeAttribute("aria-invalid");
+    }
+  });
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+
+    // Ley 19.628 art. 4: informed consent before sending personal data.
+    // The checkbox only gates submission; it is not sent to /api/contact.
+    if (!consent.checked) {
+      consentError.classList.remove("hidden");
+      consent.setAttribute("aria-invalid", "true");
+      consent.focus();
+      return;
+    }
 
     const data = new FormData(form);
     const payload = {

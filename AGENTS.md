@@ -18,10 +18,11 @@
 - Production frontend build: `npm run build`
 - Functions build only: `npm --prefix functions run build`
 - Functions tests: `npm --prefix functions test`
+- Frontend tests: `npm test` (Vitest + jsdom, `src/**/*.test.ts`)
 
 ## Verification Order
-- CI order is: install root deps -> install `functions/` deps -> `npm --prefix functions run build` -> `npm --prefix functions test` -> `npm run check` -> `npm run build`.
-- Only `functions/` has tests (Vitest, `functions/src/*.test.ts`); the frontend has none. Do not claim frontend tests passed.
+- CI order is: install root deps -> install `functions/` deps -> `npm --prefix functions run build` -> `npm --prefix functions test` -> `npm run check` -> `npm test` -> `npm run build`.
+- Both packages have Vitest tests: `functions/src/*.test.ts` (`npm --prefix functions test`) and the frontend `src/**/*.test.ts` (`npm test`, jsdom).
 
 ## Firebase and Secrets
 - Firebase project is `notaria-melipilla` from `.firebaserc`.
