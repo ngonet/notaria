@@ -57,6 +57,10 @@ describe("privacy policy page", () => {
     const el = mount(mountPrivacy);
 
     expect(el.textContent).not.toMatch(/Gemini|inteligencia artificial/i);
+    expect(el.textContent).toContain(
+      "el formulario se procesa en un servicio de Google Cloud (Firebase) ubicado en Santiago de Chile, que envía los datos por correo electrónico a la casilla de la Notaría en Gmail (Google).",
+    );
+    expect(el.textContent).not.toContain("Estados Unidos");
     expect(el.textContent).not.toMatch(
       /VERIFICAR|DECISIÓN DEL NOTARIO|Nota interna|fecha de publicación/,
     );

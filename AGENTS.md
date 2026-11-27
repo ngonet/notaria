@@ -26,7 +26,7 @@
 
 ## Firebase and Secrets
 - Firebase project is `notaria-melipilla` from `.firebaserc`.
-- Each `firebase.json` function rewrite must target a region listed for its function in `functions/src/regions.ts` (`FUNCTION_REGIONS`); `functions/src/regions.test.ts` checks it. `calendarProxy` uses the `setGlobalOptions` default `us-central1`; `deedLookup` and `publishedTemplates` run in `southamerica-west1`. A Hosting preview can only rewrite to a function that already exists in that region, so moving a rewrite to a new region takes two deploys: add the region first, move the rewrite after.
+- Each `firebase.json` function rewrite must target a region listed for its function in `functions/src/regions.ts` (`FUNCTION_REGIONS`); `functions/src/regions.test.ts` checks it. `calendarProxy` uses the `setGlobalOptions` default `us-central1`; `contactForm`, `deedLookup` and `publishedTemplates` run in `southamerica-west1`. A Hosting preview can only rewrite to a function that already exists in that region, so moving a rewrite to a new region takes two deploys: add the region first, move the rewrite after.
 - Google Calendar API key is a Firebase Functions secret named `GOOGLE_CALENDAR_API_KEY`, accessed with `defineSecret(...)`; do not move it to frontend env vars or inline config.
 - CI needs the secret `NOTARIA_DOCUMENTOS_DEPLOY_KEY` (private half of a read-only deploy key on the private `ngonet/notaria-documentos`). The merge workflow also runs on `repository_dispatch` `documentos-updated`, sent by notaria-documentos after it deploys.
 - Manual deploy target is `firebase deploy --only hosting,functions --project notaria-melipilla` after building both packages.

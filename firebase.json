@@ -14,7 +14,7 @@
         "source": "/api/contact",
         "function": {
           "functionId": "contactForm",
-          "region": "us-central1"
+          "region": "southamerica-west1"
         }
       },
       {

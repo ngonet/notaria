@@ -167,7 +167,7 @@ interface ContactBody {
 	message?: unknown;
 }
 
-// Personal data (name, email, phone, message): moving to Santiago (see regions.ts).
+// Personal data (name, email, phone, message): processed in Santiago.
 export const contactForm = onRequest(
 	{
 		secrets: [GMAIL_USER, GMAIL_APP_PASSWORD],
