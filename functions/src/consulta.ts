@@ -92,10 +92,10 @@ interface RateLimitEntry {
 	windowStart: number;
 }
 
-// Per-instance, per-IP fixed-window rate limiter. In-memory only: each Cloud
-// Run instance keeps its own state, which is acceptable because App Check is
-// already required for every request (see index.ts) — this only caps abuse
-// from a single client hammering one warm instance.
+// Per-IP fixed-window rate limiter. In-memory only: each Cloud Run instance
+// keeps its own state. deedLookup runs with maxInstances: 1 (see index.ts),
+// so its limit applies to all of its traffic; for a function with more
+// instances, the limit applies per instance.
 //
 // The hit map is swept whenever it grows past MAX_TRACKED_IPS, dropping
 // expired (window-elapsed) entries, so a warm instance fielding requests
