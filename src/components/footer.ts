@@ -1,6 +1,13 @@
 import { site } from "@/content/site";
 import { rosette } from "./icons";
 
+// On pages other than the home page, "#section" links must go back to "/".
+function sectionHref(href: string): string {
+  return href.startsWith("#") && !document.getElementById(href.slice(1))
+    ? `/${href}`
+    : href;
+}
+
 export function mountFooter(el: HTMLElement): void {
   const contact = site.contact;
 
@@ -24,7 +31,7 @@ export function mountFooter(el: HTMLElement): void {
             ${site.nav
               .map(
                 (link) => `
-                  <li><a class="inline-flex min-h-11 items-center font-medium text-white hover:text-accent-soft" href="${link.href}">${link.label}</a></li>
+                  <li><a class="inline-flex min-h-11 items-center font-medium text-white hover:text-accent-soft" href="${sectionHref(link.href)}">${link.label}</a></li>
                 `,
               )
               .join("")}
@@ -33,6 +40,10 @@ export function mountFooter(el: HTMLElement): void {
 
         <div class="flex basis-full flex-col gap-2 border-t border-dark-line pt-4 text-xs sm:flex-row sm:items-center sm:justify-between">
           <p>${site.footer.copyright}</p>
+          <a
+            class="inline-flex min-h-11 items-center font-medium text-accent-soft hover:text-white hover:underline"
+            href="${site.footer.privacy.href}"
+          >${site.footer.privacy.label}</a>
           <a
             class="inline-flex min-h-11 items-center font-medium text-accent-soft hover:text-white hover:underline"
             href="${site.footer.transparency.href}"

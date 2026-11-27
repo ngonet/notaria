@@ -108,8 +108,28 @@ export interface ContactInfo {
   deeds: { heading: string; text: string; email: string };
 }
 
+export interface PrivacyListItem {
+  html: string;
+}
+
+export type PrivacyBlock =
+  | { type: "p"; html: string }
+  | { type: "list"; items: PrivacyListItem[] };
+
+export interface PrivacyPolicyContent {
+  heading: string;
+  updatedLabel: string;
+  updatedAt: string;
+  backLabel: string;
+  intro: PrivacyBlock[];
+  sections: { heading: string; blocks: PrivacyBlock[] }[];
+}
+
 export interface ContactFormContent {
   heading: string;
+  consentBefore: string;
+  consentLinkLabel: string;
+  consentRequiredMessage: string;
   lead: string;
   nameLabel: string;
   emailLabel: string;
@@ -127,6 +147,7 @@ export interface ContactFormContent {
 
 export interface ConsultaContent {
   eyebrow: string;
+  privacyLinkLabel: string;
   heading: string;
   lead: string;
   typeLabel: string;
@@ -592,6 +613,7 @@ export const site = {
     comparecientesLabel: "Comparecientes",
     privacyNote:
       "Por protección de datos personales (Ley 19.628 y Ley 21.719), la consulta muestra únicamente datos identificatorios limitados de los comparecientes: primer nombre y apellido paterno para personas naturales, o razón social para personas jurídicas.",
+    privacyLinkLabel: "Ver la Política de privacidad",
     submitLabel: "Consultar",
     loadingLabel: "Consultando…",
     loadingMessage: "Buscando resultados…",
@@ -627,6 +649,10 @@ export const site = {
       "Otro",
     ],
     messageLabel: "Descripción del reclamo",
+    consentBefore: "He leído y acepto la",
+    consentLinkLabel: "Política de privacidad",
+    consentRequiredMessage:
+      "Para enviar el reclamo debe aceptar la Política de privacidad.",
     submitLabel: "Enviar reclamo",
     sendingLabel: "Enviando…",
     successMessage: "Reclamo recibido. Lo atenderemos a la brevedad.",
@@ -674,7 +700,164 @@ export const site = {
     },
   },
 
+  privacyPolicy: {
+    heading: "Política de privacidad",
+    updatedLabel: "Última actualización:",
+    updatedAt: "27 de noviembre de 2026",
+    backLabel: "Volver al inicio",
+    intro: [
+      {
+        type: "p",
+        html: "Esta política explica qué datos personales trata la Notaría a través de este sitio web y del registro notarial, para qué los usa y cómo puede ejercer sus derechos.",
+      },
+    ],
+    sections: [
+      {
+        heading: "1. Responsable",
+        blocks: [
+          {
+            type: "p",
+            html: "El responsable del tratamiento es el Notario René A. Martínez Loaiza, Notario y Conservador de Comercio de Melipilla, con oficio en Avenida Serrano 369, oficina 11, Melipilla.",
+          },
+          {
+            type: "p",
+            html: "Correo electrónico de contacto: notaria.martinez@gmail.com.",
+          },
+        ],
+      },
+      {
+        heading: "2. Normativa aplicable",
+        blocks: [
+          {
+            type: "p",
+            html: "El tratamiento de datos personales se rige por la Ley N° 19.628, sobre protección de la vida privada. Desde el 15 de octubre de 2027 se regirá por la Ley N° 21.719, sobre protección de datos personales. La función notarial se rige además por el Código Orgánico de Tribunales.",
+          },
+        ],
+      },
+      {
+        heading: "3. Datos que se tratan en este sitio",
+        blocks: [
+          {
+            type: "p",
+            html: "<strong>a) Formulario de reclamos y consultas.</strong>",
+          },
+          {
+            type: "list",
+            items: [
+              {
+                html: "<strong>Datos que se piden:</strong> nombre, correo electrónico, teléfono (opcional), tipo de reclamo y descripción.",
+              },
+              {
+                html: "<strong>Para qué se usan:</strong> solo para atender y responder su reclamo o consulta.",
+              },
+              {
+                html: "<strong>Cómo se envían:</strong> el formulario se procesa en un servicio de Google Cloud (Firebase) ubicado en Estados Unidos, que envía los datos por correo electrónico a la casilla de la Notaría en Gmail (Google). El sitio no los guarda en ninguna base de datos.",
+              },
+              {
+                html: "<strong>Cuánto tiempo se conservan:</strong> en el correo de la Notaría, mientras sea necesario para atender el reclamo y cumplir las obligaciones legales de la Notaría.",
+              },
+              {
+                html: "<strong>Su consentimiento:</strong> al enviar el formulario usted acepta este tratamiento. Para enviarlo debe marcar la casilla de aceptación de esta política.",
+              },
+            ],
+          },
+          {
+            type: "p",
+            html: "<strong>b) Consulta pública de escrituras.</strong>",
+          },
+          {
+            type: "list",
+            items: [
+              {
+                html: "<strong>Qué se le pide:</strong> solo el número de repertorio.",
+              },
+              {
+                html: "<strong>Qué muestra:</strong> el número de repertorio, la fecha, la materia, la foja y una identificación limitada de los comparecientes: primer nombre y apellido paterno de las personas naturales, o razón social de las personas jurídicas. Nunca muestra el contenido del documento.",
+              },
+              {
+                html: "<strong>Por qué se publica:</strong> la ley ordena que el repertorio y los índices de escrituras públicas sean públicos y que el notario facilite su examen (Código Orgánico de Tribunales, arts. 401, 401 bis, 430 y 431).",
+              },
+              {
+                html: "<strong>Límite de consultas:</strong> para evitar abusos, la dirección IP de quien consulta se usa temporalmente para limitar el número de consultas por minuto, y se elimina automáticamente en menos de una hora.",
+              },
+            ],
+          },
+          {
+            type: "p",
+            html: "<strong>c) Generador de documentos simples.</strong> Los datos que usted escribe para preparar autorizaciones, poderes o declaraciones se procesan solo en su navegador para generar el documento. No se envían a la Notaría ni se guardan.",
+          },
+          {
+            type: "p",
+            html: '<strong>d) Protección contra uso automatizado.</strong> El formulario de reclamos usa reCAPTCHA de Google para distinguir a las personas de los programas automatizados. reCAPTCHA recoge datos técnicos de su dispositivo y navegador, y se rige por la <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Política de Privacidad</a> y los <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer">Términos del Servicio</a> de Google.',
+          },
+          {
+            type: "p",
+            html: "<strong>e) Sin seguimiento ni publicidad.</strong> El sitio no usa herramientas de analítica ni cookies de publicidad. El navegador solo recuerda si usted cerró un aviso, sin guardar datos personales.",
+          },
+        ],
+      },
+      {
+        heading: "4. Datos del registro notarial",
+        blocks: [
+          {
+            type: "list",
+            items: [
+              {
+                html: "<strong>Qué datos y para qué:</strong> la Notaría registra los datos de las escrituras públicas y de sus comparecientes para llevar el Repertorio y los Índices que exige la ley. Este tratamiento se hace por mandato legal y no requiere consentimiento (Ley 19.628, art. 4).",
+              },
+              {
+                html: "<strong>Dónde se guardan:</strong> en la infraestructura de Google Cloud en Santiago de Chile. Solo accede personal autorizado de la Notaría, desde su red privada y con credenciales personales. Cada modificación y cada ingreso al sistema quedan registrados.",
+              },
+              {
+                html: "<strong>Apoyo de inteligencia artificial:</strong> para facilitar la digitación, el sistema puede enviar la escritura escaneada a un servicio de inteligencia artificial de Google (Gemini), que lee el documento y propone los datos del registro. Un funcionario de la Notaría revisa y confirma esos datos antes de registrarlos. Google procesa estos documentos como encargado, según sus condiciones de tratamiento de datos. No los usa para entrenar sus modelos ni para mejorar sus productos, y los conserva hasta 55 días solo para detectar abusos y cumplir obligaciones legales. Google puede procesarlos fuera de Chile.",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        heading: "5. Sus derechos",
+        blocks: [
+          {
+            type: "p",
+            html: "Usted puede pedir información sobre los datos que la Notaría trata sobre usted, su origen y su destino, y pedir que se corrijan si son erróneos o incompletos. También puede pedir que se eliminen o bloqueen cuando no exista fundamento legal para conservarlos (Ley 19.628, art. 12). Estos derechos son gratuitos.",
+          },
+          {
+            type: "p",
+            html: "Los datos que forman parte del protocolo, del repertorio y de los índices no pueden eliminarse, porque la ley obliga al notario a conservarlos (Código Orgánico de Tribunales, arts. 401 N° 7, 429, 430 y 431).",
+          },
+          {
+            type: "p",
+            html: "Para ejercer sus derechos, escriba a notaria.martinez@gmail.com o acuda a la Notaría. Puede pedírselo a la Notaría la persona titular de los datos o su representante, acreditando su identidad.",
+          },
+        ],
+      },
+      {
+        heading: "6. Seguridad",
+        blocks: [
+          {
+            type: "p",
+            html: "La Notaría adopta medidas para cuidar los datos con la debida diligencia: acceso restringido y autenticado, registro de cambios y de accesos, y respaldos periódicos.",
+          },
+        ],
+      },
+      {
+        heading: "7. Cambios a esta política",
+        blocks: [
+          {
+            type: "p",
+            html: "Esta política puede actualizarse, por ejemplo cuando entre en vigencia la Ley N° 21.719. La fecha de la última actualización se indica al inicio.",
+          },
+        ],
+      },
+    ],
+  } satisfies PrivacyPolicyContent,
+
   footer: {
+    privacy: {
+      label: "Política de privacidad",
+      href: "/privacidad/",
+    },
     copyright: `Copyright © ${new Date().getFullYear()} Notaría Martínez · Todos los derechos reservados.`,
     transparency: {
       label: "Declaración de patrimonio e intereses",
