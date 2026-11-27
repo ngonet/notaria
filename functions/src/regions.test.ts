@@ -17,8 +17,13 @@ const functionRewrites = firebaseJson.hosting.rewrites.filter(
 );
 
 describe("function regions", () => {
-  it("deploys the contact form in Santiago", () => {
-    expect(FUNCTION_REGIONS.contactForm).toContain("southamerica-west1");
+  it("runs the contact form only in Santiago", () => {
+    expect(FUNCTION_REGIONS.contactForm).toEqual(["southamerica-west1"]);
+    const contact = functionRewrites.find((r) => r.source === "/api/contact");
+    expect(contact?.function).toEqual({
+      functionId: "contactForm",
+      region: "southamerica-west1",
+    });
   });
 
   it("points every Hosting rewrite at a region its function is deployed in", () => {
