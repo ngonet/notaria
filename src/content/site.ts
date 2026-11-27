@@ -751,7 +751,7 @@ export const site = {
                 html: "<strong>Para qué se usan:</strong> solo para atender y responder su reclamo o consulta.",
               },
               {
-                html: "<strong>Cómo se envían:</strong> el formulario se procesa en un servicio de Google Cloud (Firebase) ubicado en Santiago de Chile, que envía los datos por correo electrónico a la casilla de la Notaría en Gmail (Google). El sitio no los guarda en ninguna base de datos.",
+                html: "<strong>Cómo se envían:</strong> el formulario se procesa en un servicio de Google Cloud (Firebase) ubicado en Estados Unidos, que envía los datos por correo electrónico a la casilla de la Notaría en Gmail (Google). El sitio no los guarda en ninguna base de datos.",
               },
               {
                 html: "<strong>Cuánto tiempo se conservan:</strong> en el correo de la Notaría, mientras sea necesario para atender el reclamo y cumplir las obligaciones legales de la Notaría.",

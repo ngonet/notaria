@@ -167,11 +167,11 @@ interface ContactBody {
 	message?: unknown;
 }
 
-// Personal data (name, email, phone, message): processed in Santiago.
+// Personal data (name, email, phone, message): moving to Santiago (see regions.ts).
 export const contactForm = onRequest(
 	{
 		secrets: [GMAIL_USER, GMAIL_APP_PASSWORD],
-		region: FUNCTION_REGIONS.contactForm,
+		region: [...FUNCTION_REGIONS.contactForm],
 		memory: "256MiB",
 		cors: false,
 	},
@@ -367,7 +367,7 @@ interface PublicConsultaRow {
 export const deedLookup = onRequest(
 	{
 		secrets: [CONSULTA_DB_PASSWORD],
-		region: FUNCTION_REGIONS.deedLookup,
+		region: [...FUNCTION_REGIONS.deedLookup],
 		maxInstances: 3,
 		memory: "256MiB",
 		cors: false,
@@ -452,7 +452,7 @@ const TEMPLATES_CACHE_SECONDS = 300;
 export const publishedTemplates = onRequest(
 	{
 		secrets: [CONSULTA_DB_PASSWORD],
-		region: FUNCTION_REGIONS.publishedTemplates,
+		region: [...FUNCTION_REGIONS.publishedTemplates],
 		maxInstances: 3,
 		memory: "256MiB",
 		cors: false,

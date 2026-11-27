@@ -175,7 +175,7 @@ firebase deploy --only hosting,functions --project notaria-melipilla
 ## Firebase
 
 - Proyecto: `notaria-melipilla` (`.firebaserc`).
-- `firebase.json` publica `dist/` y declara los rewrites `/api/calendar/**` → `calendarProxy`, `/api/contact` → `contactForm` (region `southamerica-west1`, fijada por función porque procesa datos personales) y `/api/consulta` → `deedLookup` (region `southamerica-west1`, fijada por función — más cerca de la base de datos de notIA en ese mismo proyecto/región). Las regiones de cada función están en `functions/src/regions.ts` y `functions/src/regions.test.ts` verifica que coincidan con los rewrites.
+- `firebase.json` publica `dist/` y declara los rewrites `/api/calendar/**` → `calendarProxy`, `/api/contact` → `contactForm` (region `us-central1` mientras se traslada a `southamerica-west1`: este deploy crea la copia en Santiago y el siguiente mueve el rewrite y elimina la de `us-central1`) y `/api/consulta` → `deedLookup` (region `southamerica-west1`, fijada por función — más cerca de la base de datos de notIA en ese mismo proyecto/región). Las regiones de cada función están en `functions/src/regions.ts` y `functions/src/regions.test.ts` verifica que coincidan con los rewrites.
 - Cada función con region distinta al default debe fijarla explícitamente en sus propias opciones (`onRequest({ region: ... })`) y mantenerla alineada con su rewrite en `firebase.json`.
 
 ## Notas de migración
