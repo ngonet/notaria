@@ -808,9 +808,6 @@ export const site = {
               {
                 html: "<strong>Dónde se guardan:</strong> en la infraestructura de Google Cloud en Santiago de Chile. Solo accede personal autorizado de la Notaría, desde su red privada y con credenciales personales. Cada modificación y cada ingreso al sistema quedan registrados.",
               },
-              {
-                html: "<strong>Apoyo de inteligencia artificial:</strong> para facilitar la digitación, el sistema puede enviar la escritura escaneada a un servicio de inteligencia artificial de Google (Gemini), que lee el documento y propone los datos del registro. Un funcionario de la Notaría revisa y confirma esos datos antes de registrarlos. Google procesa estos documentos como encargado, según sus condiciones de tratamiento de datos. No los usa para entrenar sus modelos ni para mejorar sus productos, y los conserva hasta 55 días solo para detectar abusos y cumplir obligaciones legales. Google puede procesarlos fuera de Chile.",
-              },
             ],
           },
         ],

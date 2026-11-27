@@ -53,15 +53,10 @@ describe("privacy policy page", () => {
     );
   });
 
-  it("publishes the AI support bullet and no review markers", () => {
+  it("publishes no AI processing text and no review markers", () => {
     const el = mount(mountPrivacy);
 
-    expect(el.textContent).toContain(
-      "Apoyo de inteligencia artificial: para facilitar la digitación, el sistema puede enviar la escritura escaneada a un servicio de inteligencia artificial de Google (Gemini)",
-    );
-    expect(el.textContent).toContain(
-      "y los conserva hasta 55 días solo para detectar abusos y cumplir obligaciones legales. Google puede procesarlos fuera de Chile.",
-    );
+    expect(el.textContent).not.toMatch(/Gemini|inteligencia artificial/i);
     expect(el.textContent).not.toMatch(
       /VERIFICAR|DECISIÓN DEL NOTARIO|Nota interna|fecha de publicación/,
     );
